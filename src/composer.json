@@ -1,0 +1,6 @@
+{
+    "name": "ghervan/cronman",
+    "require": {
+        "slim/slim": "2.*"
+    }
+}
