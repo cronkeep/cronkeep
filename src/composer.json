@@ -2,5 +2,8 @@
     "name": "ghervan/cronman",
     "require": {
         "slim/slim": "2.*"
-    }
+    },
+	"autoload": {
+		"psr-4": {"models\\": "application/models/"}
+	}
 }
