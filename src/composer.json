@@ -4,6 +4,9 @@
         "slim/slim": "2.*"
     },
 	"autoload": {
-		"psr-4": {"models\\": "application/models/"}
+		"psr-4": {
+			"models\\": "application/models/",
+			"library\\": "library/"
+		}
 	}
 }

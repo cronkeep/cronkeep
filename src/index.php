@@ -2,16 +2,18 @@
 
 require_once 'vendor/autoload.php';
 
-$app = new \Slim\Slim();
+$app = new \Slim\Slim(array(
+	'view' => new \library\Extra\Layout(),
+	'templates.path' => 'application/views'
+));
 
-$app->get('/', function () {
+$app->get('/', function () use ($app) {
     $crontab = new \models\Crontab();
 	$crontab->load();
 	
-	foreach ($crontab as $job) {
-		var_dump($job->getExpression());
-		var_dump($job->getCommand());
-	}
+	$app->render('list.phtml', array(
+		'crontab' => $crontab
+	));
 });
 
 $app->run();

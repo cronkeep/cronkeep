@@ -1,0 +1,15 @@
+<div class="panel panel-primary">
+	<div class="panel-heading">Cron jobs</div>
+	<table class="table">
+		<tr>
+			<th>Execution time</th>
+			<th>Command</th>
+		</tr>
+		<?php foreach ($crontab as $job): ?>
+		<tr>
+			<td><?php echo $job->getExpression() ?></td>
+			<td><?php echo $job->getCommand() ?></td>
+		</tr>
+		<?php endforeach ?>
+	</table>
+</div>
