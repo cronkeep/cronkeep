@@ -1,15 +1,38 @@
-<div class="panel panel-primary">
-	<div class="panel-heading">Cron jobs</div>
-	<table class="table">
-		<tr>
-			<th>Execution time</th>
-			<th>Command</th>
-		</tr>
-		<?php foreach ($crontab as $job): ?>
-		<tr>
-			<td><?php echo $job->getExpression() ?></td>
-			<td><?php echo $job->getCommand() ?></td>
-		</tr>
-		<?php endforeach ?>
-	</table>
+<div class="btn-toolbar" role="toolbar">
+	<button type="button" class="btn btn-primary pull-right" title="Add Job">
+		<span class="glyphicon glyphicon-plus"></span> Add Job
+	</button>
 </div>
+
+<table class="table table-hover table-crontab">
+	<tr>
+		<th>Time</th>
+		<th>Command</th>
+		<th></th>
+	</tr>
+	<?php foreach ($crontab as $job): ?>
+	<tr>
+		<td><?php echo $job->getExpression() ?></td>
+		<td><?php echo $job->getCommand() ?></td>
+		<td>
+			<div class="btn-group">
+				<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"
+						title="Run Job Now">
+					<span class="glyphicon glyphicon-play"></span>
+					Run <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li>
+						<a href="#" title="Pause Job Schedule">
+							<span class="glyphicon glyphicon-off"></span> Pause Schedule</a>
+					</li>
+					<li>
+						<a href="#" title="Permanently Delete Job">
+							<span class="glyphicon glyphicon-remove"></span> Delete</a>
+					</li>
+				</ul>
+			</div>
+		</td>
+	</tr>
+	<?php endforeach ?>
+</table>
