@@ -1,7 +1,9 @@
 {
     "name": "ghervan/cronman",
     "require": {
-        "slim/slim": "2.*"
+        "slim/slim": "2.*",
+		"symfony/process": "2.5.2",
+		"entomb/slim-json-api": "dev-master"
     },
 	"autoload": {
 		"psr-4": {

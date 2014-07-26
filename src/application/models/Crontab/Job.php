@@ -7,6 +7,11 @@ class Job
 	/**
 	 * @var string
 	 */
+	protected $_raw;
+	
+	/**
+	 * @var string
+	 */
 	protected $_expression;
 	
 	/**
@@ -18,6 +23,19 @@ class Job
 	 * @var string
 	 */
 	protected $_comment;
+	
+	/**
+	 * @var string
+	 */
+	protected $_hash;
+	
+	public function setRaw($raw)
+	{
+		$this->_raw = $raw;
+		$this->_computeHash();
+		
+		return $this;
+	}
 	
 	public function setExpression($expression)
 	{
@@ -50,5 +68,16 @@ class Job
 	public function getComment()
 	{
 		return $this->_comment;
+	}
+	
+	public function getHash()
+	{
+		return $this->_hash;
+	}
+	
+	protected function _computeHash()
+	{
+		$this->_hash = hash('crc32', $this->_raw);
+		return $this;
 	}
 }

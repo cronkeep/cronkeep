@@ -1,7 +1,16 @@
-<div class="btn-toolbar" role="toolbar">
-	<button type="button" class="btn btn-primary pull-right" title="Add Job">
-		<span class="glyphicon glyphicon-plus"></span> Add Job
-	</button>
+
+
+<div class="row">
+	<div class="col-xs-12 col-sm-6 col-md-8">
+		<h2>www-data</h2>
+	</div>
+	<div class="col-xs-6 col-md-4">
+		<div class="btn-toolbar" role="toolbar">
+			<button type="button" class="btn btn-primary pull-right" title="Add Job">
+				<span class="glyphicon glyphicon-plus"></span> Add Job
+			</button>
+		</div>
+	</div>
 </div>
 
 <table class="table table-hover table-crontab">
@@ -16,10 +25,13 @@
 		<td><?php echo $job->getCommand() ?></td>
 		<td>
 			<div class="btn-group">
-				<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"
-						title="Run Job Now">
-					<span class="glyphicon glyphicon-play"></span>
-					Run <span class="caret"></span>
+				<button type="button" class="btn btn-success job-run" title="Run Job Now"
+						data-hash="<?php echo $job->getHash() ?>">
+					<span class="glyphicon glyphicon-play"></span> Run
+				</button>
+				<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+					<span class="caret"></span>
+					<span class="sr-only">Toggle Dropdown</span>
 				</button>
 				<ul class="dropdown-menu" role="menu">
 					<li>

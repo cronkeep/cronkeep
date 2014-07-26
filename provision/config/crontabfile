@@ -1,0 +1,22 @@
+# Make sure there's a trailing newline at the end of the file
+# Long-running process test
+0 * * * * /var/www/cronman/tests/long-running.sh
+# use /bin/bash to run commands, instead of the default /bin/sh
+SHELL=/bin/bash
+# mail any output to `paul', no matter whose crontab this is
+MAILTO=paul
+#
+# run five minutes after midnight, every day
+5 0 * * *       /bin/daily.job >> /tmp/out 2>&1
+# run at 2:15pm on the first of every month -- output mailed to paul
+15 14 1 * *     /bin/monthly
+# run at 10 pm on weekdays, annoy Joe
+0 22 * * 1-5    mail -s "It's 10pm" joe%Joe,%%Where are your kids?%
+23 0-23/2 * * * echo "run 23 minutes after midn, 2am, 4am ..., everyday"
+5 4 * * sun     echo "run at 5 after 4 every sunday"
+# Run on every second Saturday of the month
+0 4 8-14 * *    test $(date +\%u) -eq 6 && echo "2nd Saturday"
+# This is a comment
+@yearly /run/this/once/per/.year
+@weekly /run/this/once/per/.week
+@midnight /run/this/once/per/.night
