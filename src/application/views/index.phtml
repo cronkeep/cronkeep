@@ -24,7 +24,13 @@
 		<tr data-hash="<?php echo $job->getHash() ?>"
 			<?php echo $job->isPaused() ? ' class="inactive"' : '' ?>>
 			<td><?php echo $job->getExpression() ?></td>
-			<td><?php echo $job->getCommand() ?></td>
+			<td>
+				<?php echo $job->getCommand() ?>
+				<?php if ($job->getComment()): ?>
+					<span class="glyphicon glyphicon-question-sign"
+						  data-toggle="tooltip" title="<?php echo $job->getComment() ?>"></span>
+				<?php endif; ?>
+			</td>
 			<td>
 				<div class="btn-group pull-right">
 					<button type="button" class="btn btn-success job-run" title="Run Job Now"
