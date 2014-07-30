@@ -1,5 +1,6 @@
 var CrontabService = function() {
 	var self = this;
+	var jobToDelete;
 	
 	this.runJob = function(job) {
 		var hash = job.attr('data-hash');
@@ -53,6 +54,19 @@ var CrontabService = function() {
 		});
 	};
 	
+	this.deleteJob = function(job) {
+		var hash = job.attr('data-hash');
+		
+		$.ajax('/job/delete/' + hash).done(function(data) {
+			alertService.pushSuccess(data.msg);
+			
+			// Remove element from the DOM
+			job.remove();
+		}).fail(function(data) {
+			alertService.pushError(data.responseJSON.msg);
+		});
+	};
+	
 	// Assign handlers
 	$('body').on('click', '.job-run', function() {
 		var job = $(this).closest('tr');
@@ -67,5 +81,15 @@ var CrontabService = function() {
 	$('body').on('click', '.job-resume', function() {
 		var job = $(this).closest('tr');
 		self.resumeJob(job);
+	});
+	
+	$('body').on('click', '.job-confirm-delete', function() {
+		jobToDelete = $(this).closest('tr');
+		$('#job-delete-confirmation').modal();
+	});
+	
+	$('body').on('click', '.job-delete', function() {
+		$('#job-delete-confirmation').modal('hide');
+		self.deleteJob(jobToDelete);
 	});
 };

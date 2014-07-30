@@ -87,7 +87,8 @@ class Crontab implements \IteratorAggregate
 	}
 	
 	/**
-	 * "Pauses" cron schedule by commenting the job in crontab.
+	 * Pauses cron schedule by commenting the job in crontab.
+	 * Additionally, Crontab::save should be called to persist the change.
 	 * 
 	 * @param \models\Crontab\Job $job
 	 * @return \models\Crontab
@@ -107,6 +108,7 @@ class Crontab implements \IteratorAggregate
 	
 	/**
 	 * Resumes cron schedule by un-commenting the job in crontab.
+	 * Additionally, Crontab::save should be called to persist the change.
 	 * 
 	 * @param \models\Crontab\Job $job
 	 * @return \models\Crontab
@@ -120,6 +122,20 @@ class Crontab implements \IteratorAggregate
 		
 		// Replace the job definition in the raw crontab
 		$this->_rawTable = str_replace($originalJob, $newJob, $this->_rawTable);
+		
+		return $this;
+	}
+	
+	/**
+	 * Deletes given job from crontab.
+	 * Additionally, Crontab::save should be called to persist the change.
+	 * 
+	 * @param \models\Crontab\Job $job
+	 * @return \models\Crontab
+	 */
+	public function delete(Crontab\Job $job)
+	{
+		$this->_rawTable = str_replace($job->getRaw(), '', $this->_rawTable);
 		
 		return $this;
 	}
@@ -187,10 +203,10 @@ class Crontab implements \IteratorAggregate
 	{
         $pattern = "/
             (?:
-              (\#[^\r]*)                      # match comment above cron (optional)
+              (\#[^\r]*?)                     # match comment above cron
 			  \s*                             # match any trailing whitespace
               [\n\r]{1,}                      # match any sort of line endings
-            )?
+            )?                                # comment is, however, optional
             (                                 # start command line
 			  ^(?:\#\s*)?                     # line starting with a comment sign or not
               (                               # start to match time expression
@@ -223,8 +239,9 @@ class Crontab implements \IteratorAggregate
                   @annually|@reboot)
               )                               # end matching time expression
               \s+                             # space
-              ([^\r]*)                        # command to be run (everything, but CR)
+              ([^\r]*?)                       # command to be run (everything, but CR)
             )                                 # end command line
+			\s*[\n\r]{1}                      # match trailing space and final line ending
           /imx";
 		
 		$this->_jobs = array();

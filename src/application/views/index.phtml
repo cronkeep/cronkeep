@@ -46,7 +46,7 @@
 								<span class="glyphicon glyphicon-off"></span> Pause Schedule</a>
 						</li>
 						<li>
-							<a href="#" title="Permanently Delete Job" class="job-delete">
+							<a href="#" title="Permanently Delete Job" class="job-confirm-delete">
 								<span class="glyphicon glyphicon-remove"></span> Delete</a>
 						</li>
 					</ul>
@@ -56,3 +56,23 @@
 		<?php endforeach ?>
 	</tbody>
 </table>
+
+<div class="modal fade" id="job-delete-confirmation" tabindex="-1" role="dialog"
+	 aria-labelledby="job-delete-confirmation-title" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="job-delete-confirmation-title">Delete Confirmation</h4>
+			</div>
+			<div class="modal-body">
+				You are about to delete this job from crontab.
+				Since this can't be undone, please confirm before proceeding.
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-primary btn-danger job-delete">Delete Job</button>
+			</div>
+		</div>
+	</div>
+</div>

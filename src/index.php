@@ -117,6 +117,28 @@ $app->group('/job', function() use ($app) {
 			));
 		}
 	});
+	
+	/**
+	 * Deletes job from crontab.
+	 */
+	$app->get('/delete/:hash', $setupJsonResponse, function($hash) use ($app) {
+		$crontab = new Crontab();
+		$job = $crontab->findByHash($hash);
+		
+		if ($job) {
+			$crontab->delete($job)->save();
+			
+			$app->render(200, array(
+				'error' => false,
+				'msg' => 'Job has been deleted.'
+			));
+		} else {
+			$app->render(404, array(
+				'error' => true,
+				'msg' => 'Cron job no longer exists.'
+			));
+		}
+	});
 });
 
 $app->run();
