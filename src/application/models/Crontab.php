@@ -1,5 +1,6 @@
 <?php
 namespace models;
+use \Symfony\Component\Process\Process;
 
 /**
  * Crontab model.
@@ -11,16 +12,24 @@ class Crontab implements \IteratorAggregate
 {
 	/**
 	 * Raw cron table.
-	 * @var type 
+	 * 
+	 * @var string 
 	 */
-	protected $_raw;
+	protected $_rawTable;
 	
 	/**
 	 * Loaded list of cron jobs.
 	 * 
 	 * @var array
 	 */
-	protected $_jobs;
+	protected $_jobs = array();
+	
+	/**
+	 * Process ID of the last started job.
+	 * 
+	 * @var int|null
+	 */
+	protected $_pid;
 	
 	/**
 	 * Class constructor.
@@ -30,19 +39,6 @@ class Crontab implements \IteratorAggregate
 	public function __construct()
 	{
 		$this->_load();
-	}
-	
-	/**
-	 * Loads system crontab.
-	 * 
-	 * @return \models\Crontab
-	 */
-	protected function _load()
-	{
-		$this->_raw = `crontab -l`;
-		$this->_parseRawCrontab($this->_raw);
-		
-		return $this;
 	}
 	
 	/**
@@ -64,62 +60,182 @@ class Crontab implements \IteratorAggregate
 	}
 	
 	/**
+	 * Runs the job in background.
+	 * 
+	 * @param \models\Crontab\Job $job
+	 * @return \models\Crontab
+	 */
+	public function run(Crontab\Job $job)
+	{
+		$process = new Process($job->getCommand());
+		$process->disableOutput();
+		$process->start();
+		
+		$this->_lastPid = $process->getPid();
+		
+		return $this;
+	}
+	
+	/**
+	 * Returns the process ID of the last started job.
+	 * 
+	 * @return int|null
+	 */
+	public function getLastPid()
+	{
+		return $this->_lastPid;
+	}
+	
+	/**
+	 * "Pauses" cron schedule by commenting the job in crontab.
+	 * 
+	 * @param \models\Crontab\Job $job
+	 * @return \models\Crontab
+	 */
+	public function pause(Crontab\Job $job)
+	{
+		// Comment the cron job
+		$originalJob = $job->getRaw();
+		$job->pause();
+		$newJob = $job->getRaw();
+		
+		// Replace the job definition in the raw crontab
+		$this->_rawTable = str_replace($originalJob, $newJob, $this->_rawTable);
+		
+		return $this;
+	}
+	
+	/**
+	 * Resumes cron schedule by un-commenting the job in crontab.
+	 * 
+	 * @param \models\Crontab\Job $job
+	 * @return \models\Crontab
+	 */
+	public function resume(Crontab\Job $job)
+	{
+		// Comment the cron job
+		$originalJob = $job->getRaw();
+		$job->resume();
+		$newJob = $job->getRaw();
+		
+		// Replace the job definition in the raw crontab
+		$this->_rawTable = str_replace($originalJob, $newJob, $this->_rawTable);
+		
+		return $this;
+	}
+	
+	/**
+	 * Saves the current user's crontab.
+	 * 
+	 * @return \models\Crontab
+	 * @throws \RuntimeException
+	 */
+	public function save()
+	{
+		$process = new Process('crontab');
+		$process->setInput($this->_rawTable);
+		$process->run();
+		
+		if (!$process->isSuccessful()) {
+			$errorOutput = $process->getErrorOutput();
+			if ($errorOutput) {
+				throw new \RuntimeException(sprintf(
+					'There has been an error saving the crontab. Here\'s the output from the shell: %s',
+					trim($errorOutput)));
+			}
+			throw new \RuntimeException('There has been an error saving the crontab.');
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Loads system crontab.
+	 * 
+	 * @return \models\Crontab
+	 */
+	protected function _load()
+	{
+		$this->_readCrontab();
+		$this->_parseCrontab();
+		
+		return $this;
+	}
+	
+	/**
+	 * Reads crontab for current user.
+	 * 
+	 * @return \models\Crontab
+	 */
+	protected function _readCrontab()
+	{
+		$this->_rawTable = `crontab -l`;
+		
+		return $this;
+	}
+	
+	/**
 	 * Parses a crontab with commentaries. It assumes the comment for a cron job
 	 * comes before the job definition.
 	 * 
 	 * Indentation inspired by:
 	 * http://www.onlamp.com/lpt/a/4101
 	 * 
-	 * @param type $rawCrontab
 	 * @return \models\Crontab
 	 */
-	protected function _parseRawCrontab($rawCrontab)
+	protected function _parseCrontab()
 	{
-		$pattern = $pattern = "/
-			(?:
-			  (\#[^\r]*)                    # match comment above cron (optional)
-			  [\s\r]*						# any sort of whitespace (including CR)
-			)?
-			(                               # start to match time expression
-			  (?:
-				[\d\*\/\,\-\%]+             # match minute
-			  )
-			  \s                            # space
-			  (?:
-				[\d\*\/\,\-\%]+             # match hour
-			  )
-			  \s                            # space
-			  (?:
-				[\d\*\/\,\-\%]+             # match day of month
-			  )
-			  \s                            # space
-			  (?:
-				[\d\*\/\,\-\%]+|jan|feb|    # match month
-				mar|apr|may|jun|jul|aug|
-				sep|oct|nov|dec
-			  )
-			  \s                            # space
-			  (?:
-				[\d\*\/\,\-\%]+|mon|tue|    # match day of week
-				wed|thu|fri|sat|sun
-			  )
-			  |
-			  (?:
-				@hourly|@midnight|@daily|   # OR, match special string
-				@weekly|@monthly|@yearly|
-				@annually|@reboot)
-			)                               # end matching time expression
-			\s+                             # space
-			([^\r]*)                        # command to be run (everything, but CR)
-		/imx";
+        $pattern = "/
+            (?:
+              (\#[^\r]*)                      # match comment above cron (optional)
+			  \s*                             # match any trailing whitespace
+              [\n\r]{1,}                      # match any sort of line endings
+            )?
+            (                                 # start command line
+			  ^(?:\#\s*)?                     # line starting with a comment sign or not
+              (                               # start to match time expression
+                (?:
+                  [\d\*\/\,\-\%]+             # match minute
+                )
+                \s                            # space
+                (?:
+                  [\d\*\/\,\-\%]+             # match hour
+                )
+                \s                            # space
+                (?:
+                  [\d\*\/\,\-\%]+             # match day of month
+                )
+                \s                            # space
+                (?:
+                  [\d\*\/\,\-\%]+|jan|feb|    # match month
+                  mar|apr|may|jun|jul|aug|
+                  sep|oct|nov|dec
+                )
+                \s                            # space
+                (?:
+                  [\d\*\/\,\-\%]+|mon|tue|    # match day of week
+                  wed|thu|fri|sat|sun
+                )
+                |
+                (?:
+                  @hourly|@midnight|@daily|   # OR, match special string
+                  @weekly|@monthly|@yearly|
+                  @annually|@reboot)
+              )                               # end matching time expression
+              \s+                             # space
+              ([^\r]*)                        # command to be run (everything, but CR)
+            )                                 # end command line
+          /imx";
 		
-		if (preg_match_all($pattern, $rawCrontab, $lines, PREG_SET_ORDER)) {
+		$this->_jobs = array();
+		if (preg_match_all($pattern, $this->_rawTable, $lines, PREG_SET_ORDER)) {
 			foreach ($lines as $lineParts) {
 				$job = new Crontab\Job();
 				$job->setRaw($lineParts[0]);
 				$job->setComment(empty($lineParts[1]) ? null : $lineParts[1]);
-				$job->setExpression($lineParts[2]);
-				$job->setCommand($lineParts[3]);
+				$job->setCommandLine($lineParts[2]);
+				$job->setExpression($lineParts[3]);
+				$job->setCommand($lineParts[4]);
 				
 				$this->_jobs[] = $job;
 			}

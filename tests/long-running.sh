@@ -4,7 +4,7 @@
   
   # prints current date and time to a file every 1 second for roughly 1 hour
   i=1
-  while [ $i -le 5 ]
+  while [ $i -le 3000 ]
   do
     ((i++))
     date >> /var/www/cronman/output-$$.txt
