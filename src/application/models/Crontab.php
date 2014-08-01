@@ -25,13 +25,6 @@ class Crontab implements \IteratorAggregate
 	protected $_jobs = array();
 	
 	/**
-	 * Process ID of the last started job.
-	 * 
-	 * @var int|null
-	 */
-	protected $_pid;
-	
-	/**
 	 * Class constructor.
 	 * 
 	 * @return void
@@ -67,23 +60,15 @@ class Crontab implements \IteratorAggregate
 	 */
 	public function run(Crontab\Job $job)
 	{
-		$process = new Process($job->getCommand());
-		$process->disableOutput();
+		$command = $job->getCommand();
+		if (At::isAvailable()) {
+			$command = sprintf('sh -c "echo "%s" | at now"', $job->getCommand());
+		}
+		
+		$process = new Process($command);
 		$process->start();
 		
-		$this->_lastPid = $process->getPid();
-		
 		return $this;
-	}
-	
-	/**
-	 * Returns the process ID of the last started job.
-	 * 
-	 * @return int|null
-	 */
-	public function getLastPid()
-	{
-		return $this->_lastPid;
 	}
 	
 	/**

@@ -3,6 +3,7 @@
 require_once 'vendor/autoload.php';
 use \models\Crontab;
 use \models\SystemUser;
+use \models\At;
 
 $app = new \Slim\Slim(array(
 	'templates.path' => 'application/views',
@@ -19,12 +20,14 @@ if (!$app->request->isXhr()) {
 
 // Routes
 $app->get('/', function() use ($app) {
-	$crontab = new Crontab();
+	$crontab	= new Crontab();
 	$systemUser = new SystemUser();
 	
 	$app->render('index.phtml', array(
-		'crontab' => $crontab,
-		'systemUser' => $systemUser
+		'crontab'	 => $crontab,
+		'systemUser' => $systemUser,
+		'isAtCommandAvailable' => At::isAvailable(),
+		'atCommandErrorOutput' => At::getErrorOutput()
 	));
 });
 
@@ -56,12 +59,10 @@ $app->group('/job', function() use ($app) {
 		
 		if ($job) {
 			$crontab->run($job);
-			$pid = $crontab->getLastPid();
 			
 			$app->render(200, array(
 				'error' => false,
-				'pid' => $pid,
-				'msg' => sprintf('Process with PID %d started.', $pid)
+				'msg' => 'Process started.'
 			));
 		} else {
 			$app->render(404, array(
