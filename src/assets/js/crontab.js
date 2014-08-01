@@ -4,11 +4,15 @@ var CrontabService = function() {
 	
 	this.runJob = function(job) {
 		var hash = job.attr('data-hash');
+		var runButton = $('.job-run', job);
+		runButton.button('loading');
 		
 		$.ajax('/job/run/' + hash).done(function(data) {
 			alertService.pushSuccess(data.msg);
 		}).fail(function(data) {
 			alertService.pushError(data.responseJSON.msg);
+		}).always(function() {
+			runButton.button('reset');
 		});
 	};
 	
@@ -67,10 +71,18 @@ var CrontabService = function() {
 		});
 	};
 	
+	$('body').on('click', '.job-add', function() {
+		// Prevent button from retaining focus once clicked
+		$(this).blur();
+	});
+	
 	// Assign handlers
 	$('body').on('click', '.job-run', function() {
 		var job = $(this).closest('tr');
 		self.runJob(job);
+		
+		// Prevent button from retaining focus once clicked
+		$(this).blur();
 	});
 
 	$('body').on('click', '.job-pause', function() {

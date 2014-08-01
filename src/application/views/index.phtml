@@ -1,10 +1,10 @@
 <div class="row">
-	<div class="col-xs-12 col-sm-6 col-md-8">
+	<div class="col-xs-8">
 		<h2>www-data</h2>
 	</div>
-	<div class="col-xs-6 col-md-4">
+	<div class="col-xs-4">
 		<div class="btn-toolbar" role="toolbar">
-			<button type="button" class="btn btn-primary pull-right" title="Add Job">
+			<button type="button" class="btn btn-primary pull-right job-add" title="Add Job">
 				<span class="glyphicon glyphicon-plus"></span> Add Job
 			</button>
 		</div>
@@ -34,7 +34,7 @@
 			<td>
 				<div class="btn-group pull-right">
 					<button type="button" class="btn btn-success job-run" title="Run Job Now"
-							data-hash="<?php echo $job->getHash() ?>">
+							data-hash="<?php echo $job->getHash() ?>" data-loading-text="Starting...">
 						<span class="glyphicon glyphicon-play"></span> Run
 					</button>
 					<button type="button" class="btn btn-success dropdown-toggle"
