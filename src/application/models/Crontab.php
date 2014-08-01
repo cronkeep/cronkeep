@@ -170,7 +170,20 @@ class Crontab implements \IteratorAggregate
 	 */
 	protected function _readCrontab()
 	{
-		$this->_rawTable = `crontab -l`;
+		$process = new Process('crontab -l');
+		$process->run();
+		
+		if (!$process->isSuccessful()) {
+			$errorOutput = $process->getErrorOutput();
+			if ($errorOutput) {
+				throw new \RuntimeException(sprintf(
+					'There has been an error reading the crontab. Here\'s the output from the shell: %s',
+					trim($errorOutput)));
+			}
+			throw new \RuntimeException('There has been an error reading the crontab.');
+		}
+		
+		$this->_rawTable = trim($process->getOutput());
 		
 		return $this;
 	}

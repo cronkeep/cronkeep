@@ -25,7 +25,7 @@ class At
 	protected static $_isAvailable;
 	
 	/**
-	 * Last error output from the command.
+	 * Last error outputted from the command.
 	 * 
 	 * @var string
 	 */
