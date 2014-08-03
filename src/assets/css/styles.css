@@ -1,8 +1,11 @@
 body {
   padding-top: 70px;
 }
-.table-crontab {
+.panel-crontab {
 	margin-top: 25px;
+}
+.empty-search {
+	padding: 15px;
 }
 
 .table > thead > tr > td.inactive,
@@ -30,4 +33,30 @@ body {
 .at-command-error-output {
 	display: block;
 	margin-top: 10px;
+}
+
+mark, .mark {
+	padding: 0.2em 0;
+}
+
+.panel-crontab > .table {
+	margin-top: 10px;
+}
+/* Align data and search field's edges */
+.panel-crontab > .table > thead > tr > th:first-child,
+.panel-crontab > .table > tbody > tr > th:first-child,
+.panel-crontab > .table > tfoot > tr > th:first-child,
+.panel-crontab > .table > thead > tr > td:first-child,
+.panel-crontab > .table > tbody > tr > td:first-child,
+.panel-crontab > .table > tfoot > tr > td:first-child {
+	padding-left: 15px;
+}
+
+.panel-crontab > .table > thead > tr > th:last-child,
+.panel-crontab > .table > tbody > tr > th:last-child,
+.panel-crontab > .table > tfoot > tr > th:last-child,
+.panel-crontab > .table > thead > tr > td:last-child,
+.panel-crontab > .table > tbody > tr > td:last-child,
+.panel-crontab > .table > tfoot > tr > td:last-child {
+	padding-right: 15px;
 }
