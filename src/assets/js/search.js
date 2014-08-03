@@ -20,25 +20,41 @@ var SearchService = function(searchData) {
 				words[i] = words[i].replace(/([.*+?^${}()|\[\]\/\\])/g, "\\$1");
 			}
 
-			// Put together a regexp
-			var regex = new RegExp('(' + words.join('.*?') + ')', 'ig');
-
+			// Put regexps together
+			var regexAll = new RegExp('(' + words.join('.*?') + ')', 'ig');
+			var regexPartial = new RegExp('(' + words.join('|') + ')', 'ig');
+			
 			// Hide unmatched jobs and highlight search terms
 			tableRows.each(function() {
 				var tableRow = $(this);
+				var matchedAllWords = false;
+				
+				var searchableText = $('td[data-searchable=1]', tableRow).map(function() {
+					return $.trim($(this).text());
+				}).get().join(' ');
+				
+				// All words should be found looking across table columns
+				if (regexAll.test(searchableText)) {
+					matchedAllWords = true;
+				}
 				
 				$('td[data-searchable=1]', tableRow).each(function(i, element) {
+					// Reset highlighting
 					$(element).highlightRegex(undefined, highlightOptions);
 					
-					if (regex.test($(element).text())) {
+					// Highlight those words found in current table column
+					if (matchedAllWords && regexPartial.test($(element).text())) {
 						// Highlight matched text
-						$(element).highlightRegex(regex, highlightOptions);
-						tableRow.show();
+						$(element).highlightRegex(regexPartial, highlightOptions);
 						matchedTableRows++;
-					} else {
-						tableRow.hide();
 					}
 				});
+				
+				if (matchedAllWords) {
+					tableRow.show();
+				} else {
+					tableRow.hide();
+				}
 			});
 			
 			if (matchedTableRows) {
