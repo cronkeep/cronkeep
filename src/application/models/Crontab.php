@@ -183,7 +183,7 @@ class Crontab implements \IteratorAggregate
 			throw new \RuntimeException('There has been an error reading the crontab.');
 		}
 		
-		$this->_rawTable = trim($process->getOutput());
+		$this->_rawTable = $process->getOutput();
 		
 		return $this;
 	}

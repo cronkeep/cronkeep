@@ -48,10 +48,9 @@
 					<?php endif; ?>
 				</td>
 				<td>
-					<div class="btn-group pull-right">
+					<div class="btn-group pull-right hidden-xs">
 						<button type="button" class="btn btn-success job-run" title="Run Job Now"
-								data-hash="<?php echo $job->getHash() ?>" data-loading-text="Starting..."
-								autocomplete="off">
+								data-loading-text="Starting..." autocomplete="off">
 							<span class="glyphicon glyphicon-play"></span> Run
 						</button>
 						<button type="button" class="btn btn-success dropdown-toggle"
@@ -62,11 +61,34 @@
 						<ul class="dropdown-menu" role="menu">
 							<li class="menu-item-resume <?php echo $job->isPaused() ? 'show' : 'hidden' ?>">
 								<a href="#" title="Resume Job Schedule" class="job-resume">
-									<span class="glyphicon glyphicon-off"></span> Resume Schedule</a>
+									<span class="glyphicon glyphicon-repeat"></span> Resume Schedule</a>
 							</li>
 							<li class="menu-item-pause <?php echo $job->isPaused() ? 'hidden' : 'show' ?>">
 								<a href="#" title="Pause Job Schedule" class="job-pause">
-									<span class="glyphicon glyphicon-off"></span> Pause Schedule</a>
+									<span class="glyphicon glyphicon-pause"></span> Pause Schedule</a>
+							</li>
+							<li>
+								<a href="#" title="Permanently Delete Job" class="job-confirm-delete">
+									<span class="glyphicon glyphicon-remove"></span> Delete</a>
+							</li>
+						</ul>
+					</div>
+					<div class="btn-group pull-right visible-xs">
+						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" role="menu">
+							<li>
+								<a href="#" title="Run Job Now" class="job-run">
+									<span class="glyphicon glyphicon-play"></span> Run</a>
+							</li>
+							<li class="menu-item-resume <?php echo $job->isPaused() ? 'show' : 'hidden' ?>">
+								<a href="#" title="Resume Job Schedule" class="job-resume">
+									<span class="glyphicon glyphicon-repeat"></span> Resume Schedule</a>
+							</li>
+							<li class="menu-item-pause <?php echo $job->isPaused() ? 'hidden' : 'show' ?>">
+								<a href="#" title="Pause Job Schedule" class="job-pause">
+									<span class="glyphicon glyphicon-pause"></span> Pause Schedule</a>
 							</li>
 							<li>
 								<a href="#" title="Permanently Delete Job" class="job-confirm-delete">
