@@ -29,6 +29,10 @@ var SearchService = function(searchData) {
 				var tableRow = $(this);
 				var matchedAllWords = false;
 				
+				// Prepare RegExp objects for reuse (reset lastIndex)
+				regexAll.lastIndex = 0;
+				regexPartial.lastIndex = 0;
+				
 				var searchableText = $('td[data-searchable=1]', tableRow).map(function() {
 					return $.trim($(this).text());
 				}).get().join(' ');
