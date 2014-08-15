@@ -33,7 +33,7 @@ class SystemUser
 					trim($process->getErrorOutput())));
 			}
 			
-			$this->_username = $process->getOutput();
+			$this->_username = trim($process->getOutput());
 		}
 		
 		return $this->_username;
