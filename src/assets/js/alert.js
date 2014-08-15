@@ -23,4 +23,12 @@ var AlertService = function(content, alertClass) {
 		alertArea.empty().append(alert);
 		return this;
 	};
+	
+	// "Keep reading" button used for alerts with large amounts of text
+	$('.alert a.keep-reading').click(function() {
+		var alert = $(this).parents('.alert').first();
+		$(this).removeClass('visible-xs-inline').hide();
+		$('span.hidden-xs', alert).removeClass('hidden-xs').addClass('visible');
+		$('p.hidden-xs', alert).removeClass('hidden-xs').addClass('visible');
+	});
 };
