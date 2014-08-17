@@ -31,12 +31,27 @@ class Layout extends \Slim\View
 	 */
 	public function render($template, $data = null)
 	{
+		$data = array_merge(array('view' => $this, $data));
+		
 		$viewContent = parent::render($template, $data);
 		
 		return parent::render($this->_layoutFile, array(
+			'view'	  => $this,
 			'content' => $viewContent,
 			'vars'	  => $this->_getVarsForOutput()
 		));
+	}
+	
+	/**
+	 * Renders template.
+	 * 
+	 * @param string $template
+	 * @param array $data
+	 * @return string
+	 */
+	public function partial($template, $data = null)
+	{
+		return parent::render($template, $data);
 	}
 	
 	/**

@@ -6,8 +6,8 @@ echo "Installing application stack..."
 apt-get install -y apache2 libapache2-mod-php5 screen git
 
 echo "Configuring virtual host..."
-cp /var/www/cronman/provision/config/cronman.conf /etc/apache2/sites-available
-a2ensite cronman
+cp /var/www/cronkeep/provision/config/cronkeep.conf /etc/apache2/sites-available
+a2ensite cronkeep
 a2enmod rewrite
 service apache2 reload
 
@@ -22,6 +22,6 @@ php5enmod xdebug
 service apache2 reload
 
 echo "Installing test crontab..."
-crontab -u www-data /var/www/cronman/provision/config/crontabfile
+crontab -u www-data /var/www/cronkeep/provision/config/crontabfile
 
 echo "Finished provisioning."

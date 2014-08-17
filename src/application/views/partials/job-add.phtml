@@ -1,0 +1,143 @@
+<?php
+$weekDays = array('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
+$days = range(1, 31);
+$months = array(1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April', 5 => 'May', 6 => 'June',
+	7 => 'July', 8 => 'August', 9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December');
+?>
+<div class="modal fade" id="job-add" tabindex="-1" role="dialog" aria-labelledby="job-add-title" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="job-add-title">Add Job</h4>
+			</div>
+			<div class="modal-body">
+				<ul class="nav nav-pills">
+					<li class="active"><a href="#">Simple</a></li>
+					<li><a href="#">Advanced</a></li>
+				</ul>
+				<form class="job-add-form" role="form">
+					<div class="form-group">
+						<label for="command">Run this command</label>
+						<textarea class="form-control" rows="2" id="command"></textarea>
+					</div>
+					<div class="row">
+						<div class="col-md-2">Pick time</div>
+						<div class="col-md-10">
+							<div class="radio">
+								<label>
+									<input type="radio" name="time" value="every-minute" checked>
+									Every minute of every hour
+								</label>
+							</div>
+							<div class="radio">
+								<label>
+									<input type="radio" name="time" value="every-minute" checked>
+									Every hour
+								</label>
+							</div>
+							<ul class="list-unstyled list-minutes">
+								<li>
+									<input type="text" class="form-control input-minute"
+										   placeholder="m" maxlength="2">
+								</li>
+								<li>
+									<input type="text" class="form-control input-hour"
+										   placeholder="h" maxlength="2"> :
+									<input type="text" class="form-control input-minute"
+										   placeholder="m" maxlength="2">
+								</li>
+							</ul>
+							<div class="radio">
+								<label>
+									<input type="radio" name="time" value="specific-times">
+									Specific times during the day
+								</label>
+							</div>
+							<ul class="list-unstyled list-specific-times">
+								<li>
+									<input type="text" class="form-control input-hour"
+										   placeholder="h" maxlength="2"> :
+									<input type="text" class="form-control input-minute"
+										   placeholder="m" maxlength="2">
+								</li>
+								<li>
+									<input type="text" class="form-control input-hour"
+										   placeholder="h" maxlength="2"> :
+									<input type="text" class="form-control input-minute"
+										   placeholder="m" maxlength="2">
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">Repeat</div>
+						<div class="col-md-10">
+							<select class="form-control repeat" name="repeat" autocomplete="off">
+								<option value="daily">Daily</option>
+								<option value="weekly">Weekly</option>
+								<option value="monthly">Monthly</option>
+								<option value="yearly">Yearly</option>
+							</select>
+						</div>
+					</div>
+					<div class="row row-customize-weekly hidden">
+						<div class="col-md-2"></div>
+						<div class="col-md-10">
+							<label>Pick day of week</label>
+							<div>
+								<div class="btn-group" data-toggle="buttons">
+									<?php foreach ($weekDays as $weekDay): ?>
+										<label class="btn btn-default">
+											<input type="checkbox" name="weekday"><?php echo $weekDay ?>
+										</label>
+									<?php endforeach; ?>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row row-customize-monthly hidden">
+						<div class="col-md-2"></div>
+						<div class="col-md-10">
+							<label>Pick days</label>
+							<div>
+								<div class="btn-group btn-group-day-picker">
+									<div class="btn-group" data-toggle="buttons">
+										<?php foreach ($days as $day): ?>
+											<label class="btn btn-default">
+												<input type="checkbox" name="day"
+													   value="<?php echo $day ?>">
+												<?php echo $day ?>
+											</label>
+											<?php if ($day % 7 == 0): ?>
+												</div>
+												<div class="btn-group" data-toggle="buttons">
+											<?php endif; ?>
+										<?php endforeach; ?>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row row-customize-yearly hidden">
+						<div class="col-md-2"></div>
+						<div class="col-md-10">
+							<div>
+								<label>Pick dates</label>
+								<select class="form-control month" name="month">
+									<?php foreach ($months as $i => $month): ?>
+										<option value="<?php echo $i ?>"><?php echo $month ?></option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" data-loading-text="Saving...">Save</button>
+			</div>
+		</div>
+	</div>
+</div>

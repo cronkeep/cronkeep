@@ -71,12 +71,24 @@ var CrontabService = function() {
 		});
 	};
 	
+	// Assign handlers
 	$('body').on('click', '.job-add', function() {
 		// Prevent button from retaining focus once clicked
 		$(this).blur();
+		$('#job-add').modal();
 	});
 	
-	// Assign handlers
+	$('body').on('click', '.repeat', function() {
+		var selectedRepeat = $(this).val();
+		$.each(['weekly', 'monthly', 'yearly'], function (i, repeat) {
+			if (repeat === selectedRepeat) {
+				$('.row-customize-' + repeat).addClass('show').removeClass('hidden');
+			} else {
+				$('.row-customize-' + repeat).addClass('hidden').removeClass('show');
+			}
+		});
+	});
+	
 	$('body').on('click', '.job-run', function() {
 		var job = $(this).closest('tr');
 		self.runJob(job);

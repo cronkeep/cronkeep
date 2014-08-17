@@ -4,6 +4,9 @@ body {
 .panel-crontab {
 	margin-top: 25px;
 }
+.panel-crontab > .table {
+	margin-top: 10px;
+}
 .empty-search {
 	padding: 15px;
 }
@@ -39,9 +42,6 @@ mark, .mark {
 	padding: 0.2em 0;
 }
 
-.panel-crontab > .table {
-	margin-top: 10px;
-}
 /* Align data and search field's edges */
 .panel-crontab > .table > thead > tr > th:first-child,
 .panel-crontab > .table > tbody > tr > th:first-child,
@@ -59,4 +59,63 @@ mark, .mark {
 .panel-crontab > .table > tbody > tr > td:last-child,
 .panel-crontab > .table > tfoot > tr > td:last-child {
 	padding-right: 15px;
+}
+
+/* Job add form */
+.job-add-form {
+	margin-top: 30px;
+}
+.job-add-form .input-hour, .job-add-form .input-minute {
+	width: 45px;
+	display: inline-block;
+}
+.job-add-form .list-specific-times {
+	margin-left: 25px;
+}
+.job-add-form .list-specific-times > li {
+	margin-bottom: 10px;
+}
+.job-add-form .row-customize-weekly,
+.job-add-form .row-customize-monthly,
+.job-add-form .row-customize-yearly {
+	margin-top: 20px;
+}
+
+/* Nested button groups */
+.btn-group > .btn-group {
+    clear: both;
+	margin-left: 0px !important;
+}
+	.btn-group > .btn-group:not(:first-child) > .btn {
+		margin-top: -1px;
+	}
+	/* Top left corner */
+	.btn-group > .btn-group:first-child > .btn:first-child {
+		border-top-left-radius: 1;
+		border-bottom-left-radius: 0;
+	}
+	/* Top right corner */
+	.btn-group > .btn-group:first-child > .btn:last-child {
+		border-top-right-radius: 1;
+		border-bottom-right-radius: 0;
+	}
+	/* Bottom left corner */
+	.btn-group > .btn-group:last-child > .btn:first-child {
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 1;
+	}
+	/* Bottom right corner */
+	.btn-group > .btn-group:last-child > .btn:last-child {
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 1;
+	}
+
+.job-add-form .repeat {
+	width: 100px;
+}
+.job-add-form .month {
+	width: 150px;
+}
+.btn-group-day-picker .btn {
+	width: 42px;
 }

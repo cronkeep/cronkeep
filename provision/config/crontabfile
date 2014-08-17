@@ -1,6 +1,6 @@
 # Make sure there's a trailing newline at the end of the file
 # Long-running process test
-0 * * * * /var/www/cronman/tests/long-running.sh
+0 * * * * /var/www/cronkeep/tests/long-running.sh
 # use /bin/bash to run commands, instead of the default /bin/sh
 SHELL=/bin/bash
 # mail any output to `paul', no matter whose crontab this is

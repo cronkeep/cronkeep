@@ -1,5 +1,5 @@
 {
-    "name": "ghervan/cronman",
+    "name": "bogdanghervan/cronkeep",
     "require": {
         "slim/slim": "2.*",
 		"symfony/process": "2.5.2",

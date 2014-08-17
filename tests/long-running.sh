@@ -7,7 +7,7 @@
   while [ $i -le 3000 ]
   do
     ((i++))
-    date >> /var/www/cronman/output-$$.txt
+    date >> /var/www/cronkeep/output-$$.txt
     sleep 1
   done 
 

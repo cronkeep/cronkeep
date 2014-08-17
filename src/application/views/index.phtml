@@ -102,22 +102,5 @@
 		</tbody>
 	</table>
 </div>
-<div class="modal fade" id="job-delete-confirmation" tabindex="-1" role="dialog"
-	 aria-labelledby="job-delete-confirmation-title" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title" id="job-delete-confirmation-title">Delete the job?</h4>
-			</div>
-			<div class="modal-body">
-				You are about to delete this job from crontab.
-				Since this can't be undone, please confirm before proceeding.
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-				<button type="button" class="btn btn-primary btn-danger job-delete">Delete Job</button>
-			</div>
-		</div>
-	</div>
-</div>
+<?php echo $view->partial('partials/job-delete.phtml') ?>
+<?php echo $view->partial('partials/job-add.phtml') ?>
