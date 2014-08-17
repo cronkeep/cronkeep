@@ -10,6 +10,9 @@ body {
 .empty-search {
 	padding: 15px;
 }
+.job-add {
+	margin-top: 20px;
+}
 
 .table > thead > tr > td.inactive,
 .table > tbody > tr > td.inactive,
