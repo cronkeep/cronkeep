@@ -11,6 +11,10 @@ a2ensite cronkeep
 a2enmod rewrite
 service apache2 reload
 
+echo "Installing Composer..."
+curl -sS https://getcomposer.org/installer | php
+mv composer.phar /usr/local/bin/composer
+
 echo "Installing Xdebug..."
 apt-get install -y php5-dev
 pecl install xdebug
