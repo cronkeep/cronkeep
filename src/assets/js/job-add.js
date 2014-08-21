@@ -8,7 +8,8 @@ var AddJobDialog = function() {
 			var timeInputDisabled = !radioChecked;
 			
 			var radioContainer = $(this).parents('.radio-time');
-			$('.input-hour, .input-minute', radioContainer).prop('disabled', timeInputDisabled);
+			$('.input-hour, .input-minute, .input-recur', radioContainer)
+				.prop('disabled', timeInputDisabled);
 		});		
 	};
 	
