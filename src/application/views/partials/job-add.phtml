@@ -21,57 +21,71 @@ $months = array(1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April', 5 =
 						<label for="command">Run this command</label>
 						<textarea class="form-control" rows="2" id="command"></textarea>
 					</div>
-					<div class="row">
-						<div class="col-md-2">Pick time</div>
+					<div class="row section-pick-time">
+						<div class="col-md-2">
+							<span class="legend">Pick time</span>
+						</div>
 						<div class="col-md-10">
-							<div class="radio">
+							<!-- Specific time in the day -->
+							<div class="radio radio-time radio-specific-time">
 								<label>
-									<input type="radio" name="time" value="every-minute" checked>
+									<input type="radio" name="time" value="specific-time" checked
+										   autocomplete="off">
+									Specific time in the day
+								</label>
+								
+								<ul class="list-unstyled list-specific-time">
+									<li>
+										<input type="text" class="form-control input-hour"
+											   placeholder="h" maxlength="2" autocomplete="off"> :
+										<input type="text" class="form-control input-minute"
+											   placeholder="m" maxlength="2" autocomplete="off">
+									</li>
+								</ul>
+							</div>
+							
+							<!-- Hourly at minute {min} -->
+							<div class="radio radio-time radio-every-hour">
+								<input type="radio" name="time" value="every-hour"
+									   autocomplete="off">
+								
+								<span>
+									Every 
+									<input type="text" class="form-control input-hour"
+										   maxlength="2" autocomplete="off" disabled value="1">
+									hours at minute
+									<input type="text" class="form-control input-minute"
+										   maxlength="2" autocomplete="off" disabled value="0">
+								</span>
+							</div>
+							
+							<!-- Every {min} minutes -->
+							<div class="radio radio-time radio-every-minute">
+								<input type="radio" name="time" value="every-minute"
+									   autocomplete="off">
+								
+								<span>
+									Every
+									<input type="text" class="form-control input-minute"
+										   maxlength="2" autocomplete="off" value="1" disabled>
+									minutes
+								</span>
+							</div>
+							
+							<!-- Every minute of every hour -->
+<!--							<div class="radio radio-time">
+								<label>
+									<input type="radio" name="time" value="every-minute"
+										   autocomplete="off">
 									Every minute of every hour
 								</label>
-							</div>
-							<div class="radio">
-								<label>
-									<input type="radio" name="time" value="every-minute" checked>
-									Every hour
-								</label>
-							</div>
-							<ul class="list-unstyled list-minutes">
-								<li>
-									<input type="text" class="form-control input-minute"
-										   placeholder="m" maxlength="2">
-								</li>
-								<li>
-									<input type="text" class="form-control input-hour"
-										   placeholder="h" maxlength="2"> :
-									<input type="text" class="form-control input-minute"
-										   placeholder="m" maxlength="2">
-								</li>
-							</ul>
-							<div class="radio">
-								<label>
-									<input type="radio" name="time" value="specific-times">
-									Specific times during the day
-								</label>
-							</div>
-							<ul class="list-unstyled list-specific-times">
-								<li>
-									<input type="text" class="form-control input-hour"
-										   placeholder="h" maxlength="2"> :
-									<input type="text" class="form-control input-minute"
-										   placeholder="m" maxlength="2">
-								</li>
-								<li>
-									<input type="text" class="form-control input-hour"
-										   placeholder="h" maxlength="2"> :
-									<input type="text" class="form-control input-minute"
-										   placeholder="m" maxlength="2">
-								</li>
-							</ul>
+							</div>-->
 						</div>
 					</div>
-					<div class="row">
-						<div class="col-md-2">Repeat</div>
+					<div class="row section-repeat">
+						<div class="col-md-2">
+							<span class="legend">Repeat</span>
+						</div>
 						<div class="col-md-10">
 							<select class="form-control repeat" name="repeat" autocomplete="off">
 								<option value="daily">Daily</option>
@@ -81,31 +95,36 @@ $months = array(1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April', 5 =
 							</select>
 						</div>
 					</div>
+					
+					<!-- Repeat: Weekly -->
 					<div class="row row-customize-weekly hidden">
 						<div class="col-md-2"></div>
 						<div class="col-md-10">
-							<label>Pick day of week</label>
+							<span class="hint">Pick day of week</span>
 							<div>
 								<div class="btn-group" data-toggle="buttons">
 									<?php foreach ($weekDays as $weekDay): ?>
 										<label class="btn btn-default">
-											<input type="checkbox" name="weekday"><?php echo $weekDay ?>
+											<input type="checkbox" name="weekday"
+												   autocomplete="off"><?php echo $weekDay ?>
 										</label>
 									<?php endforeach; ?>
 								</div>
 							</div>
 						</div>
 					</div>
+					
+					<!-- Repeat: Monthly -->
 					<div class="row row-customize-monthly hidden">
 						<div class="col-md-2"></div>
 						<div class="col-md-10">
-							<label>Pick days</label>
+							<span class="hint">Pick days</span>
 							<div>
 								<div class="btn-group btn-group-day-picker">
 									<div class="btn-group" data-toggle="buttons">
 										<?php foreach ($days as $day): ?>
 											<label class="btn btn-default">
-												<input type="checkbox" name="day"
+												<input type="checkbox" name="day" autocomplete="off"
 													   value="<?php echo $day ?>">
 												<?php echo $day ?>
 											</label>
@@ -119,16 +138,22 @@ $months = array(1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April', 5 =
 							</div>
 						</div>
 					</div>
+					
+					<!-- Repeat: Yearly -->
 					<div class="row row-customize-yearly hidden">
 						<div class="col-md-2"></div>
 						<div class="col-md-10">
 							<div>
-								<label>Pick dates</label>
-								<select class="form-control month" name="month">
-									<?php foreach ($months as $i => $month): ?>
-										<option value="<?php echo $i ?>"><?php echo $month ?></option>
-									<?php endforeach; ?>
-								</select>
+								<span class="hint">Pick dates</span>
+								<div class="clearfix">
+									<select class="form-control month pull-left" name="month" autocomplete="off">
+										<?php foreach ($months as $i => $month): ?>
+											<option value="<?php echo $i ?>"><?php echo $month ?></option>
+										<?php endforeach; ?>
+									</select>
+									<input type="text" class="form-control input-day pull-left"
+										   maxlength="2" autocomplete="off" value="1">
+								</div>
 							</div>
 						</div>
 					</div>

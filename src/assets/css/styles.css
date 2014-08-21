@@ -86,19 +86,65 @@ mark, .mark {
 .job-add-form {
 	margin-top: 30px;
 }
-.job-add-form .input-hour, .job-add-form .input-minute {
+.job-add-form .legend {
+	font-weight: 700;
+}
+.job-add-form .hint {
+	display: inline-block;
+	margin-bottom: 5px;
+}
+.job-add-form .input-hour, .job-add-form .input-minute, .job-add-form .input-day {
 	width: 45px;
 	display: inline-block;
 }
-.job-add-form .list-specific-times {
-	margin-left: 25px;
+/* Pick time section */
+.job-add-form .section-pick-time {
+	margin-top: 25px;
 }
-.job-add-form .list-specific-times > li {
+
+.radio-time + .radio-time {
+	margin-top: 15px;
+}
+.job-add-form .radio-specific-time {
+	margin-top: 0;
+}
+.job-add-form .list-specific-time {
+	margin: 10px 0 0 25px;
+}
+.job-add-form .list-specific-time > li {
 	margin-bottom: 10px;
+}
+.job-add-form .radio-every-hour input[type="radio"] {
+	position: absolute;
+	top: 7px;
+	left: 20px;
+}
+.job-add-form .radio-every-hour span {
+	margin-left: 20px;
+	cursor: pointer;
+}
+.job-add-form .radio-every-minute input[type="radio"] {
+	position: absolute;
+	top: 7px;
+	left: 20px;
+}
+.job-add-form .radio-every-minute span {
+	margin-left: 20px;
+	cursor: pointer;
+}
+.job-add-form .radio-every-hour .input-hour,
+.job-add-form .radio-every-hour .input-minute,
+.job-add-form .radio-every-minute .input-minute {
+	margin: 0 5px;
 }
 .job-add-form .row-customize-weekly,
 .job-add-form .row-customize-monthly,
 .job-add-form .row-customize-yearly {
+	margin-top: 20px;
+}
+
+/* Repeat section */
+.job-add-form .section-repeat {
 	margin-top: 20px;
 }
 
