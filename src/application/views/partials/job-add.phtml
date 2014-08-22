@@ -1,9 +1,3 @@
-<?php
-$weekDays = array('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
-$days = range(1, 31);
-$months = array(1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April', 5 => 'May', 6 => 'June',
-	7 => 'July', 8 => 'August', 9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December');
-?>
 <div class="modal fade" id="job-add" tabindex="-1" role="dialog" aria-labelledby="job-add-title" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -12,152 +6,23 @@ $months = array(1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April', 5 =
 				<h4 class="modal-title" id="job-add-title">Add Job</h4>
 			</div>
 			<div class="modal-body">
-				<ul class="nav nav-pills">
-					<li class="active"><a href="#">Simple</a></li>
-					<li><a href="#">Advanced</a></li>
+				<ul class="nav nav-pills" role="tablist">
+					<li class="active">
+						<a href="#simple" role="tab" data-toggle="pill">Simple</a>
+					</li>
+					<li>
+						<a href="#advanced" role="tab" data-toggle="pill">Advanced</a>
+					</li>
 				</ul>
-				<form class="job-add-form" role="form">
-					<div class="form-group">
-						<label for="command">Run this command</label>
-						<textarea class="form-control" rows="2" id="command"></textarea>
-					</div>
-					<div class="row section-pick-time">
-						<div class="col-md-2">
-							<span class="legend">Pick time</span>
-						</div>
-						<div class="col-md-10">
-							<!-- Specific time in the day -->
-							<div class="radio radio-time radio-specific-time">
-								<label>
-									<input type="radio" name="time" value="specific-time" checked
-										   autocomplete="off">
-									Specific time in the day
-								</label>
-								
-								<ul class="list-unstyled list-specific-time">
-									<li>
-										<input type="number" class="form-control input-hour"
-											   placeholder="h" maxlength="2" autocomplete="off"> :
-										<input type="number" class="form-control input-minute"
-											   placeholder="m" maxlength="2" autocomplete="off">
-									</li>
-								</ul>
-							</div>
-							
-							<!-- Hourly at minute {min} -->
-							<div class="radio radio-time radio-every-hour">
-								<input type="radio" name="time" value="every-hour"
-									   autocomplete="off">
-								
-								<span>
-									Every 
-									<input type="number" class="form-control input-recur"
-										   maxlength="2" autocomplete="off" disabled value="1">
-									hours at minute
-									<input type="number" class="form-control input-minute"
-										   maxlength="2" autocomplete="off" disabled value="0">
-								</span>
-							</div>
-							
-							<!-- Every {min} minutes -->
-							<div class="radio radio-time radio-every-minute">
-								<input type="radio" name="time" value="every-minute"
-									   autocomplete="off">
-								
-								<span>
-									Every
-									<input type="number" class="form-control input-recur"
-										   maxlength="2" autocomplete="off" value="1" disabled>
-									minutes
-								</span>
-							</div>
-							
-							<!-- Every minute of every hour -->
-<!--							<div class="radio radio-time">
-								<label>
-									<input type="radio" name="time" value="every-minute"
-										   autocomplete="off">
-									Every minute of every hour
-								</label>
-							</div>-->
-						</div>
-					</div>
-					<div class="row section-repeat">
-						<div class="col-md-2">
-							<span class="legend">Repeat</span>
-						</div>
-						<div class="col-md-10">
-							<select class="form-control repeat" name="repeat" autocomplete="off">
-								<option value="daily">Daily</option>
-								<option value="weekly">Weekly</option>
-								<option value="monthly">Monthly</option>
-								<option value="yearly">Yearly</option>
-							</select>
-						</div>
+				<div class="tab-content">
+					<div class="tab-pane active" id="simple">
+						<?php echo $view->partial('partials/job-add-simple.phtml') ?>
 					</div>
 					
-					<!-- Repeat: Weekly -->
-					<div class="row row-customize-weekly hidden">
-						<div class="col-md-2"></div>
-						<div class="col-md-10">
-							<span class="hint">Pick day of week</span>
-							<div>
-								<div class="btn-group" data-toggle="buttons">
-									<?php foreach ($weekDays as $weekDay): ?>
-										<label class="btn btn-default">
-											<input type="checkbox" name="weekday"
-												   autocomplete="off"><?php echo $weekDay ?>
-										</label>
-									<?php endforeach; ?>
-								</div>
-							</div>
-						</div>
+					<div class="tab-pane" id="advanced">
+						<?php echo $view->partial('partials/job-add-advanced.phtml') ?>
 					</div>
-					
-					<!-- Repeat: Monthly -->
-					<div class="row row-customize-monthly hidden">
-						<div class="col-md-2"></div>
-						<div class="col-md-10">
-							<span class="hint">Pick days</span>
-							<div>
-								<div class="btn-group btn-group-day-picker">
-									<div class="btn-group" data-toggle="buttons">
-										<?php foreach ($days as $day): ?>
-											<label class="btn btn-default">
-												<input type="checkbox" name="day" autocomplete="off"
-													   value="<?php echo $day ?>">
-												<?php echo $day ?>
-											</label>
-											<?php if ($day % 7 == 0): ?>
-												</div>
-												<div class="btn-group" data-toggle="buttons">
-											<?php endif; ?>
-										<?php endforeach; ?>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					
-					<!-- Repeat: Yearly -->
-					<div class="row row-customize-yearly hidden">
-						<div class="col-md-2"></div>
-						<div class="col-md-10">
-							<div>
-								<span class="hint">Pick dates</span>
-								<div class="clearfix">
-									<select class="form-control month pull-left" name="month" autocomplete="off">
-										<?php foreach ($months as $i => $month): ?>
-											<option value="<?php echo $i ?>"><?php echo $month ?></option>
-										<?php endforeach; ?>
-									</select>
-									<input type="text" class="form-control input-day pull-left"
-										   maxlength="2" autocomplete="off" value="1">
-								</div>
-							</div>
-						</div>
-					</div>
-				</form>
+				</div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

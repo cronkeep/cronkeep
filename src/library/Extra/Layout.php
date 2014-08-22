@@ -51,6 +51,7 @@ class Layout extends \Slim\View
 	 */
 	public function partial($template, $data = null)
 	{
+		$data = array_merge(array('view' => $this, $data));
 		return parent::render($template, $data);
 	}
 	

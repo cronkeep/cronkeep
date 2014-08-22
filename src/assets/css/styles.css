@@ -82,11 +82,13 @@ mark, .mark {
 	padding-right: 15px;
 }
 
-/* Job add form */
+/* Add Job form: Simple */
 .job-add-form {
 	margin-top: 30px;
 }
 .job-add-form .legend {
+	display: inline-block;
+	margin-bottom: 5px;
 	font-weight: 700;
 }
 .job-add-form .hint {
@@ -205,4 +207,20 @@ mark, .mark {
 }
 .btn-group-day-picker .btn {
 	width: 42px;
+}
+
+/* Add Job form: Advanced */
+.job-add-form .section-expression {
+	margin-top: 25px;
+}
+.job-add-form .expression-part {
+	width: 100%;
+	padding-left: 20px;
+}
+.job-add-form .expression-part .input-group-addon {
+	width: 110px;
+	text-align: left;
+}
+.expression-part + .expression-part {
+	margin-top: 15px;
 }
