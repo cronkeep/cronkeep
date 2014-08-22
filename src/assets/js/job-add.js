@@ -13,7 +13,7 @@ var AddJobDialog = function() {
 		});		
 	};
 	
-	$('body').on('click', '.repeat', function() {
+	$('body').on('change', '.repeat', function() {
 		var selectedRepeat = $(this).val();
 		$.each(['weekly', 'monthly', 'yearly'], function (i, repeat) {
 			if (repeat === selectedRepeat) {

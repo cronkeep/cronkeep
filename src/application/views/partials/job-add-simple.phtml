@@ -8,10 +8,45 @@ $months = array(
 );
 ?>
 <form class="job-add-form" role="form">
+<!--	<div class="form-group">
+		<input type="text" class="form-control" autocomplete="off" placeholder="Job Name">
+	</div>
 	<div class="form-group">
-		<span class="legend">Run this command</span>
+		<textarea class="form-control" rows="2" id="command" placeholder="Command"></textarea>
+	</div>-->
+	<div class="row">
+		<div class="col-md-2">
+			<span class="legend">Job Name</span>
+		</div>
+		<div class="col-md-10">
+			<input type="text" class="form-control" autocomplete="off">
+		</div>
+	</div>
+	<div class="row" style="margin-top: 20px;">
+		<div class="col-md-2">
+			<span class="legend">Command</span>
+		</div>
+		<div class="col-md-10">
+			<textarea class="form-control" rows="2" id="command"></textarea>
+		</div>
+	</div></fieldset>
+<!--	<div class="form-group">
+		<span class="legend">Job Name</span>
 		<textarea class="form-control" rows="2" id="command"></textarea>
 	</div>
+	<div class="form-group" style="margin-top: 20px;">
+		<span class="legend">Run this command</span>
+		<textarea class="form-control" rows="2" id="command"></textarea>
+	</div>-->
+<!--	<ul class="nav nav-tabs" role="tablist">
+		<li class="active">
+			<a href="#simple" role="tab" data-toggle="tab">Simple</a>
+		</li>
+		<li>
+			<a href="#advanced" role="tab" data-toggle="tab">Advanced</a>
+		</li>
+	</ul>-->
+	
 	<div class="row section-pick-time">
 		<div class="col-md-2">
 			<span class="legend">Pick time</span>
