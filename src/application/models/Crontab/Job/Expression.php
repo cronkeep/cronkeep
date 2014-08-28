@@ -58,6 +58,134 @@ class Expression
 	);
 	
 	/**
+	 * Special time specification "nicknames".
+	 * @todo Support "@reboot".
+	 * 
+	 * @var array
+	 */
+	protected static $_shorthands = array(
+		'@yearly'	=> '0 0 1 1 *',
+		'@annually' => '0 0 1 1 *',
+		'@monthly'	=> '0 0 1 * *',
+		'@weekly'	=> '0 0 * * 0',
+		'@daily'	=> '0 0 * * *',
+		'@hourly'	=> '0 * * * *'
+	);
+	
+	/**
+	 * Supported month literals.
+	 * 
+	 * @var array
+	 */
+	protected static $_months = array(
+		'jan' => 1,
+		'feb' => 2,
+		'mar' => 3,
+		'apr' => 4,
+		'may' => 5,
+		'jun' => 6,
+		'jul' => 7,
+		'aug' => 8,
+		'sep' => 9,
+		'oct' => 10,
+		'nov' => 11,
+		'dec' => 12,
+	);
+	
+	/**
+	 * Supported day of week literals.
+	 * 
+	 * @var array
+	 */
+	protected static $_daysOfWeek = array(
+		'sun' => 0,
+		'mon' => 1,
+		'tue' => 2,
+		'wed' => 3,
+		'thu' => 4,
+		'fri' => 5,
+		'sat' => 6,
+		'sun' => 7
+	);
+	
+	/**
+	 * Parses expression given in literal form, builds an Expression object and returns it.
+	 * 
+	 * @param string $string
+	 * @return Expression
+	 * @throws \InvalidArgumentException
+	 */
+	public static function create($string)
+	{
+		$months = implode('|', array_keys(self::$_months));
+		$daysOfWeek = implode('|', array_keys(self::$_daysOfWeek));
+		$shorthands = implode('|', array_keys(self::$_shorthands));
+		
+		$pattern = "/
+			(?:^
+				(?P<minute>[\d\*\/\,\-\%]+)
+				\s
+				(?P<hour>[\d\*\/\,\-\%]+)
+				\s
+				(?P<dayOfMonth>[\d\*\/\,\-\%]+)
+				\s
+				(?P<month>[\d\*\/\,\-\%]+|$months)
+				\s
+				(?P<dayOfWeek>[\d\*\/\,\-\%]+|$daysOfWeek)
+			$) | (?:^
+				(?P<shorthand>$shorthands)
+			$)
+		$/ix";
+		
+		if (preg_match($pattern, $string, $matches)) {
+			if (isset($matches['shorthand']) && $matches['shorthand']) {
+				return self::create(self::$_shorthands[$matches['shorthand']]);
+			}
+			
+			$expression = new Expression();
+			foreach (array('minute', 'hour', 'dayOfMonth', 'month', 'dayOfWeek') as $part) {
+				// Expand lists
+				$matches[$part] = explode(',', $matches[$part]);
+				
+				// Separate range and step
+				foreach ($matches[$part] as $timeUnit) {
+					$shards = explode('/', $timeUnit);
+					
+					// Do we have a range *and* a step?
+					if (count($shards) > 1) {
+						$rangeLimits = explode('-', $shards[0]);
+						$expression->addPart($part, array(
+							'min'  => $rangeLimits[0],
+							'max'  => $rangeLimits[1],
+							'step' => $shards[1]
+						));
+					
+					// OK, we have just a list
+					} else {
+						$rangeLimits = explode('-', $shards[0]);
+						
+						// Do we have a range *or* a number?
+						if (count($rangeLimits) > 1) {
+							$expression->addPart($part, array(
+								'min'  => $rangeLimits[0],
+								'max'  => $rangeLimits[1]
+							));
+						
+						// OK, we have just a number
+						} else {
+							$expression->addPart($part, $rangeLimits[0]);
+						}
+					}
+				}
+			}
+			
+			return $expression;
+		}
+		
+		throw new \InvalidArgumentException(sprintf('Expression "%s" is not supported', $string));
+	}
+	
+	/**
 	 * Appends $value to given $part.
 	 * 
 	 * Example:
@@ -92,10 +220,10 @@ class Expression
 		
 		// Value is literal
 		} elseif (is_string($value)) {
-			// we may want to normalize $value in the future
 			if ($value == '*') {
 				$this->_parts[$part] = array();
 			} else {
+				// we may want to normalize $value in the future
 				$this->_parts[$part][] = $value;
 			}
 		
