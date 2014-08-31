@@ -3,11 +3,17 @@
     "require": {
         "slim/slim": "2.*",
 		"symfony/process": "2.5.2",
-		"entomb/slim-json-api": "dev-master"
+		"entomb/slim-json-api": "dev-master",
+		"zendframework/zend-form": "2.3.1",
+		"zendframework/zend-servicemanager": "2.3.1",
+		"zendframework/zend-view": "2.3.1",
+		"zendframework/zend-i18n": "2.3.1",
+		"zendframework/zend-escaper": "2.3.1"
     },
 	"autoload": {
 		"psr-4": {
 			"models\\": "application/models/",
+			"forms\\": "application/forms/",
 			"library\\": "library/"
 		}
 	}

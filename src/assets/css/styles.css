@@ -86,6 +86,9 @@ mark, .mark {
 .job-add-form {
 	margin-top: 30px;
 }
+.job-add-form .row + .row {
+	margin-top: 25px;
+}
 .job-add-form .legend {
 	display: inline-block;
 	margin-bottom: 5px;
@@ -95,7 +98,7 @@ mark, .mark {
 	display: inline-block;
 	margin-bottom: 5px;
 }
-.job-add-form #command {
+.job-add-form .command {
 	resize: vertical;
 	height: 70px;
 	min-height: 70px;
@@ -103,7 +106,7 @@ mark, .mark {
 .job-add-form .input-hour,
 .job-add-form .input-minute,
 .job-add-form .input-day,
-.job-add-form .input-recur {
+.job-add-form .input-step {
 	width: 45px;
 	display: inline-block;
 	/* Hide spinner specific to number inputs on Firefox */
@@ -117,10 +120,6 @@ mark, .mark {
 }
 
 /* Pick time section */
-.job-add-form .section-pick-time {
-	margin-top: 25px;
-}
-
 .radio-time + .radio-time {
 	margin-top: 15px;
 }
@@ -151,25 +150,17 @@ mark, .mark {
 	margin-left: 20px;
 	cursor: pointer;
 }
-.job-add-form .radio-every-hour .input-recur,
+.job-add-form .radio-every-hour .input-step,
 .job-add-form .radio-every-hour .input-minute,
-.job-add-form .radio-every-minute .input-recur {
+.job-add-form .radio-every-minute .input-step {
 	margin: 0 5px;
 }
 
 /* Repeat section */
-.job-add-form .row-customize-weekly,
-.job-add-form .row-customize-monthly,
-.job-add-form .row-customize-yearly {
-	margin-top: 20px;
-}
-.job-add-form .row-customize-yearly .input-day {
+.job-add-form .fieldset-yearly .input-day {
 	margin-left: 10px;
 }
 
-.job-add-form .section-repeat {
-	margin-top: 20px;
-}
 /* Nested button groups */
 .btn-group > .btn-group {
     clear: both;

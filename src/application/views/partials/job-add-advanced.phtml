@@ -1,18 +1,22 @@
+<?php
+/* @var $form \forms\AddJob\AdvancedForm */
+$form->prepare();
+?>
 <form class="job-add-form" role="form">
 	<div class="row">
 		<div class="col-md-2">
-			<span class="legend">Job Name</span>
+			<span class="legend"><?php echo $form->get('name')->getLabel() ?></span>
 		</div>
 		<div class="col-md-10">
-			<input type="text" class="form-control" autocomplete="off">
+			<?php echo $this->formText($form->get('name')) ?>
 		</div>
 	</div>
-	<div class="row" style="margin-top: 20px;">
+	<div class="row">
 		<div class="col-md-2">
-			<span class="legend">Time Expression</span>
+			<span class="legend"><?php echo $form->get('expression')->getLabel() ?></span>
 		</div>
 		<div class="col-md-10">
-			<input type="text" class="form-control" autocomplete="off" placeholder="">
+			<?php echo $this->formText($form->get('expression')) ?>
 			<p class="help-block">
 				You may peep at this 
 				<a href="https://linuxmoz.com/crontab-syntax-tutorial/" target="_blank"
@@ -20,16 +24,16 @@
 					tutorial on crons</a> or read
 				<a href="http://unixhelp.ed.ac.uk/CGI/man-cgi?crontab+5" target="_blank"
 				   title="UNIX man pages : crontab (5)">
-					the crontab man page</a> for a full walkthrough.
+					the crontab man page</a> for a full walkthrough on time expressions.
 			</p>
 		</div>
 	</div>
-	<div class="row" style="margin-top: 20px;">
+	<div class="row">
 		<div class="col-md-2">
-			<span class="legend">Command</span>
+			<span class="legend"><?php echo $form->get('command')->getLabel() ?></span>
 		</div>
 		<div class="col-md-10">
-			<textarea class="form-control" rows="2" id="command"></textarea>
+			<?php echo $this->formTextarea($form->get('command')) ?>
 		</div>
 	</div>
 </form>

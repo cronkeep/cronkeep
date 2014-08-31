@@ -4,6 +4,7 @@ require_once 'vendor/autoload.php';
 use \models\Crontab;
 use \models\SystemUser;
 use \models\At;
+use \forms\AddJob;
 
 $app = new \Slim\Slim(array(
 	'templates.path' => 'application/views',
@@ -15,19 +16,23 @@ $app = new \Slim\Slim(array(
 
 // Initialize layout when not in an AJAX context
 if (!$app->request->isXhr()) {
-	$app->view('\library\Extra\Layout');
+	$app->view('\library\App\Layout');
 }
 
 // Routes
 $app->get('/', function() use ($app) {
-	$crontab	= new Crontab();
-	$systemUser = new SystemUser();
+	$crontab	  = new Crontab();
+	$systemUser   = new SystemUser();
+	$simpleForm   = new AddJob\SimpleForm();
+	$advancedForm = new AddJob\AdvancedForm();
 	
 	$app->render('index.phtml', array(
-		'crontab'	 => $crontab,
-		'systemUser' => $systemUser,
+		'crontab'              => $crontab,
+		'systemUser'           => $systemUser,
 		'isAtCommandAvailable' => At::isAvailable(),
-		'atCommandErrorOutput' => At::getErrorOutput()
+		'atCommandErrorOutput' => At::getErrorOutput(),
+		'simpleForm'           => $simpleForm,
+		'advancedForm'         => $advancedForm
 	));
 });
 

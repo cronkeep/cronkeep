@@ -1,6 +1,6 @@
 var AddJobDialog = function() {
 	var form = $('#job-add');
-	var timeRadio = $('input[name="time"]', form);
+	var timeRadio = $('input[name="time[picker]"]', form);
 	
 	var toggleTimeInputs = function() {
 		timeRadio.each(function(i, radio) {			
@@ -8,7 +8,7 @@ var AddJobDialog = function() {
 			var timeInputDisabled = !radioChecked;
 			
 			var radioContainer = $(this).parents('.radio-time');
-			$('.input-hour, .input-minute, .input-recur', radioContainer)
+			$('.input-hour, .input-minute, .input-step', radioContainer)
 				.prop('disabled', timeInputDisabled);
 		});		
 	};
@@ -17,9 +17,9 @@ var AddJobDialog = function() {
 		var selectedRepeat = $(this).val();
 		$.each(['weekly', 'monthly', 'yearly'], function (i, repeat) {
 			if (repeat === selectedRepeat) {
-				$('.row-customize-' + repeat).addClass('show').removeClass('hidden');
+				$('.fieldset-' + repeat).addClass('show').removeClass('hidden');
 			} else {
-				$('.row-customize-' + repeat).addClass('hidden').removeClass('show');
+				$('.fieldset-' + repeat).addClass('hidden').removeClass('show');
 			}
 		});
 	});

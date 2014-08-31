@@ -26,7 +26,7 @@
 
 	<div class="container">
 		<?php if (!$isAtCommandAvailable): ?>
-			<?php echo $view->partial('partials/alert-at-unavailable.phtml', array(
+			<?php echo $this->partial('partials/alert-at-unavailable.phtml', array(
 				'atCommandErrorOutput' => $atCommandErrorOutput,
 				'systemUser' => $systemUser
 			)) ?>

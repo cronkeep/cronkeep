@@ -1,123 +1,120 @@
 <?php
-$weekDays = array('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
-$days = range(1, 31);
-$months = array(
-	1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
-	5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August', 9 => 'September',
-	10 => 'October', 11 => 'November', 12 => 'December'
-);
+/* @var $form \forms\AddJob\SimpleForm */
+$form->prepare();
 ?>
 <form class="job-add-form" role="form">
 	<div class="row">
 		<div class="col-md-2">
-			<span class="legend">Job Name</span>
+			<span class="legend"><?php echo $form->get('name')->getLabel() ?></span>
 		</div>
 		<div class="col-md-10">
-			<input type="text" class="form-control" autocomplete="off">
+			<?php echo $this->formText($form->get('name')) ?>
 		</div>
 	</div>
-	<div class="row" style="margin-top: 20px;">
+	<div class="row">
 		<div class="col-md-2">
-			<span class="legend">Command</span>
+			<span class="legend"><?php echo $form->get('command')->getLabel() ?></span>
 		</div>
 		<div class="col-md-10">
-			<textarea class="form-control" rows="2" id="command"></textarea>
+			<?php echo $this->formTextarea($form->get('command')) ?>
 		</div>
-	</div>	
-	<div class="row section-pick-time">
+	</div>
+	
+	<?php
+		/* @var $time \Zend\Form\Fieldset */
+		$time = $form->get('time');
+	?>
+	<div class="row">
 		<div class="col-md-2">
-			<span class="legend">Pick time</span>
+			<span class="legend"><?php echo $time->get('picker')->getLabel() ?></span>
 		</div>
 		<div class="col-md-10">
 			<!-- Specific time in the day -->
 			<div class="radio radio-time radio-specific-time">
 				<label>
-					<input type="radio" name="time" value="specific-time" checked autocomplete="off">
+					<input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
+						   value="specificTime" autocomplete="off">
 					Specific time in the day
 				</label>
-
 				<ul class="list-unstyled list-specific-time">
 					<li>
-						<input type="number" class="form-control input-hour" placeholder="h"
-							   maxlength="2" autocomplete="off" min="0" max="23"> :
-						<input type="number" class="form-control input-minute" placeholder="m"
-							   maxlength="2" autocomplete="off" min="0" max="59">
+						<?php echo $this->formNumber($time->get('specificTime')->get('hour')) ?> : 
+						<?php echo $this->formNumber($time->get('specificTime')->get('minute')) ?>
 					</li>
 				</ul>
 			</div>
 
 			<!-- Hourly at minute {min} -->
 			<div class="radio radio-time radio-every-hour">
-				<input type="radio" name="time" value="every-hour"
-					   autocomplete="off">
-
+				<input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
+					   value="everyHour" autocomplete="off">
 				<span>
 					Every 
-					<input type="number" class="form-control input-recur" maxlength="2"
-						   autocomplete="off" disabled value="1" min="1">
+					<?php echo $this->formNumber($time->get('everyHour')->get('step')) ?>
 					hours at minute
-					<input type="number" class="form-control input-minute" maxlength="2"
-						   autocomplete="off" disabled value="0" min="0" max="59">
+					<?php echo $this->formNumber($time->get('everyHour')->get('minute')) ?>
 				</span>
 			</div>
 
 			<!-- Every {min} minutes -->
 			<div class="radio radio-time radio-every-minute">
-				<input type="radio" name="time" value="every-minute" autocomplete="off">
-
+				<input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
+					   value="everyMinute" autocomplete="off">
 				<span>
 					Every
-					<input type="number" class="form-control input-recur" maxlength="2"
-						   autocomplete="off" value="1" disabled min="1">
+					<?php echo $this->formNumber($time->get('everyMinute')->get('step')) ?>
 					minutes
 				</span>
 			</div>
 		</div>
 	</div>
-	<div class="row section-repeat">
+	
+	<?php
+		/* @var $repeat \Zend\Form\Fieldset */
+		$repeat = $form->get('repeat');
+	?>
+	<div class="row">
 		<div class="col-md-2">
-			<span class="legend">Repeat</span>
+			<span class="legend"><?php echo $repeat->get('picker')->getLabel() ?></span>
 		</div>
 		<div class="col-md-10">
-			<select class="form-control repeat" name="repeat" autocomplete="off">
-				<option value="daily">Daily</option>
-				<option value="weekly">Weekly</option>
-				<option value="monthly">Monthly</option>
-				<option value="yearly">Yearly</option>
-			</select>
+			<?php echo $this->formSelect($repeat->get('picker')) ?>
 		</div>
 	</div>
 
 	<!-- Repeat: Weekly -->
-	<div class="row row-customize-weekly hidden">
+	<?php
+		/* @var $dayOfWeek \Zend\Form\Element\MultiCheckbox */
+		$dayOfWeek = $repeat->get('weekly')->get('dayOfWeek');
+	?>
+	<div class="row fieldset-weekly hidden">
 		<div class="col-md-2"></div>
 		<div class="col-md-10">
-			<span class="hint">Pick day of week</span>
+			<span class="hint"><?php echo $dayOfWeek->getLabel() ?></span>
 			<div>
 				<div class="btn-group" data-toggle="buttons">
-					<?php foreach ($weekDays as $weekDay): ?>
-						<label class="btn btn-default">
-							<input type="checkbox" name="dayOfWeek" autocomplete="off">
-							<?php echo $weekDay ?>
-						</label>
-					<?php endforeach; ?>
+					<?php echo $this->formMultiCheckbox($dayOfWeek) ?>
 				</div>
 			</div>
 		</div>
 	</div>
 
 	<!-- Repeat: Monthly -->
-	<div class="row row-customize-monthly hidden">
+	<?php
+		/* @var $dayOfMonth \Zend\Form\Element\MultiCheckbox */
+		$dayOfMonth = $repeat->get('monthly')->get('dayOfMonth');
+	?>
+	<div class="row fieldset-monthly hidden">
 		<div class="col-md-2"></div>
 		<div class="col-md-10">
-			<span class="hint">Pick days</span>
+			<span class="hint"><?php echo $dayOfMonth->getLabel() ?></span>
 			<div>
 				<div class="btn-group btn-group-day-picker">
 					<div class="btn-group" data-toggle="buttons">
-						<?php foreach ($days as $day): ?>
+						<?php foreach ($dayOfMonth->getValueOptions() as $day): ?>
 							<label class="btn btn-default">
-								<input type="checkbox" name="day" autocomplete="off"
-									   value="<?php echo $day ?>">
+								<input type="checkbox" name="<?php echo $dayOfMonth->getName() ?>[]"
+									   autocomplete="off" value="<?php echo $day ?>">
 								<?php echo $day ?>
 							</label>
 							<?php if ($day % 7 == 0): ?>
@@ -132,19 +129,14 @@ $months = array(
 	</div>
 
 	<!-- Repeat: Yearly -->
-	<div class="row row-customize-yearly hidden">
+	<div class="row fieldset-yearly hidden">
 		<div class="col-md-2"></div>
 		<div class="col-md-10">
 			<div>
-				<span class="hint">Pick dates</span>
+				<span class="hint"><?php echo $repeat->get('yearly')->getLabel() ?></span>
 				<div class="clearfix">
-					<select class="form-control month pull-left" name="month" autocomplete="off">
-						<?php foreach ($months as $i => $month): ?>
-							<option value="<?php echo $i ?>"><?php echo $month ?></option>
-						<?php endforeach; ?>
-					</select>
-					<input type="number" maxlength="2" autocomplete="off" value="1"
-						   class="form-control input-day pull-left" min="1" max="31">
+					<?php echo $this->formSelect($repeat->get('yearly')->get('month')) ?>
+					<?php echo $this->formNumber($repeat->get('yearly')->get('day')) ?>
 				</div>
 			</div>
 		</div>

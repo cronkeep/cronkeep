@@ -1,12 +1,12 @@
 <?php
-namespace library\Extra;
+namespace library\App;
 
 /**
- * Implementation of a layout system similar to what other framworks have.
+ * Layout system implementation.
  * 
  * @author Bogdan Ghervan <bogdan.ghervan@gmail.com>
  */
-class Layout extends \Slim\View
+class Layout extends View
 {
 	/**
 	 * Layout file relative to the templates path.
@@ -31,28 +31,12 @@ class Layout extends \Slim\View
 	 */
 	public function render($template, $data = null)
 	{
-		$data = array_merge(array('view' => $this, $data));
-		
 		$viewContent = parent::render($template, $data);
 		
 		return parent::render($this->_layoutFile, array(
-			'view'	  => $this,
 			'content' => $viewContent,
 			'vars'	  => $this->_getVarsForOutput()
 		));
-	}
-	
-	/**
-	 * Renders template.
-	 * 
-	 * @param string $template
-	 * @param array $data
-	 * @return string
-	 */
-	public function partial($template, $data = null)
-	{
-		$data = array_merge(array('view' => $this, $data));
-		return parent::render($template, $data);
 	}
 	
 	/**

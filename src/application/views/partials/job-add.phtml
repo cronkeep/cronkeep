@@ -16,11 +16,15 @@
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active" id="simple">
-						<?php echo $view->partial('partials/job-add-simple.phtml') ?>
+						<?php echo $this->partial('partials/job-add-simple.phtml', array(
+							'form' => $simpleForm
+						)) ?>
 					</div>
 					
 					<div class="tab-pane" id="advanced">
-						<?php echo $view->partial('partials/job-add-advanced.phtml') ?>
+						<?php echo $this->partial('partials/job-add-advanced.phtml', array(
+							'form' => $advancedForm
+						)) ?>
 					</div>
 				</div>
 			</div>
