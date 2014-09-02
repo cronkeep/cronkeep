@@ -21,6 +21,7 @@ pecl install xdebug
 cat <<EOF > /etc/php5/mods-available/xdebug.ini
 zend_extension=xdebug.so
 xdebug.var_display_max_data=4096
+xdebug.var_display_max_depth=4
 EOF
 php5enmod xdebug
 service apache2 reload

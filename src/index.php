@@ -41,8 +41,8 @@ $app->get('/', function() use ($app) {
  */
 $app->group('/job', function() use ($app) {
 	/**
-	 * Should be used as a route middleware to setup allow for the response
-	 * to be JSON in the route callable.
+	 * Should be used as a route middleware to allow for the response
+	 * to be JSON in the route's callable.
 	 * 
 	 * @return void
 	 */
@@ -52,6 +52,14 @@ $app->group('/job', function() use ($app) {
         $app->view(new \JsonApiView());
         $app->add(new \JsonApiMiddleware());
 	};
+	
+	/**
+	 * Adds or edits a cron job.
+	 */
+	$app->post('/add', $setupJsonResponse, function() use ($app) {
+		$postData = $app->request->post();
+		var_dump($postData);exit;
+	});
 	
 	/**
 	 * Runs a cron job in background.

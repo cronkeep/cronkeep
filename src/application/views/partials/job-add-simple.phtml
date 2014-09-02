@@ -2,21 +2,27 @@
 /* @var $form \forms\AddJob\SimpleForm */
 $form->prepare();
 ?>
-<form class="job-add-form" role="form">
+<form class="job-add-form job-add-simple-form" role="form">
 	<div class="row">
 		<div class="col-md-2">
 			<span class="legend"><?php echo $form->get('name')->getLabel() ?></span>
 		</div>
-		<div class="col-md-10">
+		<div class="col-md-10 may-host-errors">
 			<?php echo $this->formText($form->get('name')) ?>
+			<?php echo $this->formElementErrors($form->get('name'), array(
+				'class' => 'error-container'
+			)) ?>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-md-2">
 			<span class="legend"><?php echo $form->get('command')->getLabel() ?></span>
 		</div>
-		<div class="col-md-10">
+		<div class="col-md-10 may-host-errors">
 			<?php echo $this->formTextarea($form->get('command')) ?>
+			<?php echo $this->formElementErrors($form->get('command'), array(
+				'class' => 'error-container'
+			)) ?>
 		</div>
 	</div>
 	
@@ -30,7 +36,7 @@ $form->prepare();
 		</div>
 		<div class="col-md-10">
 			<!-- Specific time in the day -->
-			<div class="radio radio-time radio-specific-time">
+			<div class="radio radio-time radio-specific-time may-host-errors">
 				<label>
 					<input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
 						   value="specificTime" autocomplete="off">
@@ -42,10 +48,25 @@ $form->prepare();
 						<?php echo $this->formNumber($time->get('specificTime')->get('minute')) ?>
 					</li>
 				</ul>
+				<ul class="error-container">
+					<?php
+						// Group messages together for hour and minute fields
+						echo $this->formElementErrors()
+								  ->setMessageOpenFormat('<li>')
+							      ->setMessageSeparatorString('</li><li>')
+							      ->setMessageCloseString('</li>')
+								  ->render($time->get('specificTime')->get('hour'));
+						echo $this->formElementErrors()
+								  ->setMessageOpenFormat('<li>')
+							      ->setMessageSeparatorString('</li><li>')
+							      ->setMessageCloseString('</li>')
+								  ->render($time->get('specificTime')->get('minute'));
+					?>
+				</ul>
 			</div>
 
-			<!-- Hourly at minute {min} -->
-			<div class="radio radio-time radio-every-hour">
+			<!-- Every {step} hours at minute {minute} -->
+			<div class="radio radio-time radio-every-hour may-host-errors">
 				<input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
 					   value="everyHour" autocomplete="off">
 				<span>
@@ -54,10 +75,25 @@ $form->prepare();
 					hours at minute
 					<?php echo $this->formNumber($time->get('everyHour')->get('minute')) ?>
 				</span>
+				<ul class="error-container">
+					<?php
+						// Group messages together for step and minute fields
+						echo $this->formElementErrors()
+								  ->setMessageOpenFormat('<li>')
+							      ->setMessageSeparatorString('</li><li>')
+							      ->setMessageCloseString('</li>')
+								  ->render($time->get('everyHour')->get('step'));
+						echo $this->formElementErrors()
+								  ->setMessageOpenFormat('<li>')
+							      ->setMessageSeparatorString('</li><li>')
+							      ->setMessageCloseString('</li>')
+								  ->render($time->get('everyHour')->get('minute'));
+					?>
+				</ul>
 			</div>
 
-			<!-- Every {min} minutes -->
-			<div class="radio radio-time radio-every-minute">
+			<!-- Every {minute} minutes -->
+			<div class="radio radio-time radio-every-minute may-host-errors">
 				<input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
 					   value="everyMinute" autocomplete="off">
 				<span>
@@ -65,6 +101,9 @@ $form->prepare();
 					<?php echo $this->formNumber($time->get('everyMinute')->get('step')) ?>
 					minutes
 				</span>
+				<?php echo $this->formElementErrors($time->get('everyMinute')->get('step'), array(
+					'class' => 'error-container'
+				)) ?>
 			</div>
 		</div>
 	</div>
@@ -89,13 +128,16 @@ $form->prepare();
 	?>
 	<div class="row fieldset-weekly hidden">
 		<div class="col-md-2"></div>
-		<div class="col-md-10">
+		<div class="col-md-10 may-host-errors">
 			<span class="hint"><?php echo $dayOfWeek->getLabel() ?></span>
 			<div>
 				<div class="btn-group" data-toggle="buttons">
 					<?php echo $this->formMultiCheckbox($dayOfWeek) ?>
 				</div>
 			</div>
+			<?php echo $this->formElementErrors($dayOfWeek, array(
+				'class' => 'error-container'
+			)) ?>
 		</div>
 	</div>
 
@@ -106,7 +148,7 @@ $form->prepare();
 	?>
 	<div class="row fieldset-monthly hidden">
 		<div class="col-md-2"></div>
-		<div class="col-md-10">
+		<div class="col-md-10 may-host-errors">
 			<span class="hint"><?php echo $dayOfMonth->getLabel() ?></span>
 			<div>
 				<div class="btn-group btn-group-day-picker">
@@ -125,6 +167,9 @@ $form->prepare();
 					</div>
 				</div>
 			</div>
+			<?php echo $this->formElementErrors($dayOfMonth, array(
+				'class' => 'error-container'
+			)) ?>
 		</div>
 	</div>
 
@@ -132,12 +177,27 @@ $form->prepare();
 	<div class="row fieldset-yearly hidden">
 		<div class="col-md-2"></div>
 		<div class="col-md-10">
-			<div>
+			<div class="may-host-errors">
 				<span class="hint"><?php echo $repeat->get('yearly')->getLabel() ?></span>
 				<div class="clearfix">
 					<?php echo $this->formSelect($repeat->get('yearly')->get('month')) ?>
 					<?php echo $this->formNumber($repeat->get('yearly')->get('day')) ?>
 				</div>
+				<ul class="error-container">
+					<?php
+						// Group messages together for month and day fields
+						echo $this->formElementErrors()
+								  ->setMessageOpenFormat('<li>')
+							      ->setMessageSeparatorString('</li><li>')
+							      ->setMessageCloseString('</li>')
+								  ->render($repeat->get('yearly')->get('month'));
+						echo $this->formElementErrors()
+								  ->setMessageOpenFormat('<li>')
+							      ->setMessageSeparatorString('</li><li>')
+							      ->setMessageCloseString('</li>')
+								  ->render($repeat->get('yearly')->get('day'));
+					?>
+				</ul>
 			</div>
 		</div>
 	</div>
