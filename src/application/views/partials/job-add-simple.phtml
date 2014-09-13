@@ -3,6 +3,7 @@
 $form->prepare();
 ?>
 <form class="job-add-form job-add-simple-form" role="form">
+	<input type="hidden" name="mode" value="simple">
 	<div class="row">
 		<div class="col-md-2">
 			<span class="legend"><?php echo $form->get('name')->getLabel() ?></span>

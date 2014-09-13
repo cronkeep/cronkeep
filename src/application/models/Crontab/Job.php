@@ -15,7 +15,7 @@ class Job
 	protected $_raw;
 	
 	/**
-	 * @var string
+	 * @var string|Expression
 	 */
 	protected $_expression;
 	
@@ -85,7 +85,7 @@ class Job
 	 * Sets raw entry.
 	 * 
 	 * @param string $raw
-	 * @return \models\Crontab\Job
+	 * @return Job
 	 */
 	public function setRaw($raw)
 	{
@@ -98,12 +98,14 @@ class Job
 	/**
 	 * Sets expression part.
 	 * 
-	 * @param string $expression
-	 * @return \models\Crontab\Job
+	 * @param string|Expression $expression
+	 * @return Job
 	 */
 	public function setExpression($expression)
 	{
 		$this->_expression = $expression;
+		$this->_updateDependentFields();
+		
 		return $this;
 	}
 	
@@ -111,11 +113,13 @@ class Job
 	 * Sets command part.
 	 * 
 	 * @param string $command
-	 * @return \models\Crontab\Job
+	 * @return Job
 	 */
 	public function setCommand($command)
 	{
 		$this->_command = $command;
+		$this->_updateDependentFields();
+		
 		return $this;
 	}
 	
@@ -135,11 +139,13 @@ class Job
 	 * Sets comment.
 	 * 
 	 * @param string $comment
-	 * @return \models\Crontab\Job
+	 * @return Job
 	 */
 	public function setComment($comment)
 	{
 		$this->_comment = $comment;
+		$this->_updateDependentFields();
+		
 		return $this;
 	}
 	
@@ -147,9 +153,15 @@ class Job
 	 * Retrieves raw version of the entry.
 	 * 
 	 * @return string
+	 * @throws \BadMethodCallException
 	 */
 	public function getRaw()
 	{
+		if (empty($this->_raw)) {
+			throw new \BadMethodCallException('Raw job definition could not be generated for '
+				. 'incomplete object (either expression or command fields are missing)');
+		}
+		
 		return $this->_raw;
 	}
 	
@@ -204,9 +216,29 @@ class Job
 	}
 	
 	/**
+	 * Updates dependents fields (raw), if one of the component fields
+	 * (command, expression, comment) changes.
+	 * 
+	 * @return Job
+	 */
+	protected function _updateDependentFields()
+	{
+		if ($this->_command && $this->_expression) {			
+			$newRaw = sprintf("%s%s",
+				$this->_comment ?  '# ' . ltrim(ltrim($this->_comment, '#')) . PHP_EOL : '',
+				$this->_commandLine . PHP_EOL);
+			
+			// Update raw job representation (this in turn refreshes the hash)
+			$this->setRaw($newRaw);
+		}
+		
+		return $this;
+	}
+	
+	/**
 	 * Generates unique hash for this job using crc32.
 	 * 
-	 * @return \models\Crontab\Job
+	 * @return Job
 	 */
 	protected function _generateHash()
 	{

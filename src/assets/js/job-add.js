@@ -175,9 +175,20 @@ var AddJobDialog = function(startIn) {
 	addValidations();
 	$('.btn-save', container).on('click', function(e) {
 		var form = getActiveForm();
+		var saveButton = $(this);
+		saveButton.button('loading');
 		
 		if (form.valid()) {
-			$.post('/job/add', form.serialize(), function(response) {
+			$.post('/job/add', form.serialize(), function(data) {
+				alertService.pushSuccess(data.msg);
+			}).fail(function(data) {
+				alertService.pushError(data.responseJSON.msg);
+			}).always(function() {
+				saveButton.button('reset');
+				$('#job-add').modal('hide');
+				
+				// @todo avoid the reload
+				//document.location.reload(true);
 			});
 		}
 	});

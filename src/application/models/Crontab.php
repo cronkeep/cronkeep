@@ -1,6 +1,8 @@
 <?php
 namespace models;
+
 use \Symfony\Component\Process\Process;
+use models\Crontab\Job;
 
 /**
  * Crontab model.
@@ -13,7 +15,7 @@ class Crontab implements \IteratorAggregate
 	/**
 	 * Raw cron table.
 	 * 
-	 * @var string 
+	 * @var string
 	 */
 	protected $_rawTable;
 	
@@ -55,10 +57,10 @@ class Crontab implements \IteratorAggregate
 	/**
 	 * Runs the job in background.
 	 * 
-	 * @param \models\Crontab\Job $job
-	 * @return \models\Crontab
+	 * @param Job $job
+	 * @return Crontab
 	 */
-	public function run(Crontab\Job $job)
+	public function run(Job $job)
 	{
 		$command = $job->getCommand();
 		if (At::isAvailable()) {
@@ -72,19 +74,36 @@ class Crontab implements \IteratorAggregate
 	}
 	
 	/**
-	 * Pauses cron schedule by commenting the job in crontab.
-	 * Additionally, Crontab::save should be called to persist the change.
+	 * Adds given cron job to crontab.
+	 * Additionally, {@link Crontab::save} should be called to persist the change.
 	 * 
-	 * @param \models\Crontab\Job $job
-	 * @return \models\Crontab
+	 * @param Job $job
+	 * @return Crontab
 	 */
-	public function pause(Crontab\Job $job)
+	public function add(Job $job)
+	{
+		// Trim any trailing newlines at the end of the raw cron table
+		$this->_rawTable = rtrim($this->_rawTable, "\r\n");
+		
+		$this->_rawTable .= PHP_EOL . $job->getRaw();
+		
+		return $this;
+	}
+	
+	/**
+	 * Pauses cron schedule by commenting the job in crontab.
+	 * Additionally, {@link Crontab::save} should be called to persist the change.
+	 * 
+	 * @param Job $job
+	 * @return Crontab
+	 */
+	public function pause(Job $job)
 	{
 		// Comment the cron job
 		$originalJob = $job->getRaw();
 		$job->pause();
 		$newJob = $job->getRaw();
-		
+		var_dump($originalJob, $newJob, $this->_rawTable);exit;
 		// Replace the job definition in the raw crontab
 		$this->_rawTable = str_replace($originalJob, $newJob, $this->_rawTable);
 		
@@ -93,12 +112,12 @@ class Crontab implements \IteratorAggregate
 	
 	/**
 	 * Resumes cron schedule by un-commenting the job in crontab.
-	 * Additionally, Crontab::save should be called to persist the change.
+	 * Additionally, {@link Crontab::save} should be called to persist the change.
 	 * 
-	 * @param \models\Crontab\Job $job
-	 * @return \models\Crontab
+	 * @param Job $job
+	 * @return Crontab
 	 */
-	public function resume(Crontab\Job $job)
+	public function resume(Job $job)
 	{
 		// Comment the cron job
 		$originalJob = $job->getRaw();
@@ -113,12 +132,12 @@ class Crontab implements \IteratorAggregate
 	
 	/**
 	 * Deletes given job from crontab.
-	 * Additionally, Crontab::save should be called to persist the change.
+	 * Additionally, {@link Crontab::save} should be called to persist the change.
 	 * 
-	 * @param \models\Crontab\Job $job
-	 * @return \models\Crontab
+	 * @param Job $job
+	 * @return Crontab
 	 */
-	public function delete(Crontab\Job $job)
+	public function delete(Job $job)
 	{
 		$this->_rawTable = str_replace($job->getRaw(), '', $this->_rawTable);
 		
@@ -128,7 +147,7 @@ class Crontab implements \IteratorAggregate
 	/**
 	 * Saves the current user's crontab.
 	 * 
-	 * @return \models\Crontab
+	 * @return Crontab
 	 * @throws \RuntimeException
 	 */
 	public function save()
@@ -153,7 +172,7 @@ class Crontab implements \IteratorAggregate
 	/**
 	 * Loads system crontab.
 	 * 
-	 * @return \models\Crontab
+	 * @return Crontab
 	 */
 	protected function _load()
 	{
@@ -166,7 +185,7 @@ class Crontab implements \IteratorAggregate
 	/**
 	 * Reads crontab for current user.
 	 * 
-	 * @return \models\Crontab
+	 * @return Crontab
 	 */
 	protected function _readCrontab()
 	{
@@ -193,17 +212,17 @@ class Crontab implements \IteratorAggregate
 	 * comes before the job definition.
 	 * 
 	 * Indentation inspired by:
-	 * http://www.onlamp.com/lpt/a/4101
+	 * @link http://www.onlamp.com/lpt/a/4101
 	 * 
-	 * @return \models\Crontab
+	 * @return Crontab
 	 */
 	protected function _parseCrontab()
 	{
         $pattern = "/
             (?:
-              (\#[^\r]*?)                     # match comment above cron
+              (\#[^\r\n]*?)                   # match comment above cron
 			  \s*                             # match any trailing whitespace
-              [\n\r]{1,}                      # match any sort of line endings
+              [\r\n]{1,}                      # match any sort of line endings
             )?                                # comment is, however, optional
             (                                 # start command line
 			  ^(?:\#\s*)?                     # line starting with a comment sign or not
@@ -237,30 +256,31 @@ class Crontab implements \IteratorAggregate
                   @annually|@reboot)
               )                               # end matching time expression
               \s+                             # space
-              ([^\r]*?)                       # command to be run (everything, but CR)
+              ([^\r\n]*?)                     # command to be run (everything, but CR)
             )                                 # end command line
-			\s*[\n\r]{1}                      # match trailing space and final line ending
+			\s*[\r\n]{1,}                     # match trailing space and final line ending
           /imx";
 		
 		$this->_jobs = array();
 		if (preg_match_all($pattern, $this->_rawTable, $lines, PREG_SET_ORDER)) {
 			foreach ($lines as $lineParts) {
+				var_dump($lineParts);
 				$job = new Crontab\Job();
 				$job->setRaw($lineParts[0]);
 				$job->setComment(empty($lineParts[1]) ? null : $lineParts[1]);
 				$job->setCommandLine($lineParts[2]);
 				$job->setExpression($lineParts[3]);
 				$job->setCommand($lineParts[4]);
-				
+				var_dump($job);	
 				$this->_jobs[] = $job;
 			}
 		}
-		
+		exit;
 		return $this;
 	}
 	
     /**
-     * Implementation of IteratorAggregate:getIterator
+     * Implementation of IteratorAggregate:getIterator.
      *
 	 * @return \ArrayIterator
      */

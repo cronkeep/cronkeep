@@ -5,6 +5,7 @@ use \models\Crontab;
 use \models\SystemUser;
 use \models\At;
 use \forms\AddJob;
+use \services\ExpressionService;
 
 $app = new \Slim\Slim(array(
 	'templates.path' => 'application/views',
@@ -57,8 +58,32 @@ $app->group('/job', function() use ($app) {
 	 * Adds or edits a cron job.
 	 */
 	$app->post('/add', $setupJsonResponse, function() use ($app) {
-		$postData = $app->request->post();
-		var_dump($postData);exit;
+		$formData = $app->request->post();
+		
+		$form = new AddJob\SimpleForm();
+		$form->setData($formData);
+		if ($form->isValid()) {
+			$expression = ExpressionService::createExpression($formData);
+			
+			$job = new Crontab\Job();
+			$job->setExpression($expression);
+			$job->setCommand($formData['command']);
+			$job->setComment($formData['name']);
+			
+			$crontab = new Crontab();
+			$crontab->add($job)->save();
+			
+			$app->render(200, array(
+				'error' => false,
+				'msg' => 'The job has been added.'
+			));
+		} else {
+			$app->render(500, array(
+				'error' => true,
+				'msg' => 'Form is invalid.',
+				'messages' => $form->getMessages()
+			));
+		}
 	});
 	
 	/**

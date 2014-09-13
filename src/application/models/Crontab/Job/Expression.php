@@ -151,16 +151,26 @@ class Expression
 				foreach ($matches[$part] as $timeUnit) {
 					$shards = explode('/', $timeUnit);
 					
-					// Do we have a range *and* a step?
+					// Do we have a range (or asterisk) *and* a step?
 					if (count($shards) > 1) {
-						$rangeLimits = explode('-', $shards[0]);
-						$expression->addPart($part, array(
-							'min'  => $rangeLimits[0],
-							'max'  => $rangeLimits[1],
-							'step' => $shards[1]
-						));
+						// Do we have an asterisk?
+						if ($shards[0] == '*') {
+							$expression->addPart($part, array(
+								'scalar' => '*',
+								'step'   => $shards[1]
+							));
+							
+						// OK, clearly we have a range
+						} else {
+							$rangeLimits = explode('-', $shards[0]);
+							$expression->addPart($part, array(
+								'min'  => $rangeLimits[0],
+								'max'  => $rangeLimits[1],
+								'step' => $shards[1]
+							));
+						}
 					
-					// OK, we have just a list
+					// OK, we have just a range
 					} else {
 						$rangeLimits = explode('-', $shards[0]);
 						
@@ -188,7 +198,7 @@ class Expression
 	/**
 	 * Appends $value to given $part.
 	 * 
-	 * Example:
+	 * Example 1:
 	 * <code>
 	 * $expression = new Expression();
 	 * $expression->addPart(Expression::MINUTE, array('min' =>  0, 'max' => 29, 'step' => 5));
@@ -196,7 +206,24 @@ class Expression
 	 * $expression->addPart(Expression::MINUTE, 7);
 	 * $expression->addPart(Expression::MINUTE, array(0, 15, 30, 45));
 	 * </code>
-	 * Resulting expression thus far: 0-29/5,30-59/10,7,0,15,30,45 * * * *
+	 * Resulting expression: 0-29/5,30-59/10,7,0,15,30,45 * * * *
+	 * 
+	 * Example 2:
+	 * <code>
+	 * $expression->addPart(Expression::MONTH, array('scalar' => 3));
+	 * </code>
+	 * This is, however, the equivalent of:
+	 * <code>
+	 * $expression->addPart(Expression::MONTH, 3);
+	 * </code>
+	 * It's recommended that the latter form be used for improved readibility.
+	 * See Example 3 for a case where scalar is essential.
+	 * 
+	 * Example 3:
+	 * <code>
+	 * $expression->addPart(Expression::HOUR, array('scalar' => '*', 'step' => 2));
+	 * </code>
+	 * Here a step is used in conjuction with an asterisk to say "every 2 hours".
 	 * 
 	 * @param string $part
 	 * @param int|string|array $value
@@ -253,6 +280,31 @@ class Expression
 					'min'  => (int) $value['min'],
 					'max'  => (int) $value['max'],
 					'step' => isset($value['step']) ? (int) $value['step'] : 1
+				);
+			
+			// Scalar value "*" (possibly accompanied by a step) *or* a plain number?
+			} elseif (isset($value['scalar'])) {
+				if (isset($value['step'])) {
+					if (is_numeric($value['scalar'])) {
+						throw new \InvalidArgumentException(
+							'Illegal use of a step in conjunction with a number');
+					}
+					if (!is_numeric($value['step'])) {
+						throw new \InvalidArgumentException(
+							__METHOD__ . ' called with an invalid value for step');
+					}
+				}
+				$step = isset($value['step']) ? (int) $value['step'] : 1;
+				
+				if ($value['scalar'] !== '*' || $step <= 1) {
+					// We'll rather store it as a plain number / asterisk instead
+					// Also, steps don't make sense for plain numbers 
+					return $this->addPart($part, $value['scalar']);
+				}
+				
+				$this->_parts[$part][] = array(
+					'scalar' => '*',
+					'step'   => $step
 				);
 				
 			// Value is a list
@@ -382,6 +434,21 @@ class Expression
 	
 	/**
 	 * Renders given part.
+	 * It basically iterates over a list of numbers, or ranges, or both,
+	 * that have been stored for this part.
+	 * 
+	 * Ranges are stored as arrays, but so are scalar constructions
+	 * (always an asterisk followed by a step - asterisks without a step
+	 * are not stored as an array).
+	 * 
+	 * Here's how a range looks like:
+	 * <code>
+	 * array('min' => ..., 'max' => ...[, 'step' => ...])
+	 * </code>
+	 * Here's how an asterisk with a step looks like:
+	 * <code>
+	 * array('scalar' => '*', 'step' => ...)
+	 * </code>
 	 * 
 	 * @param string $part
 	 * @return string
@@ -389,11 +456,22 @@ class Expression
 	protected function _renderPart($part)
 	{
 		$expr = array();
+		
+		// We're a iterating over a list of numbers, or ranges, or both
 		foreach ($this->_parts[$part] as $value) {
 			if (is_array($value)) {
 				$step = $value['step'] > 1 ? '/' . $value['step'] : '';
-				$expr[] = sprintf('%s-%s%s', $value['min'], $value['max'], $step);
+				
+				// Is it a range?
+				if (isset($value['min'])) {
+					$expr[] = sprintf('%s-%s%s', $value['min'], $value['max'], $step);
+				
+				// OK, it's an asterisk with a step
+				} else {
+					$expr[] = '*' . $step;
+				}
 			} else {
+				// A regular number or a regular asterisk (no step)
 				$expr[] = $value;
 			}
 		}

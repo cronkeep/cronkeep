@@ -15,6 +15,19 @@ use Zend\InputFilter\InputFilterProviderInterface;
 class SimpleForm extends Form implements InputFilterProviderInterface
 {
 	/**
+	 * Constants designating possible values of the time and repeat picker fields,
+	 * which also match the name of corresponding fieldsets with additional options
+	 * to set for the respective chosen value.
+	 */
+	const SPECIFIC_TIME = 'specificTime';
+	const EVERY_HOUR = 'everyHour';
+	const EVERY_MINUTE = 'everyMinute';
+	const DAILY = 'daily';
+	const WEEKLY = 'weekly';
+	const MONTHLY = 'monthly';
+	const YEARLY = 'yearly';
+	
+	/**
 	 * Options of the dayOfWeek multi-checkbox field.
 	 * 
 	 * @var array
@@ -64,7 +77,6 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 		
 		// Add fieldset wrapping all repeat options
 		$this->add($this->getRepeatFieldset());
-		
 	}
 	
 	/**
@@ -79,7 +91,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 		// Picker field
 		$picker = new Element\Radio('picker');
 		$picker->setLabel('Pick Time');
-		$picker->setValueOptions(array('specificTime', 'everyHour', 'everyMinute'));
+		$picker->setValueOptions(array(self::SPECIFIC_TIME, self::EVERY_HOUR, self::EVERY_MINUTE));
 		$timeFieldset->add($picker);
 		
 		// Attach "child" fieldsets
@@ -108,10 +120,10 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 			'autocomplete' => 'off'
 		));
 		$picker->setValueOptions(array(
-			'daily'   => 'Daily',
-			'weekly'  => 'Weekly',
-			'monthly' => 'Monthly',
-			'yearly'  => 'Yearly'
+			self::DAILY   => 'Daily',
+			self::WEEKLY  => 'Weekly',
+			self::MONTHLY => 'Monthly',
+			self::YEARLY  => 'Yearly'
 		));
 		$repeatFieldset->add($picker);
 		
@@ -131,7 +143,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 	 */
 	public function getSpecificTimeFieldset()
 	{
-		$specificTimeFieldset = new Fieldset('specificTime');
+		$specificTimeFieldset = new Fieldset(self::SPECIFIC_TIME);
 		
 		$hour = new Element\Number('hour');
 		$hour->setAttributes(array(
@@ -166,7 +178,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 	 */
 	public function getEveryHourFieldset()
 	{
-		$everyHourFieldset = new Fieldset('everyHour');
+		$everyHourFieldset = new Fieldset(self::EVERY_HOUR);
 		
 		$step = new Element\Number('step');
 		$step->setValue(1);
@@ -203,7 +215,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 	 */
 	public function getEveryMinuteFieldset()
 	{
-		$everyMinuteFieldset = new Fieldset('everyMinute');
+		$everyMinuteFieldset = new Fieldset(self::EVERY_MINUTE);
 		
 		$step = new Element\Number('step');
 		$step->setValue(1);
@@ -228,7 +240,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 	 */
 	public function getRepeatWeeklyFieldset()
 	{
-		$repeatWeeklyFieldset = new Fieldset('weekly');
+		$repeatWeeklyFieldset = new Fieldset(self::WEEKLY);
 		
 		$dayOfWeek = new Element\MultiCheckbox('dayOfWeek');
 		$dayOfWeek->setLabel('Pick day of week');
@@ -260,7 +272,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 	 */
 	public function getRepeatMonthlyFieldset()
 	{
-		$repeatMonthlyFieldset = new Fieldset('monthly');
+		$repeatMonthlyFieldset = new Fieldset(self::MONTHLY);
 		
 		$dayOfMonth = new Element\MultiCheckbox('dayOfMonth');
 		$dayOfMonth->setLabel('Pick days');
@@ -279,7 +291,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 	 */
 	public function getRepeatYearlyFieldset()
 	{
-		$repeatYearlyFieldset = new Fieldset('yearly');
+		$repeatYearlyFieldset = new Fieldset(self::YEARLY);
 		$repeatYearlyFieldset->setLabel('Pick dates');
 		
 		$month = new Element\Select('month');
@@ -315,6 +327,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
      {
 		return array(
 			'name' => array(
+				'required' => false,
 				'filters' => array(
 					array('name' => 'Zend\Filter\StringTrim')
 				)
@@ -329,7 +342,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 				'picker' => array(
 					'required' => true
 				),
-				'specificTime' => array(
+				self::SPECIFIC_TIME => array(
 					'hour' => array(
 						'filters' => array(
 							array('name' => 'Zend\Filter\StringTrim')
@@ -355,7 +368,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 						)
 					)
 				),
-				'everyHour' => array(
+				self::EVERY_HOUR => array(
 					'step' => array(
 						'required' => true,
 						'filters' => array(
@@ -383,7 +396,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 						)
 					)
 				),
-				'everyMinute' => array(
+				self::EVERY_MINUTE => array(
 					'step' => array(
 						'required' => true,
 						'filters' => array(
@@ -400,7 +413,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 				)
 			),
 			'repeat' => array(
-				'yearly' => array(
+				self::YEARLY => array(
 					'day' => array(
 						'filters' => array(
 							array('name' => 'Zend\Filter\StringTrim')
