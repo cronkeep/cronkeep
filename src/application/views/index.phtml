@@ -34,7 +34,7 @@
 		<tbody>
 			<?php
 				foreach ($crontab as $job):
-					$classAttr = $job->isPaused() ? ' class="inactive"' : '';
+					$classAttr = $job->getIsPaused() ? ' class="inactive"' : '';
 			?>
 			<tr data-hash="<?php echo $job->getHash() ?>"<?php echo $classAttr ?>>
 				<td data-searchable="1"><?php echo $job->getExpression() ?></td>
@@ -57,11 +57,11 @@
 							<span class="sr-only">Toggle Dropdown</span>
 						</button>
 						<ul class="dropdown-menu" role="menu">
-							<li class="menu-item-resume <?php echo $job->isPaused() ? 'show' : 'hidden' ?>">
+							<li class="menu-item-resume <?php echo $job->getIsPaused() ? 'show' : 'hidden' ?>">
 								<a href="#" title="Resume Job Schedule" class="job-resume">
 									<span class="glyphicon glyphicon-repeat"></span> Resume Schedule</a>
 							</li>
-							<li class="menu-item-pause <?php echo $job->isPaused() ? 'hidden' : 'show' ?>">
+							<li class="menu-item-pause <?php echo $job->getIsPaused() ? 'hidden' : 'show' ?>">
 								<a href="#" title="Pause Job Schedule" class="job-pause">
 									<span class="glyphicon glyphicon-pause"></span> Pause Schedule</a>
 							</li>
@@ -80,11 +80,11 @@
 								<a href="#" title="Run Job Now" class="job-run">
 									<span class="glyphicon glyphicon-play"></span> Run</a>
 							</li>
-							<li class="menu-item-resume <?php echo $job->isPaused() ? 'show' : 'hidden' ?>">
+							<li class="menu-item-resume <?php echo $job->getIsPaused() ? 'show' : 'hidden' ?>">
 								<a href="#" title="Resume Job Schedule" class="job-resume">
 									<span class="glyphicon glyphicon-repeat"></span> Resume Schedule</a>
 							</li>
-							<li class="menu-item-pause <?php echo $job->isPaused() ? 'hidden' : 'show' ?>">
+							<li class="menu-item-pause <?php echo $job->getIsPaused() ? 'hidden' : 'show' ?>">
 								<a href="#" title="Pause Job Schedule" class="job-pause">
 									<span class="glyphicon glyphicon-pause"></span> Pause Schedule</a>
 							</li>

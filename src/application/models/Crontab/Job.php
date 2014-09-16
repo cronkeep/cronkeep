@@ -12,6 +12,11 @@ class Job
 	/**
 	 * @var string
 	 */
+	protected $_originalRaw;
+	
+	/**
+	 * @var string
+	 */
 	protected $_raw;
 	
 	/**
@@ -25,9 +30,9 @@ class Job
 	protected $_command;
 	
 	/**
-	 * @var string
+	 * @var boolean
 	 */
-	protected $_commandLine;
+	protected $_isPaused;
 	
 	/**
 	 * @var string
@@ -40,55 +45,25 @@ class Job
 	protected $_hash;
 	
 	/**
-	 * Tells whether the job schedule is paused or not.
+	 * Default line separator.
 	 * 
-	 * @return boolean
+	 * @var string
 	 */
-	public function isPaused()
-	{
-		return $this->_commandLine[0] == '#';
-	}
+	protected $_lineSeparator = PHP_EOL;
 	
 	/**
-	 * Pauses job schedule by commenting it out.
-	 * 
-	 * @return \models\Crontab\Job
-	 */
-	public function pause()
-	{
-		if (!$this->isPaused()) {
-			$newCommandLine = '# ' . $this->getCommandLine();
-			$this->setRaw(str_replace($this->getCommandLine(), $newCommandLine, $this->getRaw()));
-			$this->setCommandLine($newCommandLine);
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Resumes job schedule by un-commenting the entry.
-	 * 
-	 * @return \models\Crontab\Job
-	 */
-	public function resume()
-	{
-		if ($this->isPaused()) {
-			$newCommandLine = preg_replace('/\#\s/', '', $this->getCommandLine());
-			$this->setRaw(str_replace($this->getCommandLine(), $newCommandLine, $this->getRaw()));
-			$this->setCommandLine($newCommandLine);
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets raw entry.
-	 * 
+	 * Sets raw job representation.
+	 * @todo Find another way to keep original data and changed data 
+	 *
 	 * @param string $raw
 	 * @return Job
 	 */
 	public function setRaw($raw)
 	{
+		if (is_null($this->_originalRaw)) {
+			$this->_originalRaw = $raw;
+		}
+		
 		$this->_raw = $raw;
 		$this->_generateHash();
 		
@@ -104,7 +79,7 @@ class Job
 	public function setExpression($expression)
 	{
 		$this->_expression = $expression;
-		$this->_updateDependentFields();
+		$this->_updateRaw();
 		
 		return $this;
 	}
@@ -118,20 +93,8 @@ class Job
 	public function setCommand($command)
 	{
 		$this->_command = $command;
-		$this->_updateDependentFields();
+		$this->_updateRaw();
 		
-		return $this;
-	}
-	
-	/**
-	 * Sets the entire command line (expression and command).
-	 *  
-	 * @param string $commandLine
-	 * @return \models\Crontab\Job
-	 */
-	public function setCommandLine($commandLine)
-	{
-		$this->_commandLine = $commandLine;
 		return $this;
 	}
 	
@@ -144,13 +107,37 @@ class Job
 	public function setComment($comment)
 	{
 		$this->_comment = $comment;
-		$this->_updateDependentFields();
+		$this->_updateRaw();
 		
 		return $this;
 	}
 	
 	/**
-	 * Retrieves raw version of the entry.
+	 * Sets job schedule status (paused or ready to run).
+	 *  
+	 * @param boolean $isPaused
+	 * @return Job
+	 */
+	public function setIsPaused($isPaused)
+	{
+		$this->_isPaused = (bool) $isPaused;
+		$this->_updateRaw();
+		
+		return $this;
+	}
+	
+	/**
+	 * Retrieves initial raw job representation.
+	 * 
+	 * @return string
+	 */
+	public function getOriginalRaw()
+	{
+		return $this->_originalRaw;
+	}
+	
+	/**
+	 * Retrieves raw job representation.
 	 * 
 	 * @return string
 	 * @throws \BadMethodCallException
@@ -186,13 +173,13 @@ class Job
 	}
 	
 	/**
-	 * Retrieves command line (expression and command).
+	 * Retrieves job schedule status (paused or ready to run).
 	 * 
 	 * @return string
 	 */
-	public function getCommandLine()
+	public function getIsPaused()
 	{
-		return $this->_commandLine;
+		return $this->_isPaused;
 	}
 	
 	/**
@@ -216,17 +203,17 @@ class Job
 	}
 	
 	/**
-	 * Updates dependents fields (raw), if one of the component fields
-	 * (command, expression, comment) changes.
+	 * Rebuilds internal raw job representation from parts and returns it.
 	 * 
-	 * @return Job
+	 * @return string
 	 */
-	protected function _updateDependentFields()
+	protected function _updateRaw()
 	{
-		if ($this->_command && $this->_expression) {			
-			$newRaw = sprintf("%s%s",
-				$this->_comment ?  '# ' . ltrim(ltrim($this->_comment, '#')) . PHP_EOL : '',
-				$this->_commandLine . PHP_EOL);
+		if ($this->_command && $this->_expression) {
+			$newRaw = ($this->_comment ?  '# ' . ltrim($this->_comment, '# ') . $this->_lineSeparator : '')
+					. ($this->_isPaused ? '# ' : '')
+					. $this->_expression . ' ' . $this->_command
+					. $this->_lineSeparator;
 			
 			// Update raw job representation (this in turn refreshes the hash)
 			$this->setRaw($newRaw);

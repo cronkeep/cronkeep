@@ -27,6 +27,13 @@ class Crontab implements \IteratorAggregate
 	protected $_jobs = array();
 	
 	/**
+	 * Default line separator.
+	 * 
+	 * @var string
+	 */
+	protected $_lineSeparator = PHP_EOL;
+	
+	/**
 	 * Class constructor.
 	 * 
 	 * @return void
@@ -85,7 +92,7 @@ class Crontab implements \IteratorAggregate
 		// Trim any trailing newlines at the end of the raw cron table
 		$this->_rawTable = rtrim($this->_rawTable, "\r\n");
 		
-		$this->_rawTable .= PHP_EOL . $job->getRaw();
+		$this->_rawTable .= $this->_lineSeparator . $job->getRaw();
 		
 		return $this;
 	}
@@ -100,10 +107,11 @@ class Crontab implements \IteratorAggregate
 	public function pause(Job $job)
 	{
 		// Comment the cron job
-		$originalJob = $job->getRaw();
-		$job->pause();
+		$job->setIsPaused(true);
+		
+		$originalJob = $job->getOriginalRaw();
 		$newJob = $job->getRaw();
-		var_dump($originalJob, $newJob, $this->_rawTable);exit;
+		
 		// Replace the job definition in the raw crontab
 		$this->_rawTable = str_replace($originalJob, $newJob, $this->_rawTable);
 		
@@ -120,8 +128,9 @@ class Crontab implements \IteratorAggregate
 	public function resume(Job $job)
 	{
 		// Comment the cron job
-		$originalJob = $job->getRaw();
-		$job->resume();
+		$job->setIsPaused(false);
+		
+		$originalJob = $job->getOriginalRaw();
 		$newJob = $job->getRaw();
 		
 		// Replace the job definition in the raw crontab
@@ -220,62 +229,59 @@ class Crontab implements \IteratorAggregate
 	{
         $pattern = "/
             (?:
-              (\#[^\r\n]*?)                   # match comment above cron
-			  \s*                             # match any trailing whitespace
-              [\r\n]{1,}                      # match any sort of line endings
-            )?                                # comment is, however, optional
-            (                                 # start command line
-			  ^(?:\#\s*)?                     # line starting with a comment sign or not
-              (                               # start to match time expression
-                (?:
-                  [\d\*\/\,\-\%]+             # match minute
-                )
-                \s                            # space
-                (?:
-                  [\d\*\/\,\-\%]+             # match hour
-                )
-                \s                            # space
-                (?:
-                  [\d\*\/\,\-\%]+             # match day of month
-                )
-                \s                            # space
-                (?:
-                  [\d\*\/\,\-\%]+|jan|feb|    # match month
-                  mar|apr|may|jun|jul|aug|
-                  sep|oct|nov|dec
-                )
-                \s                            # space
-                (?:
-                  [\d\*\/\,\-\%]+|mon|tue|    # match day of week
-                  wed|thu|fri|sat|sun
-                )
-                |
-                (?:
-                  @hourly|@midnight|@daily|   # OR, match special string
-                  @weekly|@monthly|@yearly|
-                  @annually|@reboot)
-              )                               # end matching time expression
-              \s+                             # space
-              ([^\r\n]*?)                     # command to be run (everything, but CR)
-            )                                 # end command line
-			\s*[\r\n]{1,}                     # match trailing space and final line ending
+              (\#[^\r\n]*?)                 # match comment above cron
+			  \s*                           # match any trailing whitespace
+              [\r\n]{1,}                    # match any sort of line endings
+            )?                              # comment is, however, optional
+			^(\#\s*)?                       # line starting with a comment sign or not
+            (                               # start to match time expression
+              (?:
+                [\d\*\/\,\-\%]+             # match minute
+              )
+              \s                            # space
+              (?:
+                [\d\*\/\,\-\%]+             # match hour
+              )
+              \s                            # space
+              (?:
+                [\d\*\/\,\-\%]+             # match day of month
+              )
+              \s                            # space
+              (?:
+                [\d\*\/\,\-\%]+|jan|feb|    # match month
+                mar|apr|may|jun|jul|aug|
+                sep|oct|nov|dec
+              )
+              \s                            # space
+              (?:
+                [\d\*\/\,\-\%]+|mon|tue|    # match day of week
+                wed|thu|fri|sat|sun
+              )
+              |
+              (?:
+                @hourly|@midnight|@daily|   # OR, match special string
+                @weekly|@monthly|@yearly|
+                @annually|@reboot)
+            )                               # end matching time expression
+            \s+                             # space
+            ([^\r\n]*?)                     # command to be run (everything, but line endings)  
+			\s*[\r\n]{1,}                   # match trailing space and line ending
           /imx";
 		
 		$this->_jobs = array();
 		if (preg_match_all($pattern, $this->_rawTable, $lines, PREG_SET_ORDER)) {
 			foreach ($lines as $lineParts) {
-				var_dump($lineParts);
 				$job = new Crontab\Job();
 				$job->setRaw($lineParts[0]);
 				$job->setComment(empty($lineParts[1]) ? null : $lineParts[1]);
-				$job->setCommandLine($lineParts[2]);
+				$job->setIsPaused($lineParts[2] != '');
 				$job->setExpression($lineParts[3]);
 				$job->setCommand($lineParts[4]);
-				var_dump($job);	
+				
 				$this->_jobs[] = $job;
 			}
 		}
-		exit;
+		
 		return $this;
 	}
 	
