@@ -1,8 +1,10 @@
 <?php
-/* @var $form \forms\AddJob\SimpleForm */
+use \forms\AddJob\SimpleForm;
+
+/* @var $form SimpleForm */
 $form->prepare();
 ?>
-<form class="job-add-form job-add-simple-form" role="form">
+<form class="job-add-form job-add-simple-form" role="form" method="post">
 	<input type="hidden" name="mode" value="simple">
 	<div class="row">
 		<div class="col-md-2">
@@ -30,6 +32,11 @@ $form->prepare();
 	<?php
 		/* @var $time \Zend\Form\Fieldset */
 		$time = $form->get('time');
+		$pickerValue = $time->get('picker')->getValue();
+		
+		$specificTimeChecked = ($pickerValue == SimpleForm::SPECIFIC_TIME ? ' checked' : '');
+		$everyHourChecked    = ($pickerValue == SimpleForm::EVERY_HOUR ? ' checked' : '');
+		$everyMinuteChecked  = ($pickerValue == SimpleForm::EVERY_MINUTE ? ' checked' : '');
 	?>
 	<div class="row">
 		<div class="col-md-2">
@@ -40,7 +47,7 @@ $form->prepare();
 			<div class="radio radio-time radio-specific-time may-host-errors">
 				<label>
 					<input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
-						   value="specificTime" autocomplete="off">
+						   value="specificTime" autocomplete="off"<?php echo $specificTimeChecked ?>>
 					Specific time in the day
 				</label>
 				<ul class="list-unstyled list-specific-time">
@@ -69,7 +76,7 @@ $form->prepare();
 			<!-- Every {step} hours at minute {minute} -->
 			<div class="radio radio-time radio-every-hour may-host-errors">
 				<input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
-					   value="everyHour" autocomplete="off">
+					   value="everyHour" autocomplete="off"<?php echo $everyHourChecked ?>>
 				<span>
 					Every 
 					<?php echo $this->formNumber($time->get('everyHour')->get('step')) ?>
@@ -96,7 +103,7 @@ $form->prepare();
 			<!-- Every {minute} minutes -->
 			<div class="radio radio-time radio-every-minute may-host-errors">
 				<input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
-					   value="everyMinute" autocomplete="off">
+					   value="everyMinute" autocomplete="off"<?php echo $everyMinuteChecked ?>>
 				<span>
 					Every
 					<?php echo $this->formNumber($time->get('everyMinute')->get('step')) ?>

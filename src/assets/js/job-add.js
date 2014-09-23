@@ -7,9 +7,11 @@ var AddJobDialog = function(startIn) {
 	var YEARLY  = 'yearly';
 	
 	var container = $('#job-add');
-	var timeRadio = $('input[name="time[picker]"]', container);
+	var timePicker = $('input[name="time[picker]"]', container);
+	var repeatPicker = $('.repeat', container);
 	var simpleForm = $('.job-add-simple-form', container);
 	var advancedForm = $('.job-add-advanced-form', container);
+	var saveButton = $('.btn-save', container);
 	
 	// Retrieves simple or advanced form, whichever is active now
 	var getActiveForm = function() {
@@ -31,7 +33,21 @@ var AddJobDialog = function(startIn) {
 		return repeatPicker.val() === expected;
 	};
 	
-	var addValidations = function() {
+	var submitHandler = function(form) {
+		saveButton.button('loading');
+		
+		$.post('/job/add', $(form).serialize(), function(data) {
+			alertService.pushSuccess(data.msg);
+			container.modal('hide');
+			form.reset();
+		}).fail(function(data) {
+			//alertService.pushError(data.responseJSON.msg);
+		}).always(function() {
+			saveButton.button('reset');
+		});
+	};
+	
+	var addValidationsAndSubmitHandler = function() {
 		$.validator.setDefaults({
 			errorClass: 'has-error'
 		});
@@ -58,6 +74,7 @@ var AddJobDialog = function(startIn) {
 					}
 				}
 			},
+			submitHandler: submitHandler,
 			rules: {
 				'command': {
 					required: true
@@ -126,6 +143,7 @@ var AddJobDialog = function(startIn) {
 		});
 		
 		advancedForm.validate({
+			submitHandler: submitHandler,
 			rules: {
 				'command': {
 					required: true
@@ -139,7 +157,7 @@ var AddJobDialog = function(startIn) {
 	
 	// Cycles through time radio options and toggles accompanying inputs
 	var toggleTimeInputs = function() {
-		timeRadio.each(function(i, radio) {			
+		timePicker.each(function(i, radio) {			
 			var radioChecked = $(radio).prop('checked');
 			var timeInputDisabled = !radioChecked;
 			
@@ -149,8 +167,20 @@ var AddJobDialog = function(startIn) {
 		});		
 	};
 	
+	// Shows fieldset corresponding to chosen "Repeat" option and hides the others
+	var toggleRepeatFieldsets = function() {
+		var selectedRepeat = repeatPicker.val();
+		$.each(['weekly', 'monthly', 'yearly'], function (i, repeat) {
+			if (repeat === selectedRepeat) {
+				$('.fieldset-' + repeat).addClass('show').removeClass('hidden');
+			} else {
+				$('.fieldset-' + repeat).addClass('hidden').removeClass('show');
+			}
+		});
+	};
+	
 	// Toggle accompanying inputs when cycling through radio options
-	timeRadio.on('change', function() {
+	timePicker.on('change', function() {
 		toggleTimeInputs();
 	});
 	
@@ -161,35 +191,16 @@ var AddJobDialog = function(startIn) {
 	});
 	
 	// Toggle fieldset corresponding to chosen "Repeat" option
-	$('body').on('change', '.repeat', function() {
-		var selectedRepeat = $(this).val();
-		$.each(['weekly', 'monthly', 'yearly'], function (i, repeat) {
-			if (repeat === selectedRepeat) {
-				$('.fieldset-' + repeat).addClass('show').removeClass('hidden');
-			} else {
-				$('.fieldset-' + repeat).addClass('hidden').removeClass('show');
-			}
-		});
+	repeatPicker.on('change', function() {
+		toggleRepeatFieldsets();
 	});
 	
-	addValidations();
-	$('.btn-save', container).on('click', function(e) {
+	addValidationsAndSubmitHandler();
+	toggleTimeInputs();
+	toggleRepeatFieldsets();
+	
+	saveButton.on('click', function(e) {
 		var form = getActiveForm();
-		var saveButton = $(this);
-		saveButton.button('loading');
-		
-		if (form.valid()) {
-			$.post('/job/add', form.serialize(), function(data) {
-				alertService.pushSuccess(data.msg);
-			}).fail(function(data) {
-				alertService.pushError(data.responseJSON.msg);
-			}).always(function() {
-				saveButton.button('reset');
-				$('#job-add').modal('hide');
-				
-				// @todo avoid the reload
-				//document.location.reload(true);
-			});
-		}
+		form.submit();
 	});
 };

@@ -51,14 +51,14 @@ class AdvancedForm extends Form implements InputFilterProviderInterface
 		$this->add($command);
 	}
 	
-     /**
-      * Returns an array specification compatible with
-      * {@link Zend\InputFilter\Factory::createInputFilter()}.
-	  * 
-      * @return array
-      */
-     public function getInputFilterSpecification()
-     {
+	/**
+	 * Returns an array specification compatible with
+	 * {@link Zend\InputFilter\Factory::createInputFilter()}.
+	 * 
+	 * @return array
+	 */
+	public function getInputFilterSpecification()
+    {
 		return array(
 			'name' => array(
 				'filters' => array(
@@ -77,6 +77,6 @@ class AdvancedForm extends Form implements InputFilterProviderInterface
 					array('name' => 'Zend\Filter\StringTrim')
 				)
 			)
-         );
-     }	
+		);
+	}
 }

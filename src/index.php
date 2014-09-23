@@ -60,10 +60,13 @@ $app->group('/job', function() use ($app) {
 	$app->post('/add', $setupJsonResponse, function() use ($app) {
 		$formData = $app->request->post();
 		
-		$form = new AddJob\SimpleForm();
-		$form->setData($formData);
+		$form = AddJob\FormFactory::createForm($formData);
 		if ($form->isValid()) {
-			$expression = ExpressionService::createExpression($formData);
+			if ($formData['mode'] == AddJob\FormFactory::SIMPLE) {
+				$expression = ExpressionService::createExpression($formData);
+			} else {
+				$expression = $formData['expression'];
+			}
 			
 			$job = new Crontab\Job();
 			$job->setExpression($expression);
@@ -80,8 +83,7 @@ $app->group('/job', function() use ($app) {
 		} else {
 			$app->render(500, array(
 				'error' => true,
-				'msg' => 'Form is invalid.',
-				'messages' => $form->getMessages()
+				'msg' => $form->getMessages()
 			));
 		}
 	});

@@ -92,6 +92,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 		$picker = new Element\Radio('picker');
 		$picker->setLabel('Pick Time');
 		$picker->setValueOptions(array(self::SPECIFIC_TIME, self::EVERY_HOUR, self::EVERY_MINUTE));
+		$picker->setValue(self::SPECIFIC_TIME);
 		$timeFieldset->add($picker);
 		
 		// Attach "child" fieldsets
@@ -125,6 +126,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 			self::MONTHLY => 'Monthly',
 			self::YEARLY  => 'Yearly'
 		));
+		$picker->setValue(self::DAILY);
 		$repeatFieldset->add($picker);
 		
 		// Attach "child" fieldsets
@@ -317,14 +319,14 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 		return $repeatYearlyFieldset;
 	}
 	
-     /**
-      * Returns an array specification compatible with
-      * {@link Zend\InputFilter\Factory::createInputFilter()}.
-	  * 
-      * @return array
-      */
-     public function getInputFilterSpecification()
-     {
+	/**
+	 * Returns an array specification compatible with
+	 * {@link Zend\InputFilter\Factory::createInputFilter()}.
+	 * 
+	 * @return array
+	 */
+	public function getInputFilterSpecification()
+    {
 		return array(
 			'name' => array(
 				'required' => false,
@@ -428,6 +430,6 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 					)
 				)
 			)
-         );
-     }	
+		);
+    }
 }
