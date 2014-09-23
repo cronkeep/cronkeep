@@ -63,6 +63,7 @@ class Crontab implements \IteratorAggregate
 	
 	/**
 	 * Runs the job in background.
+	 * @see http://symfony.com/doc/current/components/process.html
 	 * 
 	 * @param Job $job
 	 * @return Crontab
@@ -127,7 +128,7 @@ class Crontab implements \IteratorAggregate
 	 */
 	public function resume(Job $job)
 	{
-		// Comment the cron job
+		// Uncomment the cron job
 		$job->setIsPaused(false);
 		
 		$originalJob = $job->getOriginalRaw();
@@ -271,7 +272,7 @@ class Crontab implements \IteratorAggregate
 		$this->_jobs = array();
 		if (preg_match_all($pattern, $this->_rawTable, $lines, PREG_SET_ORDER)) {
 			foreach ($lines as $lineParts) {
-				$job = new Crontab\Job();
+				$job = new Job();
 				$job->setRaw($lineParts[0]);
 				$job->setComment(empty($lineParts[1]) ? null : $lineParts[1]);
 				$job->setIsPaused($lineParts[2] != '');

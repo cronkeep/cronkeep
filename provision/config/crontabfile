@@ -19,4 +19,3 @@ MAILTO=paul
 # This is a comment
 @yearly /run/this/once/per/.year
 @weekly /run/this/once/per/.week
-@midnight /run/this/once/per/.night

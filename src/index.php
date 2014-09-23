@@ -88,8 +88,6 @@ $app->group('/job', function() use ($app) {
 	
 	/**
 	 * Runs a cron job in background.
-	 * 
-	 * @see http://symfony.com/doc/current/components/process.html
 	 */
 	$app->get('/run/:hash', $setupJsonResponse, function($hash) use ($app) {
 		$crontab = new Crontab();
