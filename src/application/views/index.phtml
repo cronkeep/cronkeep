@@ -32,70 +32,10 @@
 			</tr>
 		</thead>
 		<tbody>
-			<?php
-				foreach ($crontab as $job):
-					$classAttr = $job->getIsPaused() ? ' class="inactive"' : '';
-			?>
-			<tr data-hash="<?php echo $job->getHash() ?>"<?php echo $classAttr ?>>
-				<td data-searchable="1"><?php echo $job->getExpression() ?></td>
-				<td data-searchable="1">
-					<?php echo $job->getCommand() ?>
-					<?php if ($job->getComment()): ?>
-						<span class="glyphicon glyphicon-question-sign"
-							  data-toggle="tooltip" title="<?php echo $job->getComment() ?>"></span>
-					<?php endif; ?>
-				</td>
-				<td>
-					<div class="btn-group pull-right hidden-xs">
-						<button type="button" class="btn btn-success job-run" title="Run Job Now"
-								data-loading-text="Starting..." autocomplete="off">
-							<span class="glyphicon glyphicon-play"></span> Run
-						</button>
-						<button type="button" class="btn btn-success dropdown-toggle"
-								data-toggle="dropdown">
-							<span class="caret"></span>
-							<span class="sr-only">Toggle Dropdown</span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li class="menu-item-resume <?php echo $job->getIsPaused() ? 'show' : 'hidden' ?>">
-								<a href="#" title="Resume Job Schedule" class="job-resume">
-									<span class="glyphicon glyphicon-repeat"></span> Resume Schedule</a>
-							</li>
-							<li class="menu-item-pause <?php echo $job->getIsPaused() ? 'hidden' : 'show' ?>">
-								<a href="#" title="Pause Job Schedule" class="job-pause">
-									<span class="glyphicon glyphicon-pause"></span> Pause Schedule</a>
-							</li>
-							<li>
-								<a href="#" title="Permanently Delete Job" class="job-confirm-delete">
-									<span class="glyphicon glyphicon-remove"></span> Delete</a>
-							</li>
-						</ul>
-					</div>
-					<div class="btn-group pull-right visible-xs">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li>
-								<a href="#" title="Run Job Now" class="job-run">
-									<span class="glyphicon glyphicon-play"></span> Run</a>
-							</li>
-							<li class="menu-item-resume <?php echo $job->getIsPaused() ? 'show' : 'hidden' ?>">
-								<a href="#" title="Resume Job Schedule" class="job-resume">
-									<span class="glyphicon glyphicon-repeat"></span> Resume Schedule</a>
-							</li>
-							<li class="menu-item-pause <?php echo $job->getIsPaused() ? 'hidden' : 'show' ?>">
-								<a href="#" title="Pause Job Schedule" class="job-pause">
-									<span class="glyphicon glyphicon-pause"></span> Pause Schedule</a>
-							</li>
-							<li>
-								<a href="#" title="Permanently Delete Job" class="job-confirm-delete">
-									<span class="glyphicon glyphicon-remove"></span> Delete</a>
-							</li>
-						</ul>
-					</div>
-				</td>
-			</tr>
+			<?php foreach ($crontab as $job): ?>
+				<?php echo $this->partial('partials/job.phtml', array(
+					'job' => $job
+				)) ?>
 			<?php endforeach; ?>
 		</tbody>
 	</table>

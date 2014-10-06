@@ -3,9 +3,11 @@ var crontabService = new CrontabService(alertService);
 var searchService = new SearchService();
 var addJobDialog = new AddJobDialog();
 
-// Enable tooltips
+// Enable tooltips now and in the future
 $(function() {
-	$("[data-toggle='tooltip']").tooltip();
+	$(".table-crontab [data-toggle='tooltip']").tooltip();
 });
-
-//$('#job-add').modal();
+$(document).on('jobAdd', function(event, data) {
+	var job = $(".table-crontab [data-hash='" + data.hash + "']");
+	$("[data-toggle='tooltip']", job).tooltip();
+});

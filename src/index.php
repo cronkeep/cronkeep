@@ -15,9 +15,13 @@ $app = new \Slim\Slim(array(
     'hash' => '[a-z0-9]{8}'
 ));
 
-// Initialize layout when not in an AJAX context
+// Initialize layout and store it, and use it right away
+// as the view for non-XHR requests
+$view = new \library\App\Layout();
+$view->setTemplatesDirectory($app->config('templates.path'));
+$app->config('view', $view);
 if (!$app->request->isXhr()) {
-	$app->view('\library\App\Layout');
+	$app->view($view);
 }
 
 // Routes
@@ -76,10 +80,18 @@ $app->group('/job', function() use ($app) {
 			$crontab = new Crontab();
 			$crontab->add($job)->save();
 			
-			$app->render(200, array(
+			$response = array(
 				'error' => false,
-				'msg' => 'The job has been added.'
-			));
+				'msg' => 'The job has been added.',
+				'hash' => $job->getHash()
+			);
+			if ((bool) $formData['returnHtml']) {
+				$response['html'] = $app->config('view')->partial('partials/job.phtml', array(
+					'job' => $job
+				));
+			}
+			
+			$app->render(200, $response);
 		} else {
 			$app->render(500, array(
 				'error' => true,

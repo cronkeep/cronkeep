@@ -12,6 +12,7 @@ var AddJobDialog = function(startIn) {
 	var simpleForm = $('.job-add-simple-form', container);
 	var advancedForm = $('.job-add-advanced-form', container);
 	var saveButton = $('.btn-save', container);
+	var crontab = $('.table-crontab tbody');
 	
 	// Retrieves simple or advanced form, whichever is active now
 	var getActiveForm = function() {
@@ -40,8 +41,10 @@ var AddJobDialog = function(startIn) {
 			alertService.pushSuccess(data.msg);
 			container.modal('hide');
 			form.reset();
+			crontab.append(data.html);
+			$(document).trigger('jobAdd', {hash: data.hash});
 		}).fail(function(data) {
-			//alertService.pushError(data.responseJSON.msg);
+			// @todo Handle server-side errors
 		}).always(function() {
 			saveButton.button('reset');
 		});

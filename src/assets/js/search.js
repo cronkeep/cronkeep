@@ -73,18 +73,28 @@ var SearchService = function(searchData) {
 		return this;
 	};
 	
+	// Brings back all the table rows and disables any highlights
 	this.clear = function() {
 		// Turn off highlights
 		$('.table-crontab td[data-searchable=1]').each(function(i, element) {
 			$(element).highlightRegex(undefined, highlightOptions);
 		});
-
+		
 		// Show all table rows
 		tableRows.show();
 		
 		return this;
 	};
 	
+	// Hides empty search notice, brings back all table rows and clears the search field
+	// (more powerful than .clear)
+	this.reset = function() {
+		self.hideEmptySearchNotice();
+		self.clear();
+		$('.job-search').val('');
+	}
+	
+	// Shows a special container with empty search instructions
 	this.showEmptySearchNotice = function() {
 		emptySearch.removeClass('hidden');
 		table.hide();
@@ -92,9 +102,17 @@ var SearchService = function(searchData) {
 		return this;
 	};
 	
+	// Hides special container shown for empty searches
 	this.hideEmptySearchNotice = function() {
 		emptySearch.addClass('hidden');
 		table.show();
+		
+		return this;
+	};
+	
+	// Loads table rows
+	var init = function() {
+		tableRows = $('tbody tr', table);
 		
 		return this;
 	};
@@ -108,8 +126,11 @@ var SearchService = function(searchData) {
 	});
 	
 	$('body').on('click', '.job-search-reset', function() {
-		self.hideEmptySearchNotice();
-		self.clear();
-		$('.job-search').val('');
+		self.reset();
+	});
+	
+	$(document).on('jobAdd', function() {
+		init();
+		self.reset();
 	});
 };
