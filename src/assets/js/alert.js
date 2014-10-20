@@ -1,6 +1,5 @@
-var AlertService = function(content, alertClass) {
+var AlertService = function(container) {
 	var self = this;
-	var alertArea = $('.alert-area');
 	
 	this.pushSuccess = function(message) {
 		this.pushMessage(message, 'alert-success');
@@ -13,6 +12,10 @@ var AlertService = function(content, alertClass) {
 	};
 	
 	this.pushMessage = function(message, alertClass) {
+		if ($.isArray(message)) {
+			message = message.join('<br>');
+		}
+		
 		var alert = $('<div class="alert ' + alertClass + ' alert-dismissible" role="alert">'
 			+ '<button type="button" class="close" data-dismiss="alert">'
 				+ '<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>'
@@ -20,7 +23,7 @@ var AlertService = function(content, alertClass) {
 			+ message
 			+ '</div>');
 	
-		alertArea.empty().append(alert);
+		container.empty().append(alert);
 		return this;
 	};
 	

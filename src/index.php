@@ -95,7 +95,7 @@ $app->group('/job', function() use ($app) {
 		} else {
 			$app->render(500, array(
 				'error' => true,
-				'msg' => $form->getMessages()
+				'msg' => $form->getFormattedMessages()
 			));
 		}
 	});

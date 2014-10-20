@@ -2,7 +2,7 @@
 
 namespace forms\AddJob;
 
-use Zend\Form\Form;
+use library\App\Form;
 use Zend\Form\Element;
 use Zend\InputFilter\InputFilterProviderInterface;
 
@@ -61,6 +61,7 @@ class AdvancedForm extends Form implements InputFilterProviderInterface
     {
 		return array(
 			'name' => array(
+				'required' => false,
 				'filters' => array(
 					array('name' => 'Zend\Filter\StringTrim')
 				)

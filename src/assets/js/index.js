@@ -1,7 +1,7 @@
-var alertService = new AlertService();
+var alertService = new AlertService($('.global-alerts'));
 var crontabService = new CrontabService(alertService);
 var searchService = new SearchService();
-var addJobDialog = new AddJobDialog();
+var addJobDialog = new AddJobDialog(alertService);
 
 // Enable tooltips now and in the future
 $(function() {

@@ -1,4 +1,4 @@
-var AddJobDialog = function(startIn) {
+var AddJobDialog = function(globalAlertService) {
 	var SPECIFIC_TIME = 'specificTime';
 	var EVERY_HOUR = 'everyHour';
 	var EVERY_MINUTE = 'everyMinute';
@@ -14,12 +14,28 @@ var AddJobDialog = function(startIn) {
 	var saveButton = $('.btn-save', container);
 	var crontab = $('.table-crontab tbody');
 	
+	var simpleFormAlertService = new AlertService($('.form-alerts', simpleForm));
+	var advancedFormAlertService = new AlertService($('.form-alerts', advancedForm));
+	
+	// Tells whether the simple form is the one currently active
+	var isSimpleFormActive = function() {
+		return $('ul.nav li.active a', container).attr('data-mode') === 'simple';
+	};
+	
 	// Retrieves simple or advanced form, whichever is active now
 	var getActiveForm = function() {
-		if ($('ul.nav li.active a', container).attr('data-mode') === 'simple') {
+		if (isSimpleFormActive()) {
 			return simpleForm;
 		}
 		return advancedForm;
+	};
+	
+	// Retrieves alert service for the currently active form
+	var getFormAlertService = function() {
+		if (isSimpleFormActive()) {
+			return simpleFormAlertService;
+		}
+		return advancedFormAlertService;
 	};
 	
 	// Assert-style function to compare time picker's value with passed value
@@ -38,13 +54,14 @@ var AddJobDialog = function(startIn) {
 		saveButton.button('loading');
 		
 		$.post('/job/add', $(form).serialize(), function(data) {
-			alertService.pushSuccess(data.msg);
+			globalAlertService.pushSuccess(data.msg);
 			container.modal('hide');
 			form.reset();
 			crontab.append(data.html);
 			$(document).trigger('jobAdd', {hash: data.hash});
 		}).fail(function(data) {
-			// @todo Handle server-side errors
+			var formAlertService = getFormAlertService();
+			formAlertService.pushError(data.responseJSON.msg);
 		}).always(function() {
 			saveButton.button('reset');
 		});
