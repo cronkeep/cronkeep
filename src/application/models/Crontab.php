@@ -229,7 +229,7 @@ class Crontab implements \IteratorAggregate
 (?(DEFINE)
 
 	# Subroutine matching the (optional) comment sign preceding a cron definition
-	(?<_cronCommentedSign>(\#\s*)?)
+	(?<_cronCommentedSign>(?:\#\s*)?)
 	
 	# Subroutine matching the time expression
 	(?<_expression>
@@ -280,24 +280,24 @@ class Crontab implements \IteratorAggregate
 	)
 	
 	# Subroutine matching comment (which is above cron, by convention)
-	# Also a comment isn't allowed to look like a cron definition, or otherwise
-	# commented crons could pass as comments for neighbouring crons
-	(?<_comment>
-		(?(?!(?&_cronDefinition))				# conditional: not a cron definition
-			(?:
-				(\#[^\r\n]*?)                 	# comment
-				\s*                           	# trailing whitespace, if any
-				[\r\n]{1,}                    	# line endings
-			)?                              	# comment is, however, optional
-		)
-	)
+	(?<_comment>\#[^\r\n]*)
 )
 
 # Here's where the actual matching happens.
 # Subroutine calls are wrapped by named capture groups so we could
 # easily reference the captured subpatterns later.
 
-(?P<comment>(?&_comment))						# comment
+
+
+# A comment isn't allowed to look like a cron definition, or otherwise
+# commented crons could pass as comments for neighboring crons
+^(?(?!(?&_cronDefinition))                      # conditional: not a cron definition
+	(?:
+		(?P<comment>(?&_comment))               # comment
+		\s*                                     # trailing whitespace, if any
+		[\r\n]{1,}                              # line endings
+	)?                                          # comment is, however, optional
+)
 (?P<cronCommentedSign>^(?&_cronCommentedSign))	# (optional) comment sign for 'paused' crons
 (?P<expression>(?&_expression))					# time expression
 \s+												# space
