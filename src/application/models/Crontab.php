@@ -221,63 +221,100 @@ class Crontab implements \IteratorAggregate
 	 * Parses a crontab with commentaries. It assumes the comment for a cron job
 	 * comes before the job definition.
 	 * 
-	 * Indentation inspired by:
-	 * @link http://www.onlamp.com/lpt/a/4101
-	 * 
 	 * @return Crontab
 	 */
 	protected function _parseCrontab()
 	{
-        $pattern = "/
-            (?:
-              (\#[^\r\n]*?)                 # match comment above cron
-			  \s*                           # match any trailing whitespace
-              [\r\n]{1,}                    # match any sort of line endings
-            )?                              # comment is, however, optional
-			^(\#\s*)?                       # line starting with a comment sign or not
-            (                               # start to match time expression
-              (?:
-                [\d\*\/\,\-\%]+             # match minute
-              )
-              \s                            # space
-              (?:
-                [\d\*\/\,\-\%]+             # match hour
-              )
-              \s                            # space
-              (?:
-                [\d\*\/\,\-\%]+             # match day of month
-              )
-              \s                            # space
-              (?:
-                [\d\*\/\,\-\%]+|jan|feb|    # match month
-                mar|apr|may|jun|jul|aug|
-                sep|oct|nov|dec
-              )
-              \s                            # space
-              (?:
-                [\d\*\/\,\-\%]+|mon|tue|    # match day of week
-                wed|thu|fri|sat|sun
-              )
-              |
-              (?:
-                @hourly|@midnight|@daily|   # OR, match special string
-                @weekly|@monthly|@yearly|
-                @annually|@reboot)
-            )                               # end matching time expression
-            \s+                             # space
-            ([^\r\n]*?)                     # command to be run (everything, but line endings)  
-			\s*[\r\n]{1,}                   # match trailing space and line ending
-          /imx";
+		$pattern = "/
+(?(DEFINE)
+
+	# Subroutine matching the (optional) comment sign preceding a cron definition
+	(?<_cronCommentedSign>(\#\s*)?)
+	
+	# Subroutine matching the time expression
+	(?<_expression>
 		
+		# either match expression
+		(?:
+			(?:
+				[\d\*\/\,\-\%]+             	# minute part
+			)
+			\s                            		# space
+			(?:
+				[\d\*\/\,\-\%]+					# hour part
+			)
+			\s									# space
+			(?:
+				[\d\*\/\,\-\%]+					# day of month part
+			)
+			\s                            		# space
+			(?:
+				[\d\*\/\,\-\%]+|jan|feb|    	# month part
+				mar|apr|may|jun|jul|aug|
+				sep|oct|nov|dec
+			)
+			\s                            		# space
+			(?:
+				[\d\*\/\,\-\%]+|mon|tue|    	# day of week part
+				wed|thu|fri|sat|sun
+			)
+		)
+		
+		# or match specials
+		| (?:
+			@hourly|@midnight|@daily|
+			@weekly|@monthly|@yearly|
+			@annually|@reboot
+		)
+	)
+	
+	# Subroutine matching the command part (everything except line ending)
+	(?<_command>[^\r\n]*)
+
+	# Subroutine matching full cron definition (time + command)
+	(?<_cronDefinition>
+		^(?&_cronCommentedSign)					# comment sign (optional)
+		(?&_expression)							# time expression part
+		\s+										# space
+		(?&_command)							# command part
+	)
+	
+	# Subroutine matching comment (which is above cron, by convention)
+	# Also a comment isn't allowed to look like a cron definition, or otherwise
+	# commented crons could pass as comments for neighbouring crons
+	(?<_comment>
+		(?(?!(?&_cronDefinition))				# conditional: not a cron definition
+			(?:
+				(\#[^\r\n]*?)                 	# comment
+				\s*                           	# trailing whitespace, if any
+				[\r\n]{1,}                    	# line endings
+			)?                              	# comment is, however, optional
+		)
+	)
+)
+
+# Here's where the actual matching happens.
+# Subroutine calls are wrapped by named capture groups so we could
+# easily reference the captured subpatterns later.
+
+(?P<comment>(?&_comment))						# comment
+(?P<cronCommentedSign>^(?&_cronCommentedSign))	# (optional) comment sign for 'paused' crons
+(?P<expression>(?&_expression))					# time expression
+\s+												# space
+(?P<command>(?&_command))						# command to be run (everything, but line ending)
+\s*[\r\n]{1,}									# trailing space and line ending
+
+		/imx";
+
 		$this->_jobs = array();
 		if (preg_match_all($pattern, $this->_rawTable, $lines, PREG_SET_ORDER)) {
 			foreach ($lines as $lineParts) {
 				$job = new Job();
 				$job->setRaw($lineParts[0]);
-				$job->setComment(empty($lineParts[1]) ? null : $lineParts[1]);
-				$job->setIsPaused($lineParts[2] != '');
-				$job->setExpression($lineParts[3]);
-				$job->setCommand($lineParts[4]);
+				$job->setComment(empty($lineParts['comment']) ? null : $lineParts['comment']);
+				$job->setIsPaused($lineParts['cronCommentedSign'] != '');
+				$job->setExpression($lineParts['expression']);
+				$job->setCommand($lineParts['command']);
 				
 				$this->_jobs[] = $job;
 			}
