@@ -8,6 +8,9 @@ $form->prepare();
 	<div class="form-alerts"></div>
 	<input type="hidden" name="mode" value="simple">
 	<input type="hidden" name="returnHtml" value="1">
+	<?php if (isset($hash)): ?>
+		<input type="hidden" name="hash" value="<?php echo $hash ?>">
+	<?php endif; ?>
 	<div class="row">
 		<div class="col-md-2">
 			<span class="legend"><?php echo $form->get('name')->getLabel() ?></span>
@@ -155,6 +158,7 @@ $form->prepare();
 	<?php
 		/* @var $dayOfMonth \Zend\Form\Element\MultiCheckbox */
 		$dayOfMonth = $repeat->get('monthly')->get('dayOfMonth');
+		$selectedDays = $dayOfMonth->getValue();
 	?>
 	<div class="row fieldset-monthly hidden">
 		<div class="col-md-2"></div>
@@ -163,10 +167,14 @@ $form->prepare();
 			<div>
 				<div class="btn-group btn-group-day-picker">
 					<div class="btn-group" data-toggle="buttons">
-						<?php foreach ($dayOfMonth->getValueOptions() as $day): ?>
+						<?php foreach ($dayOfMonth->getValueOptions() as $day):
+								$dayChecked = $selectedDays && in_array($day, $selectedDays) ?
+									' checked' : '';
+						?>
 							<label class="btn btn-default">
 								<input type="checkbox" name="<?php echo $dayOfMonth->getName() ?>[]"
-									   autocomplete="off" value="<?php echo $day ?>">
+									   <?php echo $dayChecked ?> value="<?php echo $day ?>"
+									   autocomplete="off">
 								<?php echo $day ?>
 							</label>
 							<?php if ($day % 7 == 0): ?>

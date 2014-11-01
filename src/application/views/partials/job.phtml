@@ -19,6 +19,10 @@
 				<span class="sr-only">Toggle Dropdown</span>
 			</button>
 			<ul class="dropdown-menu" role="menu">
+				<li>
+					<a href="#" title="Edit Job" class="job-edit">
+						<span class="glyphicon glyphicon-edit"></span> Edit</a>
+				</li>
 				<li class="menu-item-resume <?php echo $job->getIsPaused() ? 'show' : 'hidden' ?>">
 					<a href="#" title="Resume Job Schedule" class="job-resume">
 						<span class="glyphicon glyphicon-repeat"></span> Resume Schedule</a>
@@ -38,6 +42,10 @@
 				<span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu" role="menu">
+				<li>
+					<a href="#" title="Edit Job" class="job-edit">
+						<span class="glyphicon glyphicon-edit"></span> Edit</a>
+				</li>
 				<li>
 					<a href="#" title="Run Job Now" class="job-run">
 						<span class="glyphicon glyphicon-play"></span> Run</a>

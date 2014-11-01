@@ -99,6 +99,23 @@ class Crontab implements \IteratorAggregate
 	}
 	
 	/**
+	 * Updates original job definition in the raw crontab with changed data.
+	 * 
+	 * @param Job $job
+	 * @return Crontab
+	 */
+	public function update(Job $job)
+	{
+		$originalJob = $job->getOriginalRaw();
+		$newJob = $job->getRaw();
+		
+		// Replace the job definition in the raw crontab
+		$this->_rawTable = str_replace($originalJob, $newJob, $this->_rawTable);
+		
+		return $this;
+	}
+	
+	/**
 	 * Pauses cron schedule by commenting the job in crontab.
 	 * Additionally, {@link Crontab::save} should be called to persist the change.
 	 * 
@@ -109,12 +126,7 @@ class Crontab implements \IteratorAggregate
 	{
 		// Comment the cron job
 		$job->setIsPaused(true);
-		
-		$originalJob = $job->getOriginalRaw();
-		$newJob = $job->getRaw();
-		
-		// Replace the job definition in the raw crontab
-		$this->_rawTable = str_replace($originalJob, $newJob, $this->_rawTable);
+		$this->update($job);
 		
 		return $this;
 	}
@@ -130,12 +142,7 @@ class Crontab implements \IteratorAggregate
 	{
 		// Uncomment the cron job
 		$job->setIsPaused(false);
-		
-		$originalJob = $job->getOriginalRaw();
-		$newJob = $job->getRaw();
-		
-		// Replace the job definition in the raw crontab
-		$this->_rawTable = str_replace($originalJob, $newJob, $this->_rawTable);
+		$this->update($job);
 		
 		return $this;
 	}
@@ -229,7 +236,7 @@ class Crontab implements \IteratorAggregate
 (?(DEFINE)
 
 	# Subroutine matching the (optional) comment sign preceding a cron definition
-	(?<_cronCommentedSign>(?:\#\s*)?)
+	(?<_commentSign>(?:\#[ \t]*))
 	
 	# Subroutine matching the time expression
 	(?<_expression>
@@ -239,21 +246,21 @@ class Crontab implements \IteratorAggregate
 			(?:
 				[\d\*\/\,\-\%]+             	# minute part
 			)
-			\s                            		# space
+			[ \t]+                            	# space
 			(?:
 				[\d\*\/\,\-\%]+					# hour part
 			)
-			\s									# space
+			[ \t]+								# space
 			(?:
 				[\d\*\/\,\-\%]+					# day of month part
 			)
-			\s                            		# space
+			[ \t]+                            	# space
 			(?:
 				[\d\*\/\,\-\%]+|jan|feb|    	# month part
 				mar|apr|may|jun|jul|aug|
 				sep|oct|nov|dec
 			)
-			\s                            		# space
+			[ \t]+                            	# space
 			(?:
 				[\d\*\/\,\-\%]+|mon|tue|    	# day of week part
 				wed|thu|fri|sat|sun
@@ -273,32 +280,31 @@ class Crontab implements \IteratorAggregate
 
 	# Subroutine matching full cron definition (time + command)
 	(?<_cronDefinition>
-		^(?&_cronCommentedSign)					# comment sign (optional)
+		^(?&_commentSign)?					    # comment sign (optional)
 		(?&_expression)							# time expression part
 		\s+										# space
 		(?&_command)							# command part
 	)
 	
 	# Subroutine matching comment (which is above cron, by convention)
-	(?<_comment>\#[^\r\n]*)
+	(?<_comment>[^\r\n]*)
 )
 
 # Here's where the actual matching happens.
 # Subroutine calls are wrapped by named capture groups so we could
 # easily reference the captured subpatterns later.
 
-
-
 # A comment isn't allowed to look like a cron definition, or otherwise
 # commented crons could pass as comments for neighboring crons
 ^(?(?!(?&_cronDefinition))                      # conditional: not a cron definition
 	(?:
+		(?&_commentSign)                        # comment sign preceding comment
 		(?P<comment>(?&_comment))               # comment
 		\s*                                     # trailing whitespace, if any
 		[\r\n]{1,}                              # line endings
 	)?                                          # comment is, however, optional
 )
-(?P<cronCommentedSign>^(?&_cronCommentedSign))	# (optional) comment sign for 'paused' crons
+(?P<cronCommentSign>^(?&_commentSign)?)	        # comment sign for 'paused' crons (optional)
 (?P<expression>(?&_expression))					# time expression
 \s+												# space
 (?P<command>(?&_command))						# command to be run (everything, but line ending)
@@ -312,7 +318,7 @@ class Crontab implements \IteratorAggregate
 				$job = new Job();
 				$job->setRaw($lineParts[0]);
 				$job->setComment(empty($lineParts['comment']) ? null : $lineParts['comment']);
-				$job->setIsPaused($lineParts['cronCommentedSign'] != '');
+				$job->setIsPaused($lineParts['cronCommentSign'] != '');
 				$job->setExpression($lineParts['expression']);
 				$job->setCommand($lineParts['command']);
 				

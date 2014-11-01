@@ -61,28 +61,47 @@ $app->group('/job', function() use ($app) {
 	/**
 	 * Adds or edits a cron job.
 	 */
-	$app->post('/add', $setupJsonResponse, function() use ($app) {
+	$app->post('/save', $setupJsonResponse, function() use ($app) {
 		$formData = $app->request->post();
+		$hash = $app->request->params('hash');
 		
 		$form = AddJob\FormFactory::createForm($formData);
 		if ($form->isValid()) {
+			$crontab = new Crontab();
+			
 			if ($formData['mode'] == AddJob\FormFactory::SIMPLE) {
 				$expression = ExpressionService::createExpression($formData);
 			} else {
 				$expression = $formData['expression'];
 			}
 			
-			$job = new Crontab\Job();
+			// This is an edit
+			if ($hash) {	
+				$job = $crontab->findByHash($hash);
+				if (!$job) {
+					$app->render(500, array(
+						'error' => true,
+						'msg' => 'Cron job no longer exists'
+					));
+				}
+			} else {
+				$job = new Crontab\Job();
+			}
+			
 			$job->setExpression($expression);
 			$job->setCommand($formData['command']);
 			$job->setComment($formData['name']);
 			
-			$crontab = new Crontab();
-			$crontab->add($job)->save();
+			if ($hash) {
+				$crontab->update($job);
+			} else {
+				$crontab->add($job);
+			}
+			$crontab->save();
 			
 			$response = array(
 				'error' => false,
-				'msg' => 'The job has been added.',
+				'msg' => 'The job has been saved.',
 				'hash' => $job->getHash()
 			);
 			if ((bool) $formData['returnHtml']) {
@@ -98,6 +117,43 @@ $app->group('/job', function() use ($app) {
 				'msg' => $form->getFormattedMessages()
 			));
 		}
+	});
+	
+	$app->get('/edit-form/:hash', $setupJsonResponse, function($hash) use ($app) {
+		$crontab = new Crontab();
+		$job = $crontab->findByHash($hash);
+		if (!$job) {
+			$app->render(404, array(
+				'error' => true,
+				'msg' => 'Cron job no longer exists'
+			));
+		}
+		
+		$expressionService = new ExpressionService();
+		
+		// Prepare simple form
+		$simpleForm = null;
+		if ($expressionService->isSimpleExpression($job->getExpression())) {
+			$simpleForm = new AddJob\SimpleForm();
+			$simpleForm->get('name')->setValue($job->getComment());
+			$simpleForm->get('command')->setValue($job->getCommand());
+			$expressionService->hydrateSimpleForm($job->getExpression(), $simpleForm);
+		}
+		
+		// Prepare advanced form
+		$advancedForm = new AddJob\AdvancedForm();
+		$advancedForm->get('name')->setValue($job->getComment());
+		$advancedForm->get('command')->setValue($job->getCommand());
+		$advancedForm->get('expression')->setValue($job->getExpression());
+		
+		$app->render(200, array(
+			'error' => false,
+			'html'  => $app->config('view')->partial('partials/job-edit-dialog.phtml', array(
+				'hash'		   => $hash,
+				'simpleForm'   => $simpleForm,
+				'advancedForm' => $advancedForm
+			))
+		));
 	});
 	
 	/**

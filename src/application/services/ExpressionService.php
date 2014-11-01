@@ -72,14 +72,18 @@ class ExpressionService
 	}
 	
 	/**
-	 * Tells whether the given expression is simple enough so that
-	 * the simple add job form is able to render it.
+	 * Tells whether the given expression is simple enough for
+	 * the simple add job form to render it.
 	 * 
-	 * @param Expression $expression
+	 * @param Expression|string $expression
 	 * @return boolean
 	 */
-	public static function isSimpleExpression(Expression $expression)
-	{
+	public function isSimpleExpression($expression)
+	{		
+		if (!$expression instanceof Expression) {
+			$expression = Expression::create($expression);
+		}
+		
 		$minute		= $expression->getMinute();
 		$hour		= $expression->getHour();
 		$dayOfMonth = $expression->getDayOfMonth();
@@ -165,22 +169,126 @@ class ExpressionService
 	}
 	
 	/**
-	 * Converts an expression back into form data.
+	 * Hydrates simple form with expression data.
 	 * 
-	 * @param Expression $expression
-	 * @return array
+	 * @param Expression|string $expression
+	 * @param SimpleForm $form
+	 * @return ExpressionService
 	 */
-	public function getFormData(Expression $expression)
+	public function hydrateSimpleForm($expression, SimpleForm $form)
 	{
-		if (!self::isSimpleExpression($expression)) {
+		if (!$expression instanceof Expression) {
+			$expression = Expression::create($expression);
+		}
+		if (!$this->isSimpleExpression($expression)) {
 			throw new \InvalidArgumentException(
 				'Expression is too complex to be rendered by the simple form');
 		}
 		
-		$formData = array();
+		$hour		= $expression->getHour();
+		$minute		= $expression->getMinute();
+		$dayOfMonth = $expression->getDayOfMonth();
+		$month		= $expression->getMonth();
+		$dayOfWeek  = $expression->getDayOfWeek();
 		
-		// Build form data here
+		$timeFieldset = $form->get('time');
+		if ($hour && $minute) {
+			if (is_array($hour[0])) {
+				// Populate "Every Hour" fieldset
+				$timeFieldset->get('picker')->setValue(SimpleForm::EVERY_HOUR);
+				$timeFieldset->get(SimpleForm::EVERY_HOUR)
+							 ->get('step')->setValue($hour[0]['step']);
+				$timeFieldset->get(SimpleForm::EVERY_HOUR)
+							 ->get('minute')->setValue($minute[0]);
+			} else {
+				// Populate "Specific Time" fieldset
+				$timeFieldset->get('picker')->setValue(SimpleForm::SPECIFIC_TIME);
+				$timeFieldset->get(SimpleForm::SPECIFIC_TIME)
+							 ->get('hour')->setValue($hour[0]);
+				$timeFieldset->get(SimpleForm::SPECIFIC_TIME)
+							 ->get('minute')->setValue($minute[0]);
+			}
+		} elseif ($minute) {
+			if (is_array($minute[0])) {
+				// Populate "Every Minute" fieldset
+				$timeFieldset->get('picker')->setValue(SimpleForm::EVERY_MINUTE);
+				$timeFieldset->get(SimpleForm::EVERY_MINUTE)
+							 ->get('step')->setValue($minute[0]['step']);
+			} else {
+				// Populate "Every Hour" fieldset
+				$timeFieldset->get('picker')->setValue(SimpleForm::EVERY_HOUR);
+				$timeFieldset->get(SimpleForm::EVERY_HOUR)->get('step')->setValue(1);
+				$timeFieldset->get(SimpleForm::EVERY_HOUR)
+							 ->get('minute')->setValue($minute[0]);
+			}
+		} else {
+			// Populate "Every Minute" fieldset
+			$timeFieldset->get('picker')->setValue(SimpleForm::EVERY_MINUTE);
+			$timeFieldset->get(SimpleForm::EVERY_MINUTE)->get('step')->setValue(1);
+		}
 		
-		return $formData;
+		$repeatFieldset = $form->get('repeat');
+		if ($dayOfMonth) {			
+			// Populate "Yearly" fieldset
+			if ($month) {				
+				$repeatFieldset->get('picker')->setValue(SimpleForm::YEARLY);
+				$repeatFieldset->get(SimpleForm::YEARLY)
+							   ->get('dayOfMonth')->setValue($dayOfMonth[0]);
+				$repeatFieldset->get(SimpleForm::YEARLY)
+							   ->get('month')->setValue($month[0]);
+			
+			// Populate "Monthly" fieldset
+			} else {
+				$dayOfMonth = $this->_expandRanges($dayOfMonth);
+				
+				$repeatFieldset->get('picker')->setValue(SimpleForm::MONTHLY);
+				$repeatFieldset->get(SimpleForm::MONTHLY)
+							   ->get('dayOfMonth')->setValue($dayOfMonth);
+			}
+		}
+		
+		// Populate "Weekly" fieldset
+		if ($dayOfWeek) {
+			$dayOfWeek = $this->_expandRanges($dayOfWeek);
+			
+			$repeatFieldset->get('picker')->setValue(SimpleForm::WEEKLY);
+			$repeatFieldset->get(SimpleForm::WEEKLY)->get('dayOfWeek')->setValue($dayOfWeek);
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Goes through the values of an expression part and expands any ranges.
+	 * Basically, from something like "1-4,7" we'll get "1,2,3,4,7".
+	 * 
+	 * @param array $partValues
+	 * @return array
+	 */
+	protected function _expandRanges(array $partValues)
+	{
+		$finalValues = array();
+		foreach ($partValues as $partValue) {
+			// It's a range
+			if (is_array($partValue)) {
+				/**
+				 * $partValue looks like:
+				 * array(
+				 *   'min'  => (int),
+				 *   'max'  => (int),
+				 *   'step' => (int)
+				 * )
+				 */
+				extract($partValue);
+				while ($min <= $max) {
+					$finalValues[] = $min;
+					$min += $step;
+				}
+			} else {
+				$finalValues[] = $partValue;
+			}
+		}
+		
+		return $finalValues;
 	}
 }

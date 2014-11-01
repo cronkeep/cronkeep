@@ -6,6 +6,9 @@ $form->prepare();
 	<div class="form-alerts"></div>
 	<input type="hidden" name="mode" value="advanced">
 	<input type="hidden" name="returnHtml" value="1">
+	<?php if (isset($hash)): ?>
+		<input type="hidden" name="hash" value="<?php echo $hash ?>">
+	<?php endif; ?>
 	<div class="row">
 		<div class="col-md-2">
 			<span class="legend"><?php echo $form->get('name')->getLabel() ?></span>

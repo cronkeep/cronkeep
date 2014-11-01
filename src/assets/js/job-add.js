@@ -1,4 +1,4 @@
-var AddJobDialog = function(globalAlertService) {
+var AddJobDialog = function(container, crontabService, globalAlertService) {
 	var SPECIFIC_TIME = 'specificTime';
 	var EVERY_HOUR = 'everyHour';
 	var EVERY_MINUTE = 'everyMinute';
@@ -6,7 +6,6 @@ var AddJobDialog = function(globalAlertService) {
 	var MONTHLY = 'monthly';
 	var YEARLY  = 'yearly';
 	
-	var container = $('#job-add');
 	var timePicker = $('input[name="time[picker]"]', container);
 	var repeatPicker = $('.repeat', container);
 	var simpleForm = $('.job-add-simple-form', container);
@@ -16,6 +15,11 @@ var AddJobDialog = function(globalAlertService) {
 	
 	var simpleFormAlertService = new AlertService($('.form-alerts', simpleForm));
 	var advancedFormAlertService = new AlertService($('.form-alerts', advancedForm));
+	
+	// Opens job add / edit dialog
+	this.open = function() {
+		container.modal();
+	};
 	
 	// Tells whether the simple form is the one currently active
 	var isSimpleFormActive = function() {
@@ -52,13 +56,22 @@ var AddJobDialog = function(globalAlertService) {
 	
 	var submitHandler = function(form) {
 		saveButton.button('loading');
+		var oldHash = $('input[name=hash]', form).val();
 		
-		$.post('/job/add', $(form).serialize(), function(data) {
+		$.post('/job/save', $(form).serialize(), function(data) {			
+			// Show success message, close dialog and reset form
 			globalAlertService.pushSuccess(data.msg);
 			container.modal('hide');
 			form.reset();
-			crontab.append(data.html);
-			$(document).trigger('jobAdd', {hash: data.hash});
+			
+			// Refresh edited job in the grid
+			if (oldHash) {
+				crontabService.updateJob(oldHash, data.html, data.hash);
+			
+			// Append new job to the grid
+			} else {
+				crontabService.appendJob(data.html, data.hash);
+			}
 		}).fail(function(data) {
 			var formAlertService = getFormAlertService();
 			formAlertService.pushError(data.responseJSON.msg);
