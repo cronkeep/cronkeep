@@ -63,7 +63,7 @@ class ExpressionService
 			case SimpleForm::YEARLY: {
 				$options = $formData['repeat'][$repeatPicker];
 				$expression->setMonth($options['month']);
-				$expression->setDayOfMonth($options['day']);
+				$expression->setDayOfMonth($options['dayOfMonth']);
 				break;
 			}
 		}
@@ -90,7 +90,7 @@ class ExpressionService
 		$month		= $expression->getMonth();
 		$dayOfWeek  = $expression->getDayOfWeek();
 		
-		// Simple expressions support a specific time (one hour, one minute)
+		// Simple expressions feature a specific time (one hour, one minute)
 		if (count($minute) > 1 || count($hour) > 1) {
 			return false;
 		}
@@ -143,9 +143,6 @@ class ExpressionService
 			if ($dayOfWeek) {
 				return false;
 			}
-			if ($month) {
-				return false;
-			}
 			
 			// Step is not supported for day of month intervals
 			foreach ($dayOfMonth as $value) {
@@ -155,9 +152,12 @@ class ExpressionService
 			}
 		}
 		
-		// "Yearly" repeat option (only a month and a day should be set)
+		// "Yearly" repeat option (only one month and one day should be set)
 		if ($month) {
-			if (count($dayOfMonth) != 1) {
+			if (count($dayOfMonth) != 1 || is_array($dayOfMonth[0])) {
+				return false;
+			}
+			if (count($month) != 1 || is_array($month[0])) {
 				return false;
 			}
 			if ($dayOfWeek) {

@@ -304,7 +304,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 		$month->setValueOptions($this->_monthOptions);
 		$repeatYearlyFieldset->add($month);
 		
-		$day = new Element\Number('day');
+		$day = new Element\Number('dayOfMonth');
 		$day->setValue(1);
 		$day->setAttributes(array(
 			'class' => 'form-control input-day pull-left',
@@ -416,7 +416,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 			),
 			'repeat' => array(
 				self::YEARLY => array(
-					'day' => array(
+					'dayOfMonth' => array(
 						'filters' => array(
 							array('name' => 'Zend\Filter\StringTrim')
 						),

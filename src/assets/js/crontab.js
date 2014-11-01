@@ -142,22 +142,26 @@ var CrontabService = function(alertService) {
 		$(this).blur();
 	});
 	
-	$('body').on('click', '.job-edit', function() {
+	$('body').on('click', '.job-edit', function(e) {
+		e.preventDefault();
 		var job = $(this).closest('tr');
 		self.editJob(job);
 	});
 
-	$('body').on('click', '.job-pause', function() {
+	$('body').on('click', '.job-pause', function(e) {
+		e.preventDefault();
 		var job = $(this).closest('tr');
 		self.pauseJob(job);
 	});
 
-	$('body').on('click', '.job-resume', function() {
+	$('body').on('click', '.job-resume', function(e) {
+		e.preventDefault();
 		var job = $(this).closest('tr');
 		self.resumeJob(job);
 	});
 	
-	$('body').on('click', '.job-confirm-delete', function() {
+	$('body').on('click', '.job-confirm-delete', function(e) {
+		e.preventDefault();
 		jobToDelete = $(this).closest('tr');
 		$('#job-delete-confirmation').modal();
 	});

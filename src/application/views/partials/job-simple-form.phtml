@@ -199,7 +199,7 @@ $form->prepare();
 				<span class="hint"><?php echo $repeat->get('yearly')->getLabel() ?></span>
 				<div class="clearfix">
 					<?php echo $this->formSelect($repeat->get('yearly')->get('month')) ?>
-					<?php echo $this->formNumber($repeat->get('yearly')->get('day')) ?>
+					<?php echo $this->formNumber($repeat->get('yearly')->get('dayOfMonth')) ?>
 				</div>
 				<ul class="error-container">
 					<?php
@@ -213,7 +213,7 @@ $form->prepare();
 								  ->setMessageOpenFormat('<li>')
 							      ->setMessageSeparatorString('</li><li>')
 							      ->setMessageCloseString('</li>')
-								  ->render($repeat->get('yearly')->get('day'));
+								  ->render($repeat->get('yearly')->get('dayOfMonth'));
 					?>
 				</ul>
 			</div>
