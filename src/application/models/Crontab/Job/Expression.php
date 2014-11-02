@@ -229,14 +229,13 @@ class Expression
 	 */
 	public function addPart($part, $value)
 	{
-		$value = $this->_normalize($part, $value);
-		
 		if (!array_key_exists($part, $this->_parts)) {
 			throw new \OutOfBoundsException(__METHOD__ . ' called with an invalid part: ' . $part);
 		}
 		
 		// Value is a number
 		if (is_numeric($value)) {
+			$value = $this->_normalize($part, $value);
 			if ($value < $this->_bounds[$part]['min'] || $value > $this->_bounds[$part]['max']) {
 				throw new \InvalidArgumentException('Value is outside the valid range for ' . $part);
 			}
@@ -248,7 +247,7 @@ class Expression
 			if ($value == '*') {
 				$this->_parts[$part] = array();
 			} else {
-				// we may want to normalize $value in the future
+				$value = $this->_normalize($part, $value);
 				$this->_parts[$part][] = $value;
 			}
 		
@@ -440,12 +439,15 @@ class Expression
 	 */
 	protected function _normalize($part, $value)
 	{
-		if (is_string($value)) {
-			$value = strtolower($value);
-		}
-		
-		if (isset(self::$_synonyms[$part][$value])) {
-			return self::$_synonyms[$part][$value];
+		// Working only with int and string values
+		if (is_scalar($value)) {
+			if (is_string($value)) {
+				$value = strtolower($value);
+			}
+
+			if (isset(self::$_synonyms[$part][$value])) {
+				return self::$_synonyms[$part][$value];
+			}
 		}
 		
 		return $value;
