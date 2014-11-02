@@ -212,6 +212,16 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
 		});
 	};
 	
+	// Pads time fields with "0" for single-digit values
+	// (works only on IE and Chrome for number inputs)
+	var padTimeField = function(field) {
+		var val = field.val();
+		if (val !== '') {
+			field.val(String('00' + val).slice(-2));
+		}
+		return this;
+	};
+	
 	// Toggle accompanying inputs when cycling through radio options
 	timePicker.on('change', function() {
 		toggleTimeInputs();
@@ -231,6 +241,10 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
 	addValidationsAndSubmitHandler();
 	toggleTimeInputs();
 	toggleRepeatFieldsets();
+	
+	padTimeField($('input[name="time[specificTime][hour]"]', container));
+	padTimeField($('input[name="time[specificTime][minute]"]', container));
+	padTimeField($('input[name="time[everyHour][minute]"]', container));
 	
 	saveButton.on('click', function(e) {
 		var form = getActiveForm();
