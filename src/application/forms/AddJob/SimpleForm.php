@@ -244,23 +244,11 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 	{
 		$repeatWeeklyFieldset = new Fieldset(self::WEEKLY);
 		
+		// Note that this field is rendered on the frontend without the view helper,
+		// for more flexibility.
 		$dayOfWeek = new Element\MultiCheckbox('dayOfWeek');
 		$dayOfWeek->setLabel('Pick day of week');
-		
-		$valueOptions = array();
-		foreach ($this->_dayOfWeekOptions as $key => $dayOption) {
-			$valueOptions[] = array(
-				'label' => $dayOption,
-				'value' => $key,
-				'attributes' => array(
-					'autocomplete' => 'off'
-				),
-				'label_attributes' => array(
-					'class' => 'btn btn-default'
-				)
-			);
-		}
-		$dayOfWeek->setValueOptions($valueOptions);
+		$dayOfWeek->setValueOptions($this->_dayOfWeekOptions);
 		
 		$repeatWeeklyFieldset->add($dayOfWeek);		
 		return $repeatWeeklyFieldset;
@@ -276,6 +264,8 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 	{
 		$repeatMonthlyFieldset = new Fieldset(self::MONTHLY);
 		
+		// Note that this field is rendered on the frontend without the view helper,
+		// for more flexibility.
 		$dayOfMonth = new Element\MultiCheckbox('dayOfMonth');
 		$dayOfMonth->setLabel('Pick days');
 		$dayOfMonth->setValueOptions(array_combine(range(1, 31), range(1, 31)));

@@ -138,6 +138,7 @@ $form->prepare();
 	<?php
 		/* @var $dayOfWeek \Zend\Form\Element\MultiCheckbox */
 		$dayOfWeek = $repeat->get('weekly')->get('dayOfWeek');
+		$selectedDays = $dayOfWeek->getValue();
 	?>
 	<div class="row fieldset-weekly hidden">
 		<div class="col-md-2"></div>
@@ -145,7 +146,16 @@ $form->prepare();
 			<span class="hint"><?php echo $dayOfWeek->getLabel() ?></span>
 			<div>
 				<div class="btn-group" data-toggle="buttons">
-					<?php echo $this->formMultiCheckbox($dayOfWeek) ?>
+					<?php foreach ($dayOfWeek->getValueOptions() as $value => $label):
+							$dayChecked = $selectedDays && in_array($value, $selectedDays);
+					?>
+						<label class="btn btn-default<?php echo $dayChecked ? ' active' : '' ?>">
+							<input type="checkbox" name="<?php echo $dayOfWeek->getName() ?>[]"
+								   <?php echo $dayChecked ? 'checked' : '' ?>
+								   value="<?php echo $value ?>" autocomplete="off">
+							<?php echo $label ?>
+						</label>
+					<?php endforeach; ?>
 				</div>
 			</div>
 			<?php echo $this->formElementErrors($dayOfWeek, array(
@@ -168,13 +178,12 @@ $form->prepare();
 				<div class="btn-group btn-group-day-picker">
 					<div class="btn-group" data-toggle="buttons">
 						<?php foreach ($dayOfMonth->getValueOptions() as $day):
-								$dayChecked = $selectedDays && in_array($day, $selectedDays) ?
-									' checked' : '';
+								$dayChecked = $selectedDays && in_array($day, $selectedDays);
 						?>
-							<label class="btn btn-default">
+							<label class="btn btn-default<?php echo $dayChecked ? ' active' : '' ?>">
 								<input type="checkbox" name="<?php echo $dayOfMonth->getName() ?>[]"
-									   <?php echo $dayChecked ?> value="<?php echo $day ?>"
-									   autocomplete="off">
+									   <?php echo $dayChecked ? 'checked' : '' ?>
+									   value="<?php echo $day ?>" autocomplete="off">
 								<?php echo $day ?>
 							</label>
 							<?php if ($day % 7 == 0): ?>

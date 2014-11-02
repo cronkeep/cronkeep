@@ -73,39 +73,35 @@ class Expression
 	);
 	
 	/**
-	 * Supported month literals.
+	 * Supported synonyms used by normalization and expression parsing.
 	 * 
 	 * @var array
 	 */
-	protected static $_months = array(
-		'jan' => 1,
-		'feb' => 2,
-		'mar' => 3,
-		'apr' => 4,
-		'may' => 5,
-		'jun' => 6,
-		'jul' => 7,
-		'aug' => 8,
-		'sep' => 9,
-		'oct' => 10,
-		'nov' => 11,
-		'dec' => 12,
-	);
-	
-	/**
-	 * Supported day of week literals.
-	 * 
-	 * @var array
-	 */
-	protected static $_daysOfWeek = array(
-		'sun' => 0,
-		'mon' => 1,
-		'tue' => 2,
-		'wed' => 3,
-		'thu' => 4,
-		'fri' => 5,
-		'sat' => 6,
-		'sun' => 7
+	protected static $_synonyms = array(
+		self::MONTH => array(
+			'jan' => 1,
+			'feb' => 2,
+			'mar' => 3,
+			'apr' => 4,
+			'may' => 5,
+			'jun' => 6,
+			'jul' => 7,
+			'aug' => 8,
+			'sep' => 9,
+			'oct' => 10,
+			'nov' => 11,
+			'dec' => 12
+		),
+		self::DAY_OF_WEEK => array(
+			7 => 0,
+			'sun' => 0,
+			'mon' => 1,
+			'tue' => 2,
+			'wed' => 3,
+			'thu' => 4,
+			'fri' => 5,
+			'sat' => 6
+		)
 	);
 	
 	/**
@@ -117,8 +113,8 @@ class Expression
 	 */
 	public static function create($string)
 	{
-		$months = implode('|', array_keys(self::$_months));
-		$daysOfWeek = implode('|', array_keys(self::$_daysOfWeek));
+		$months = implode('|', array_keys(self::$_synonyms[self::MONTH]));
+		$daysOfWeek = implode('|', array_keys(self::$_synonyms[self::DAY_OF_WEEK]));
 		$shorthands = implode('|', array_keys(self::$_shorthands));
 		
 		$pattern = "/
@@ -233,6 +229,8 @@ class Expression
 	 */
 	public function addPart($part, $value)
 	{
+		$value = $this->_normalize($part, $value);
+		
 		if (!array_key_exists($part, $this->_parts)) {
 			throw new \OutOfBoundsException(__METHOD__ . ' called with an invalid part: ' . $part);
 		}
@@ -430,6 +428,27 @@ class Expression
 	public function __toString()
 	{
 		return $this->render();
+	}
+	
+	/**
+	 * Normalizes given part value based on a dictionary of alternate values
+	 * for that part.
+	 * 
+	 * @param string $part
+	 * @param int|string $value
+	 * @return int|string
+	 */
+	protected function _normalize($part, $value)
+	{
+		if (is_string($value)) {
+			$value = strtolower($value);
+		}
+		
+		if (isset(self::$_synonyms[$part][$value])) {
+			return self::$_synonyms[$part][$value];
+		}
+		
+		return $value;
 	}
 	
 	/**
