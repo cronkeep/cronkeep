@@ -4,7 +4,7 @@
 	<td data-searchable="1">
 		<?php echo $job->getCommand() ?>
 		<?php if ($job->getComment()): ?>
-			<span class="glyphicon glyphicon-question-sign"
+			<span class="glyphicon glyphicon-info-sign"
 				  data-toggle="tooltip" title="<?php echo $job->getComment() ?>"></span>
 		<?php endif; ?>
 	</td>
@@ -21,7 +21,7 @@
 			<ul class="dropdown-menu" role="menu">
 				<li>
 					<a href="#" title="Edit Job" class="job-edit">
-						<span class="glyphicon glyphicon-edit"></span> Edit</a>
+						<span class="glyphicon glyphicon-pencil"></span> Edit</a>
 				</li>
 				<li class="menu-item-resume <?php echo $job->getIsPaused() ? 'show' : 'hidden' ?>">
 					<a href="#" title="Resume Job Schedule" class="job-resume">
@@ -44,7 +44,7 @@
 			<ul class="dropdown-menu" role="menu">
 				<li>
 					<a href="#" title="Edit Job" class="job-edit">
-						<span class="glyphicon glyphicon-edit"></span> Edit</a>
+						<span class="glyphicon glyphicon-pencil"></span> Edit</a>
 				</li>
 				<li>
 					<a href="#" title="Run Job Now" class="job-run">

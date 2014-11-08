@@ -35,26 +35,16 @@ body {
 	width: 12%;
 }
 
-.table > thead > tr > td.inactive,
-.table > tbody > tr > td.inactive,
-.table > tfoot > tr > td.inactive,
-.table > thead > tr > th.inactive,
-.table > tbody > tr > th.inactive,
-.table > tfoot > tr > th.inactive,
-.table > thead > tr.inactive > td,
+/* Inactive style for paused cron jobs */
 .table > tbody > tr.inactive > td,
-.table > tfoot > tr.inactive > td,
-.table > thead > tr.inactive > th,
-.table > tbody > tr.inactive > th,
-.table > tfoot > tr.inactive > th {
-  background-color: #f5f5f5;
-}
-.table-hover > tbody > tr > td.inactive:hover,
-.table-hover > tbody > tr > th.inactive:hover,
 .table-hover > tbody > tr.inactive:hover > td,
-.table-hover > tbody > tr:hover > .inactive,
-.table-hover > tbody > tr.inactive:hover > th {
-  background-color: #f5f5f5;
+.touch .table-hover > tbody > tr.inactive:hover > td {
+	background-color: #f5f5f5;
+}
+
+/* Disable table hover style on touch devices */
+.touch .table-hover > tbody > tr:hover > td {
+  background-color: #fff;
 }
 
 .at-command-error-output {
