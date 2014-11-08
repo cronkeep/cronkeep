@@ -31,6 +31,10 @@ $app->get('/', function() use ($app) {
 	$simpleForm   = new AddJob\SimpleForm();
 	$advancedForm = new AddJob\AdvancedForm();
 	
+	$showAlertAtUnavailable = $app->getCookie('showAlertAtUnavailable');
+	$app->view->setData('showAtUnavailableAlert', $showAlertAtUnavailable !== null ?
+			(bool) $showAlertAtUnavailable : true);
+	
 	$app->render('index.phtml', array(
 		'crontab'              => $crontab,
 		'systemUser'           => $systemUser,
