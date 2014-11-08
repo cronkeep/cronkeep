@@ -42,11 +42,6 @@ body {
 	background-color: #f5f5f5;
 }
 
-/* Disable table hover style on touch devices */
-.touch .table-hover > tbody > tr:hover > td {
-  background-color: #fff;
-}
-
 .at-command-error-output {
 	display: block;
 	margin-top: 10px;

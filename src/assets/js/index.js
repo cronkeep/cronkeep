@@ -12,7 +12,3 @@ if (alertAtUnavailable.length) {
 	});
 	$('.close', alertAtUnavailable).attr('title', 'Remind me in 3 days').tooltip();
 }
-
-if ('ontouchstart' in document.documentElement) {
-    document.documentElement.className += ' touch';
-}

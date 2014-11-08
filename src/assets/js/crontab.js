@@ -5,6 +5,7 @@ var CrontabService = function(alertService) {
 	var addJobDialog = new AddJobDialog($('#job-add'), self, alertService);
 	var editJobDialog;
 	var lastEditedJobHash;
+	var isTouchDevice = ('ontouchstart' in document.documentElement);
 	
 	this.runJob = function(job) {
 		var hash = job.attr('data-hash');
@@ -142,6 +143,11 @@ var CrontabService = function(alertService) {
 		
 		return this;
 	};
+	
+	// Prevent table rows' hover style on touch devices
+	if (isTouchDevice) {
+		$('.table-crontab').removeClass('table-hover');
+	}
 	
 	// Assign handlers
 	$('body').on('click', '.job-add', function() {
