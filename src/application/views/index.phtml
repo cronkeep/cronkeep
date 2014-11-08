@@ -1,4 +1,22 @@
-<div class="row">
+<?php
+$crontabEmpty = !count($crontab);
+?>
+<div class="well well-empty-crontab visible-empty-crontab
+			<?php echo $crontabEmpty ? '' : 'hidden' ?>">
+	<h3>Crontab is empty</h3>
+	<p>
+		User "<?php echo $systemUser->getUsername() ?>" doesn't have any jobs.
+		Start by adding a new cron job.
+	</p>
+	<p>
+		<button type="button" class="btn btn-primary job-add" title="Add Job"
+				autocomplete="off">
+			<span class="glyphicon glyphicon-plus"></span> Add Job
+		</button>
+	</p>
+</div>
+
+<div class="row visible-full-crontab<?php echo $crontabEmpty ? ' hidden' : '' ?>">
 	<div class="col-xs-8">
 		<h2><?php echo $systemUser->getUsername() ?></h2>
 	</div>
@@ -9,8 +27,8 @@
 		</button>
 	</div>
 </div>
-
-<div class="panel panel-default panel-crontab">
+<div class="panel panel-default panel-crontab visible-full-crontab
+			<?php echo $crontabEmpty ? 'hidden' : '' ?>">
 	<div class="panel-heading">
 		<input type="text" class="form-control job-search" autocomplete="off" placeholder="Search">
 	</div>

@@ -54,6 +54,7 @@ var CrontabService = function(alertService) {
 	this.appendJob = function(content, hash) {
 		crontab.append(content);
 		$(document).trigger('jobAdd', {hash: hash});
+		toggleCrontabGrid();
 		
 		return this;
 	};
@@ -120,9 +121,24 @@ var CrontabService = function(alertService) {
 			
 			// Remove element from the DOM
 			job.remove();
+			toggleCrontabGrid();
 		}).fail(function(data) {
 			alertService.pushError(data.responseJSON.msg);
 		});
+		
+		return this;
+	};
+	
+	// Displays either the cron jobs table or the empty crontab notice
+	var toggleCrontabGrid = function() {
+		var jobCount = $('tr', crontab).size();
+		if (jobCount) {
+			$('.visible-full-crontab').removeClass('hidden');
+			$('.visible-empty-crontab').addClass('hidden');
+		} else {
+			$('.visible-full-crontab').addClass('hidden');
+			$('.visible-empty-crontab').removeClass('hidden');
+		}
 		
 		return this;
 	};

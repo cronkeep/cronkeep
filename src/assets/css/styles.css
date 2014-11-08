@@ -7,6 +7,9 @@ body {
 .panel-crontab > .table {
 	margin-top: 10px;
 }
+.well-empty-crontab {
+	margin-top: 25px;
+}
 .empty-search {
 	padding: 15px;
 }

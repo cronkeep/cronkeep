@@ -10,7 +10,7 @@ use models\Crontab\Job;
  * @author Bogdan Ghervan <bogdan.ghervan@gmail.com>
  * @see man 5 crontab for details
  */
-class Crontab implements \IteratorAggregate
+class Crontab implements \IteratorAggregate, \Countable
 {
 	/**
 	 * Raw cron table.
@@ -330,7 +330,17 @@ class Crontab implements \IteratorAggregate
 	}
 	
     /**
-     * Implementation of IteratorAggregate:getIterator.
+     * Implementation of Countable::count.
+     *
+	 * @return int
+     */
+	public function count()
+	{
+		return count($this->_jobs);
+	}
+	
+    /**
+     * Implementation of IteratorAggregate::getIterator.
      *
 	 * @return \ArrayIterator
      */
