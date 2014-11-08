@@ -156,7 +156,7 @@ class Crontab implements \IteratorAggregate
 	 */
 	public function delete(Job $job)
 	{
-		$this->_rawTable = str_replace($job->getRaw(), '', $this->_rawTable);
+		$this->_rawTable = str_replace($job->getOriginalRaw(), '', $this->_rawTable);
 		
 		return $this;
 	}

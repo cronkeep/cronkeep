@@ -11,7 +11,6 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
 	var simpleForm = $('.job-add-simple-form', container);
 	var advancedForm = $('.job-add-advanced-form', container);
 	var saveButton = $('.btn-save', container);
-	var crontab = $('.table-crontab tbody');
 	
 	var simpleFormAlertService = new AlertService($('.form-alerts', simpleForm));
 	var advancedFormAlertService = new AlertService($('.form-alerts', advancedForm));
@@ -57,6 +56,7 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
 	var submitHandler = function(form) {
 		saveButton.button('loading');
 		var oldHash = $('input[name=hash]', form).val();
+		stripNewlines($('textarea.command', form));
 		
 		$.post('/job/save', $(form).serialize(), function(data) {			
 			// Show success message, close dialog and reset form
@@ -222,6 +222,12 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
 		return this;
 	};
 	
+	// Removes any newlines (CR, LF) in the given field
+	var stripNewlines = function(field) {
+		field.val(field.val().replace(/[\r\n]/g, ''));
+		return this;
+	};
+	
 	// Toggle accompanying inputs when cycling through radio options
 	timePicker.on('change', function() {
 		toggleTimeInputs();
@@ -236,6 +242,11 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
 	// Toggle fieldset corresponding to chosen "Repeat" option
 	repeatPicker.on('change', function() {
 		toggleRepeatFieldsets();
+	});
+	
+	// Restrict the usage of newlines (CR, LF) in the command field
+	$('textarea.command', container).on('blur', function() {
+		stripNewlines($(this));
 	});
 	
 	addValidationsAndSubmitHandler();

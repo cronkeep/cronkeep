@@ -6,6 +6,7 @@ use library\App\Form;
 use Zend\Form\Element;
 use Zend\Form\Fieldset;
 use Zend\InputFilter\InputFilterProviderInterface;
+use Zend\InputFilter\InputFilter;
 
 /**
  * Simple form for adding a cron job.
@@ -43,6 +44,25 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 		1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April', 5 => 'May',
 		6 => 'June', 7 => 'July', 8 => 'August', 9 => 'September', 10 => 'October',
 		11 => 'November', 12 => 'December'
+	);
+	
+	/**
+	 * Time radio set options.
+	 * 
+	 * @var array
+	 */
+	protected $_timeOptions = array(self::SPECIFIC_TIME, self::EVERY_HOUR, self::EVERY_MINUTE);
+	
+	/**
+	 * Repeat select options.
+	 * 
+	 * @var array
+	 */
+	protected $_repeatOptions = array(
+		self::DAILY   => 'Daily',
+		self::WEEKLY  => 'Weekly',
+		self::MONTHLY => 'Monthly',
+		self::YEARLY  => 'Yearly'
 	);
 	
 	/**
@@ -91,7 +111,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 		// Picker field
 		$picker = new Element\Radio('picker');
 		$picker->setLabel('Pick Time');
-		$picker->setValueOptions(array(self::SPECIFIC_TIME, self::EVERY_HOUR, self::EVERY_MINUTE));
+		$picker->setValueOptions($this->_timeOptions);
 		$picker->setValue(self::SPECIFIC_TIME);
 		$timeFieldset->add($picker);
 		
@@ -120,12 +140,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 			// @todo make "autocomplete" attribute work for select
 			'autocomplete' => 'off'
 		));
-		$picker->setValueOptions(array(
-			self::DAILY   => 'Daily',
-			self::WEEKLY  => 'Weekly',
-			self::MONTHLY => 'Monthly',
-			self::YEARLY  => 'Yearly'
-		));
+		$picker->setValueOptions($this->_repeatOptions);
 		$picker->setValue(self::DAILY);
 		$repeatFieldset->add($picker);
 		
@@ -331,11 +346,38 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 				)
 			),
 			'time' => array(
+				'type' => 'Zend\InputFilter\InputFilter',
 				'picker' => array(
-					'required' => true
+					'required' => true,
+					'validators' => array(
+						// Pushing what is otherwise an implied validator for selects, to break
+						// validation chain on failure to prevent reaching the callback
+						array(
+							'name' => 'Zend\Validator\InArray',
+							'break_chain_on_failure' => true,
+							'options' => array(
+								'haystack' => $this->_timeOptions
+							)
+						),
+						// Finds a fieldset called $timeOption inside fieldset "time",
+						// and marks all those inputs as required
+						array(
+							'name' => 'Zend\Validator\Callback',
+							'options' => array(
+								'callback' => function($timeOption) {
+									$timeInputFilter = $this->getInputFilter()->get('time');
+									$this->_markInputsAsRequired($timeInputFilter, $timeOption);
+									
+									return true;
+								}
+							)
+						),
+					)
 				),
 				self::SPECIFIC_TIME => array(
+					'type' => 'Zend\InputFilter\InputFilter',
 					'hour' => array(
+						'required' => false,
 						'filters' => array(
 							array('name' => 'Zend\Filter\StringTrim')
 						),
@@ -348,6 +390,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 						)
 					),
 					'minute' => array(
+						'required' => false,
 						'filters' => array(
 							array('name' => 'Zend\Filter\StringTrim')
 						),
@@ -361,8 +404,9 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 					)
 				),
 				self::EVERY_HOUR => array(
+					'type' => 'Zend\InputFilter\InputFilter',
 					'step' => array(
-						'required' => true,
+						'required' => false,
 						'filters' => array(
 							array('name' => 'Zend\Filter\StringTrim')
 						),
@@ -375,7 +419,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 						)
 					),
 					'minute' => array(
-						'required' => true,
+						'required' => false,
 						'filters' => array(
 							array('name' => 'Zend\Filter\StringTrim')
 						),
@@ -389,8 +433,9 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 					)
 				),
 				self::EVERY_MINUTE => array(
+					'type' => 'Zend\InputFilter\InputFilter',
 					'step' => array(
-						'required' => true,
+						'required' => false,
 						'filters' => array(
 							array('name' => 'Zend\Filter\StringTrim')
 						),
@@ -405,8 +450,64 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 				)
 			),
 			'repeat' => array(
-				self::YEARLY => array(
+				'type' => 'Zend\InputFilter\InputFilter',
+				'picker' => array(
+					'required' => true,
+					'validators' => array(
+						// Pushing what is otherwise an implied validator for selects, to break
+						// validation chain on failure to prevent reaching the callback
+						array(
+							'name' => 'Zend\Validator\InArray',
+							'break_chain_on_failure' => true,
+							'options' => array(
+								'haystack' => array_keys($this->_repeatOptions)
+							)
+						),
+						// Finds a fieldset called $repeatOption inside fieldset "repeat",
+						// and marks all those inputs as required
+						array(
+							'name' => 'Zend\Validator\Callback',
+							'options' => array(
+								'callback' => function($repeatOption) {
+									$repeatInputFilter = $this->getInputFilter()->get('repeat');
+									$this->_markInputsAsRequired($repeatInputFilter, $repeatOption);
+									
+									return true;
+								}
+							)
+						),
+					)
+				),
+				self::WEEKLY => array(
+					'type' => 'Zend\InputFilter\InputFilter',
+					'dayOfWeek' => array(
+						'required' => false,
+						'validators' => array(
+							array('name' => 'Zend\Validator\Digits'),
+							array(
+								'name' => 'Zend\Validator\Between',
+								'options' => array('min' => 0, 'max' => 6)
+							)
+						)
+					)
+				),
+				self::MONTHLY => array(
+					'type' => 'Zend\InputFilter\InputFilter',
 					'dayOfMonth' => array(
+						'required' => false,
+						'validators' => array(
+							array('name' => 'Zend\Validator\Digits'),
+							array(
+								'name' => 'Zend\Validator\Between',
+								'options' => array('min' => 1, 'max' => 31)
+							)
+						)
+					)
+				),
+				self::YEARLY => array(
+					'type' => 'Zend\InputFilter\InputFilter',
+					'dayOfMonth' => array(
+						'required' => false,
 						'filters' => array(
 							array('name' => 'Zend\Filter\StringTrim')
 						),
@@ -422,4 +523,43 @@ class SimpleForm extends Form implements InputFilterProviderInterface
 			)
 		);
     }
+	
+	/**
+	 * Checks that a fieldset called $chosenOption exists under fieldset $pickerInputFilter,
+	 * and marks all the inputs in that fieldset as required.
+	 * 
+	 * Example:
+	 * Given this structure:
+	 * - name
+	 * - command
+	 * - repeat
+	 *   \ picker (daily, weekly, monthly, yearly)
+	 *   \ weekly
+	 *     \ dayOfWeek
+	 *   \ monthly
+	 *     \ dayOfMonth
+	 *   [...]
+	 * [...]
+	 * 
+	 * For the given input filter associated to fieldset "repeat" and "weekly" as the chosen
+	 * picker option, we only want repeat/weekly/dayOfWeek to be required, but not
+	 * repeat/monthly/dayOfMonth.
+	 * 
+	 * @param InputFilter $inputFilter
+	 * @param string $chosenOption
+	 * @return SimpleForm
+	 */
+	protected function _markInputsAsRequired(InputFilter $pickerInputFilter, $chosenOption)
+	{
+		if ($pickerInputFilter->has($chosenOption)) {
+			$dependentFieldsetInputFilter = $pickerInputFilter->get($chosenOption);
+			
+			foreach ($dependentFieldsetInputFilter->getInputs() as $input) {
+				/* @var Zend\InputFilter\Input $input */
+				$input->setRequired(true);
+			}
+		}
+		
+		return $this;
+	}
 }
