@@ -22,227 +22,227 @@ use \forms\AddJob\SimpleForm;
 $form->prepare();
 ?>
 <form class="job-add-form job-add-simple-form" role="form" method="post">
-	<div class="form-alerts"></div>
-	<input type="hidden" name="mode" value="simple">
-	<input type="hidden" name="returnHtml" value="1">
-	<?php if (isset($hash)): ?>
-		<input type="hidden" name="hash" value="<?php echo $hash ?>">
-	<?php endif; ?>
-	<div class="row">
-		<div class="col-md-2">
-			<span class="legend"><?php echo $form->get('name')->getLabel() ?></span>
-		</div>
-		<div class="col-md-10 may-host-errors">
-			<?php echo $this->formText($form->get('name')) ?>
-			<?php echo $this->formElementErrors($form->get('name'), array(
-				'class' => 'error-container'
-			)) ?>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-2">
-			<span class="legend"><?php echo $form->get('command')->getLabel() ?></span>
-		</div>
-		<div class="col-md-10 may-host-errors">
-			<?php echo $this->formTextarea($form->get('command')) ?>
-			<?php echo $this->formElementErrors($form->get('command'), array(
-				'class' => 'error-container'
-			)) ?>
-		</div>
-	</div>
-	
-	<?php
-		/* @var $time \Zend\Form\Fieldset */
-		$time = $form->get('time');
-		$pickerValue = $time->get('picker')->getValue();
-		
-		$specificTimeChecked = ($pickerValue == SimpleForm::SPECIFIC_TIME ? ' checked' : '');
-		$everyHourChecked    = ($pickerValue == SimpleForm::EVERY_HOUR ? ' checked' : '');
-		$everyMinuteChecked  = ($pickerValue == SimpleForm::EVERY_MINUTE ? ' checked' : '');
-	?>
-	<div class="row">
-		<div class="col-md-2">
-			<span class="legend"><?php echo $time->get('picker')->getLabel() ?></span>
-		</div>
-		<div class="col-md-10">
-			<!-- Specific time in the day -->
-			<div class="radio radio-time radio-specific-time may-host-errors">
-				<label>
-					<input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
-						   value="specificTime" autocomplete="off"<?php echo $specificTimeChecked ?>>
-					Specific time in the day
-				</label>
-				<ul class="list-unstyled list-specific-time">
-					<li>
-						<?php echo $this->formNumber($time->get('specificTime')->get('hour')) ?> : 
-						<?php echo $this->formNumber($time->get('specificTime')->get('minute')) ?>
-					</li>
-				</ul>
-				<ul class="error-container">
-					<?php
-						// Group messages together for hour and minute fields
-						echo $this->formElementErrors()
-								  ->setMessageOpenFormat('<li>')
-							      ->setMessageSeparatorString('</li><li>')
-							      ->setMessageCloseString('</li>')
-								  ->render($time->get('specificTime')->get('hour'));
-						echo $this->formElementErrors()
-								  ->setMessageOpenFormat('<li>')
-							      ->setMessageSeparatorString('</li><li>')
-							      ->setMessageCloseString('</li>')
-								  ->render($time->get('specificTime')->get('minute'));
-					?>
-				</ul>
-			</div>
+    <div class="form-alerts"></div>
+    <input type="hidden" name="mode" value="simple">
+    <input type="hidden" name="returnHtml" value="1">
+    <?php if (isset($hash)): ?>
+        <input type="hidden" name="hash" value="<?php echo $hash ?>">
+    <?php endif; ?>
+    <div class="row">
+        <div class="col-md-2">
+            <span class="legend"><?php echo $form->get('name')->getLabel() ?></span>
+        </div>
+        <div class="col-md-10 may-host-errors">
+            <?php echo $this->formText($form->get('name')) ?>
+            <?php echo $this->formElementErrors($form->get('name'), array(
+                'class' => 'error-container'
+            )) ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <span class="legend"><?php echo $form->get('command')->getLabel() ?></span>
+        </div>
+        <div class="col-md-10 may-host-errors">
+            <?php echo $this->formTextarea($form->get('command')) ?>
+            <?php echo $this->formElementErrors($form->get('command'), array(
+                'class' => 'error-container'
+            )) ?>
+        </div>
+    </div>
+    
+    <?php
+        /* @var $time \Zend\Form\Fieldset */
+        $time = $form->get('time');
+        $pickerValue = $time->get('picker')->getValue();
+        
+        $specificTimeChecked = ($pickerValue == SimpleForm::SPECIFIC_TIME ? ' checked' : '');
+        $everyHourChecked    = ($pickerValue == SimpleForm::EVERY_HOUR ? ' checked' : '');
+        $everyMinuteChecked  = ($pickerValue == SimpleForm::EVERY_MINUTE ? ' checked' : '');
+    ?>
+    <div class="row">
+        <div class="col-md-2">
+            <span class="legend"><?php echo $time->get('picker')->getLabel() ?></span>
+        </div>
+        <div class="col-md-10">
+            <!-- Specific time in the day -->
+            <div class="radio radio-time radio-specific-time may-host-errors">
+                <label>
+                    <input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
+                           value="specificTime" autocomplete="off"<?php echo $specificTimeChecked ?>>
+                    Specific time in the day
+                </label>
+                <ul class="list-unstyled list-specific-time">
+                    <li>
+                        <?php echo $this->formNumber($time->get('specificTime')->get('hour')) ?> : 
+                        <?php echo $this->formNumber($time->get('specificTime')->get('minute')) ?>
+                    </li>
+                </ul>
+                <ul class="error-container">
+                    <?php
+                        // Group messages together for hour and minute fields
+                        echo $this->formElementErrors()
+                                  ->setMessageOpenFormat('<li>')
+                                  ->setMessageSeparatorString('</li><li>')
+                                  ->setMessageCloseString('</li>')
+                                  ->render($time->get('specificTime')->get('hour'));
+                        echo $this->formElementErrors()
+                                  ->setMessageOpenFormat('<li>')
+                                  ->setMessageSeparatorString('</li><li>')
+                                  ->setMessageCloseString('</li>')
+                                  ->render($time->get('specificTime')->get('minute'));
+                    ?>
+                </ul>
+            </div>
 
-			<!-- Every {step} hours at minute {minute} -->
-			<div class="radio radio-time radio-every-hour may-host-errors">
-				<input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
-					   value="everyHour" autocomplete="off"<?php echo $everyHourChecked ?>>
-				<span>
-					Every 
-					<?php echo $this->formNumber($time->get('everyHour')->get('step')) ?>
-					hours at minute
-					<?php echo $this->formNumber($time->get('everyHour')->get('minute')) ?>
-				</span>
-				<ul class="error-container">
-					<?php
-						// Group messages together for step and minute fields
-						echo $this->formElementErrors()
-								  ->setMessageOpenFormat('<li>')
-							      ->setMessageSeparatorString('</li><li>')
-							      ->setMessageCloseString('</li>')
-								  ->render($time->get('everyHour')->get('step'));
-						echo $this->formElementErrors()
-								  ->setMessageOpenFormat('<li>')
-							      ->setMessageSeparatorString('</li><li>')
-							      ->setMessageCloseString('</li>')
-								  ->render($time->get('everyHour')->get('minute'));
-					?>
-				</ul>
-			</div>
+            <!-- Every {step} hours at minute {minute} -->
+            <div class="radio radio-time radio-every-hour may-host-errors">
+                <input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
+                       value="everyHour" autocomplete="off"<?php echo $everyHourChecked ?>>
+                <span>
+                    Every 
+                    <?php echo $this->formNumber($time->get('everyHour')->get('step')) ?>
+                    hours at minute
+                    <?php echo $this->formNumber($time->get('everyHour')->get('minute')) ?>
+                </span>
+                <ul class="error-container">
+                    <?php
+                        // Group messages together for step and minute fields
+                        echo $this->formElementErrors()
+                                  ->setMessageOpenFormat('<li>')
+                                  ->setMessageSeparatorString('</li><li>')
+                                  ->setMessageCloseString('</li>')
+                                  ->render($time->get('everyHour')->get('step'));
+                        echo $this->formElementErrors()
+                                  ->setMessageOpenFormat('<li>')
+                                  ->setMessageSeparatorString('</li><li>')
+                                  ->setMessageCloseString('</li>')
+                                  ->render($time->get('everyHour')->get('minute'));
+                    ?>
+                </ul>
+            </div>
 
-			<!-- Every {minute} minutes -->
-			<div class="radio radio-time radio-every-minute may-host-errors">
-				<input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
-					   value="everyMinute" autocomplete="off"<?php echo $everyMinuteChecked ?>>
-				<span>
-					Every
-					<?php echo $this->formNumber($time->get('everyMinute')->get('step')) ?>
-					minutes
-				</span>
-				<?php echo $this->formElementErrors($time->get('everyMinute')->get('step'), array(
-					'class' => 'error-container'
-				)) ?>
-			</div>
-		</div>
-	</div>
-	
-	<?php
-		/* @var $repeat \Zend\Form\Fieldset */
-		$repeat = $form->get('repeat');
-	?>
-	<div class="row">
-		<div class="col-md-2">
-			<span class="legend"><?php echo $repeat->get('picker')->getLabel() ?></span>
-		</div>
-		<div class="col-md-10">
-			<?php echo $this->formSelect($repeat->get('picker')) ?>
-		</div>
-	</div>
+            <!-- Every {minute} minutes -->
+            <div class="radio radio-time radio-every-minute may-host-errors">
+                <input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
+                       value="everyMinute" autocomplete="off"<?php echo $everyMinuteChecked ?>>
+                <span>
+                    Every
+                    <?php echo $this->formNumber($time->get('everyMinute')->get('step')) ?>
+                    minutes
+                </span>
+                <?php echo $this->formElementErrors($time->get('everyMinute')->get('step'), array(
+                    'class' => 'error-container'
+                )) ?>
+            </div>
+        </div>
+    </div>
+    
+    <?php
+        /* @var $repeat \Zend\Form\Fieldset */
+        $repeat = $form->get('repeat');
+    ?>
+    <div class="row">
+        <div class="col-md-2">
+            <span class="legend"><?php echo $repeat->get('picker')->getLabel() ?></span>
+        </div>
+        <div class="col-md-10">
+            <?php echo $this->formSelect($repeat->get('picker')) ?>
+        </div>
+    </div>
 
-	<!-- Repeat: Weekly -->
-	<?php
-		/* @var $dayOfWeek \Zend\Form\Element\MultiCheckbox */
-		$dayOfWeek = $repeat->get('weekly')->get('dayOfWeek');
-		$selectedDays = $dayOfWeek->getValue();
-	?>
-	<div class="row fieldset-weekly hidden">
-		<div class="col-md-2"></div>
-		<div class="col-md-10 may-host-errors">
-			<span class="hint"><?php echo $dayOfWeek->getLabel() ?></span>
-			<div>
-				<div class="btn-group" data-toggle="buttons">
-					<?php foreach ($dayOfWeek->getValueOptions() as $value => $label):
-							$dayChecked = $selectedDays && in_array($value, $selectedDays);
-					?>
-						<label class="btn btn-default<?php echo $dayChecked ? ' active' : '' ?>">
-							<input type="checkbox" name="<?php echo $dayOfWeek->getName() ?>[]"
-								   <?php echo $dayChecked ? 'checked' : '' ?>
-								   value="<?php echo $value ?>" autocomplete="off">
-							<?php echo $label ?>
-						</label>
-					<?php endforeach; ?>
-				</div>
-			</div>
-			<?php echo $this->formElementErrors($dayOfWeek, array(
-				'class' => 'error-container'
-			)) ?>
-		</div>
-	</div>
+    <!-- Repeat: Weekly -->
+    <?php
+        /* @var $dayOfWeek \Zend\Form\Element\MultiCheckbox */
+        $dayOfWeek = $repeat->get('weekly')->get('dayOfWeek');
+        $selectedDays = $dayOfWeek->getValue();
+    ?>
+    <div class="row fieldset-weekly hidden">
+        <div class="col-md-2"></div>
+        <div class="col-md-10 may-host-errors">
+            <span class="hint"><?php echo $dayOfWeek->getLabel() ?></span>
+            <div>
+                <div class="btn-group" data-toggle="buttons">
+                    <?php foreach ($dayOfWeek->getValueOptions() as $value => $label):
+                            $dayChecked = $selectedDays && in_array($value, $selectedDays);
+                    ?>
+                        <label class="btn btn-default<?php echo $dayChecked ? ' active' : '' ?>">
+                            <input type="checkbox" name="<?php echo $dayOfWeek->getName() ?>[]"
+                                   <?php echo $dayChecked ? 'checked' : '' ?>
+                                   value="<?php echo $value ?>" autocomplete="off">
+                            <?php echo $label ?>
+                        </label>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php echo $this->formElementErrors($dayOfWeek, array(
+                'class' => 'error-container'
+            )) ?>
+        </div>
+    </div>
 
-	<!-- Repeat: Monthly -->
-	<?php
-		/* @var $dayOfMonth \Zend\Form\Element\MultiCheckbox */
-		$dayOfMonth = $repeat->get('monthly')->get('dayOfMonth');
-		$selectedDays = $dayOfMonth->getValue();
-	?>
-	<div class="row fieldset-monthly hidden">
-		<div class="col-md-2"></div>
-		<div class="col-md-10 may-host-errors">
-			<span class="hint"><?php echo $dayOfMonth->getLabel() ?></span>
-			<div>
-				<div class="btn-group btn-group-day-picker">
-					<div class="btn-group" data-toggle="buttons">
-						<?php foreach ($dayOfMonth->getValueOptions() as $day):
-								$dayChecked = $selectedDays && in_array($day, $selectedDays);
-						?>
-							<label class="btn btn-default<?php echo $dayChecked ? ' active' : '' ?>">
-								<input type="checkbox" name="<?php echo $dayOfMonth->getName() ?>[]"
-									   <?php echo $dayChecked ? 'checked' : '' ?>
-									   value="<?php echo $day ?>" autocomplete="off">
-								<?php echo $day ?>
-							</label>
-							<?php if ($day % 7 == 0): ?>
-								</div>
-								<div class="btn-group" data-toggle="buttons">
-							<?php endif; ?>
-						<?php endforeach; ?>
-					</div>
-				</div>
-			</div>
-			<?php echo $this->formElementErrors($dayOfMonth, array(
-				'class' => 'error-container'
-			)) ?>
-		</div>
-	</div>
+    <!-- Repeat: Monthly -->
+    <?php
+        /* @var $dayOfMonth \Zend\Form\Element\MultiCheckbox */
+        $dayOfMonth = $repeat->get('monthly')->get('dayOfMonth');
+        $selectedDays = $dayOfMonth->getValue();
+    ?>
+    <div class="row fieldset-monthly hidden">
+        <div class="col-md-2"></div>
+        <div class="col-md-10 may-host-errors">
+            <span class="hint"><?php echo $dayOfMonth->getLabel() ?></span>
+            <div>
+                <div class="btn-group btn-group-day-picker">
+                    <div class="btn-group" data-toggle="buttons">
+                        <?php foreach ($dayOfMonth->getValueOptions() as $day):
+                                $dayChecked = $selectedDays && in_array($day, $selectedDays);
+                        ?>
+                            <label class="btn btn-default<?php echo $dayChecked ? ' active' : '' ?>">
+                                <input type="checkbox" name="<?php echo $dayOfMonth->getName() ?>[]"
+                                       <?php echo $dayChecked ? 'checked' : '' ?>
+                                       value="<?php echo $day ?>" autocomplete="off">
+                                <?php echo $day ?>
+                            </label>
+                            <?php if ($day % 7 == 0): ?>
+                                </div>
+                                <div class="btn-group" data-toggle="buttons">
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+            <?php echo $this->formElementErrors($dayOfMonth, array(
+                'class' => 'error-container'
+            )) ?>
+        </div>
+    </div>
 
-	<!-- Repeat: Yearly -->
-	<div class="row fieldset-yearly hidden">
-		<div class="col-md-2"></div>
-		<div class="col-md-10">
-			<div class="may-host-errors">
-				<span class="hint"><?php echo $repeat->get('yearly')->getLabel() ?></span>
-				<div class="clearfix">
-					<?php echo $this->formSelect($repeat->get('yearly')->get('month')) ?>
-					<?php echo $this->formNumber($repeat->get('yearly')->get('dayOfMonth')) ?>
-				</div>
-				<ul class="error-container">
-					<?php
-						// Group messages together for month and day fields
-						echo $this->formElementErrors()
-								  ->setMessageOpenFormat('<li>')
-							      ->setMessageSeparatorString('</li><li>')
-							      ->setMessageCloseString('</li>')
-								  ->render($repeat->get('yearly')->get('month'));
-						echo $this->formElementErrors()
-								  ->setMessageOpenFormat('<li>')
-							      ->setMessageSeparatorString('</li><li>')
-							      ->setMessageCloseString('</li>')
-								  ->render($repeat->get('yearly')->get('dayOfMonth'));
-					?>
-				</ul>
-			</div>
-		</div>
-	</div>
+    <!-- Repeat: Yearly -->
+    <div class="row fieldset-yearly hidden">
+        <div class="col-md-2"></div>
+        <div class="col-md-10">
+            <div class="may-host-errors">
+                <span class="hint"><?php echo $repeat->get('yearly')->getLabel() ?></span>
+                <div class="clearfix">
+                    <?php echo $this->formSelect($repeat->get('yearly')->get('month')) ?>
+                    <?php echo $this->formNumber($repeat->get('yearly')->get('dayOfMonth')) ?>
+                </div>
+                <ul class="error-container">
+                    <?php
+                        // Group messages together for month and day fields
+                        echo $this->formElementErrors()
+                                  ->setMessageOpenFormat('<li>')
+                                  ->setMessageSeparatorString('</li><li>')
+                                  ->setMessageCloseString('</li>')
+                                  ->render($repeat->get('yearly')->get('month'));
+                        echo $this->formElementErrors()
+                                  ->setMessageOpenFormat('<li>')
+                                  ->setMessageSeparatorString('</li><li>')
+                                  ->setMessageCloseString('</li>')
+                                  ->render($repeat->get('yearly')->get('dayOfMonth'));
+                    ?>
+                </ul>
+            </div>
+        </div>
+    </div>
 </form>

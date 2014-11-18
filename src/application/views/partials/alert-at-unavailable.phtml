@@ -16,36 +16,36 @@
  */
 ?>
 <div class="alert alert-warning alert-dismissible alert-at-unavailable" role="alert">
-	<button type="button" class="close" data-dismiss="alert"
-			data-toggle="tooltip" data-placement="left">
-		<span aria-hidden="true">&times;</span>
-		<span class="sr-only">Close</span>
-	</button>
-	<h4>Oh Snap!</h4>
-	<p>
-		<code>at</code> is not available on this system. cronkeep uses this slick command internally
-		to run jobs independently from your web server, whenever you hit "Run".
-		<span class="hidden-xs">This means you could restart your web server and still have the
-		process running in the background.</span>
+    <button type="button" class="close" data-dismiss="alert"
+            data-toggle="tooltip" data-placement="left">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">Close</span>
+    </button>
+    <h4>Oh Snap!</h4>
+    <p>
+        <code>at</code> is not available on this system. cronkeep uses this slick command internally
+        to run jobs independently from your web server, whenever you hit "Run".
+        <span class="hidden-xs">This means you could restart your web server and still have the
+        process running in the background.</span>
 
-		<a href="#" class="visible-xs-inline keep-reading">
-			Keep reading <span class="glyphicon glyphicon-arrow-right"></span></a>
-	</p>
-	<?php if ($atCommandErrorOutput == \models\At::ERROR_ACCESS_DENIED): ?>
-		<p class="hidden-xs">
-			To allow access you should add user
-			<code><?php echo $systemUser->getUsername() ?></code> to your <code>/etc/at.allow</code>
-			file on a new line. If the file does not exist, locate <code>/etc/at.deny</code> and
-			remove the user from there.	Please be mindful that no whitespace is permitted in either
-			file.
-		</p>
-	<?php else: ?>
-		<p class="hidden-xs">
-			Here's the raw output from the command that may help you debug this further:
-			<samp class="at-command-error-output">
-				<a href="http://www.google.com/#q=<?php echo urlencode($atCommandErrorOutput) ?>"
-				   class="alert-link" target="_blank"><?php echo $atCommandErrorOutput ?></a>
-			</samp>
-		</p>
-	<?php endif; ?>
+        <a href="#" class="visible-xs-inline keep-reading">
+            Keep reading <span class="glyphicon glyphicon-arrow-right"></span></a>
+    </p>
+    <?php if ($atCommandErrorOutput == \models\At::ERROR_ACCESS_DENIED): ?>
+        <p class="hidden-xs">
+            To allow access you should add user
+            <code><?php echo $systemUser->getUsername() ?></code> to your <code>/etc/at.allow</code>
+            file on a new line. If the file does not exist, locate <code>/etc/at.deny</code> and
+            remove the user from there.    Please be mindful that no whitespace is permitted in either
+            file.
+        </p>
+    <?php else: ?>
+        <p class="hidden-xs">
+            Here's the raw output from the command that may help you debug this further:
+            <samp class="at-command-error-output">
+                <a href="http://www.google.com/#q=<?php echo urlencode($atCommandErrorOutput) ?>"
+                   class="alert-link" target="_blank"><?php echo $atCommandErrorOutput ?></a>
+            </samp>
+        </p>
+    <?php endif; ?>
 </div>

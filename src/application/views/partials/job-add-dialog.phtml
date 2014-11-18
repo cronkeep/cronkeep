@@ -16,43 +16,43 @@
  */
 ?>
 <div class="modal fade" id="job-add" tabindex="-1" role="dialog" aria-labelledby="job-add-title"
-	 aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title" id="job-add-title">Add Job</h4>
-			</div>
-			<div class="modal-body">
-				<ul class="nav nav-pills" role="tablist">
-					<li class="active">
-						<a href="#simple-add" role="tab" data-toggle="pill" data-mode="simple">
-							Simple</a>
-					</li>
-					<li>
-						<a href="#advanced-add" role="tab" data-toggle="pill" data-mode="advanced">
-							Advanced</a>
-					</li>
-				</ul>
-				<div class="tab-content">
-					<div class="tab-pane active" id="simple-add">
-						<?php echo $this->partial('partials/job-simple-form.phtml', array(
-							'form' => $simpleForm
-						)) ?>
-					</div>
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="job-add-title">Add Job</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-pills" role="tablist">
+                    <li class="active">
+                        <a href="#simple-add" role="tab" data-toggle="pill" data-mode="simple">
+                            Simple</a>
+                    </li>
+                    <li>
+                        <a href="#advanced-add" role="tab" data-toggle="pill" data-mode="advanced">
+                            Advanced</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="simple-add">
+                        <?php echo $this->partial('partials/job-simple-form.phtml', array(
+                            'form' => $simpleForm
+                        )) ?>
+                    </div>
 
-					<div class="tab-pane" id="advanced-add">
-						<?php echo $this->partial('partials/job-advanced-form.phtml', array(
-							'form' => $advancedForm
-						)) ?>
-					</div>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary btn-save"
-						data-loading-text="Saving...">Save</button>
-			</div>
-		</div>
-	</div>
+                    <div class="tab-pane" id="advanced-add">
+                        <?php echo $this->partial('partials/job-advanced-form.phtml', array(
+                            'form' => $advancedForm
+                        )) ?>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-save"
+                        data-loading-text="Saving...">Save</button>
+            </div>
+        </div>
+    </div>
 </div>

@@ -18,53 +18,53 @@ body {
   padding-top: 70px;
 }
 .panel-crontab {
-	margin-top: 25px;
+    margin-top: 25px;
 }
 .panel-crontab > .table {
-	margin-top: 10px;
+    margin-top: 10px;
 }
 .well-empty-crontab {
-	margin-top: 25px;
+    margin-top: 25px;
 }
 .empty-search {
-	padding: 15px;
+    padding: 15px;
 }
 .job-add {
-	margin-top: 20px;
+    margin-top: 20px;
 }
 .table-crontab > tbody > tr > td:nth-child(2) {
-	-ms-word-break: break-all;
+    -ms-word-break: break-all;
     word-break: break-all;
-	word-break: break-word;
-	-webkit-hyphens: auto;
-	   -moz-hyphens: auto;
-		-ms-hyphens: auto;
-			hyphens: auto;
+    word-break: break-word;
+    -webkit-hyphens: auto;
+       -moz-hyphens: auto;
+        -ms-hyphens: auto;
+            hyphens: auto;
 }
 .table-crontab > thead > tr > th:nth-child(1) {
-	width: 15%;
+    width: 15%;
 }
 .table-crontab > thead > tr > th:nth-child(2) {
-	width: 73%;
+    width: 73%;
 }
 .table-crontab > thead > tr > th:nth-child(3) {
-	width: 12%;
+    width: 12%;
 }
 
 /* Inactive style for paused cron jobs */
 .table > tbody > tr.inactive > td,
 .table-hover > tbody > tr.inactive:hover > td,
 .touch .table-hover > tbody > tr.inactive:hover > td {
-	background-color: #f5f5f5;
+    background-color: #f5f5f5;
 }
 
 .at-command-error-output {
-	display: block;
-	margin-top: 10px;
+    display: block;
+    margin-top: 10px;
 }
 
 mark, .mark {
-	padding: 0.2em 0;
+    padding: 0.2em 0;
 }
 
 /* Align data and search field's edges */
@@ -74,7 +74,7 @@ mark, .mark {
 .panel-crontab > .table > thead > tr > td:first-child,
 .panel-crontab > .table > tbody > tr > td:first-child,
 .panel-crontab > .table > tfoot > tr > td:first-child {
-	padding-left: 15px;
+    padding-left: 15px;
 }
 
 .panel-crontab > .table > thead > tr > th:last-child,
@@ -83,38 +83,38 @@ mark, .mark {
 .panel-crontab > .table > thead > tr > td:last-child,
 .panel-crontab > .table > tbody > tr > td:last-child,
 .panel-crontab > .table > tfoot > tr > td:last-child {
-	padding-right: 15px;
+    padding-right: 15px;
 }
 
 /* Add Job form: Simple */
 .job-add-form {
-	margin-top: 30px;
+    margin-top: 30px;
 }
 .job-add-form .row + .row {
-	margin-top: 25px;
+    margin-top: 25px;
 }
 .job-add-form .legend {
-	display: inline-block;
-	margin-bottom: 5px;
-	font-weight: 700;
+    display: inline-block;
+    margin-bottom: 5px;
+    font-weight: 700;
 }
 .job-add-form .hint {
-	display: inline-block;
-	margin-bottom: 5px;
+    display: inline-block;
+    margin-bottom: 5px;
 }
 .job-add-form .command {
-	resize: vertical;
-	height: 70px;
-	min-height: 70px;
+    resize: vertical;
+    height: 70px;
+    min-height: 70px;
 }
 .job-add-form .input-hour,
 .job-add-form .input-minute,
 .job-add-form .input-day,
 .job-add-form .input-step {
-	width: 45px;
-	display: inline-block;
-	/* Hide spinner specific to number inputs on Firefox */
-	-moz-appearance: textfield;
+    width: 45px;
+    display: inline-block;
+    /* Hide spinner specific to number inputs on Firefox */
+    -moz-appearance: textfield;
 }
 /* Hide spinner specific to number inputs on WebKit browsers */
 .job-add-form input[type=number]::-webkit-inner-spin-button,
@@ -125,97 +125,97 @@ mark, .mark {
 
 /* Pick time section */
 .radio-time + .radio-time {
-	margin-top: 15px;
+    margin-top: 15px;
 }
 .job-add-form .radio-specific-time {
-	margin-top: 0;
+    margin-top: 0;
 }
 .job-add-form .list-specific-time {
-	margin: 10px 0 0 25px;
+    margin: 10px 0 0 25px;
 }
 .job-add-form .list-specific-time > li {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 .job-add-form .radio-every-hour input[type="radio"] {
-	position: absolute;
-	top: 7px;
-	left: 20px;
+    position: absolute;
+    top: 7px;
+    left: 20px;
 }
 .job-add-form .radio-every-hour span {
-	margin-left: 20px;
-	cursor: pointer;
+    margin-left: 20px;
+    cursor: pointer;
 }
 .job-add-form .radio-every-minute input[type="radio"] {
-	position: absolute;
-	top: 7px;
-	left: 20px;
+    position: absolute;
+    top: 7px;
+    left: 20px;
 }
 .job-add-form .radio-every-minute span {
-	margin-left: 20px;
-	cursor: pointer;
+    margin-left: 20px;
+    cursor: pointer;
 }
 .job-add-form .radio-every-hour .input-step,
 .job-add-form .radio-every-hour .input-minute,
 .job-add-form .radio-every-minute .input-step {
-	margin: 0 5px;
+    margin: 0 5px;
 }
 
 /* Repeat section */
 .job-add-form .fieldset-yearly .input-day {
-	margin-left: 10px;
+    margin-left: 10px;
 }
 
 /* Nested button groups */
 .btn-group > .btn-group {
     clear: both;
-	margin-left: 0px !important;
+    margin-left: 0px !important;
 }
-	.btn-group > .btn-group:not(:first-child) > .btn {
-		margin-top: -1px;
-	}
-	/* Top left corner */
-	.btn-group > .btn-group:first-child > .btn:first-child {
-		border-top-left-radius: 1;
-		border-bottom-left-radius: 0;
-	}
-	/* Top right corner */
-	.btn-group > .btn-group:first-child > .btn:last-child {
-		border-top-right-radius: 1;
-		border-bottom-right-radius: 0;
-	}
-	/* Bottom left corner */
-	.btn-group > .btn-group:last-child > .btn:first-child {
-		border-top-left-radius: 0;
-		border-bottom-left-radius: 1;
-	}
-	/* Bottom right corner */
-	.btn-group > .btn-group:last-child > .btn:last-child {
-		border-top-right-radius: 0;
-		border-bottom-right-radius: 1;
-	}
+    .btn-group > .btn-group:not(:first-child) > .btn {
+        margin-top: -1px;
+    }
+    /* Top left corner */
+    .btn-group > .btn-group:first-child > .btn:first-child {
+        border-top-left-radius: 1;
+        border-bottom-left-radius: 0;
+    }
+    /* Top right corner */
+    .btn-group > .btn-group:first-child > .btn:last-child {
+        border-top-right-radius: 1;
+        border-bottom-right-radius: 0;
+    }
+    /* Bottom left corner */
+    .btn-group > .btn-group:last-child > .btn:first-child {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 1;
+    }
+    /* Bottom right corner */
+    .btn-group > .btn-group:last-child > .btn:last-child {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 1;
+    }
 
 .job-add-form .repeat {
-	width: 100px;
+    width: 100px;
 }
 .job-add-form .month {
-	width: 150px;
+    width: 150px;
 }
 .btn-group-day-picker .btn {
-	width: 42px;
+    width: 42px;
 }
 
 /* Add Job form: Advanced */
 .job-add-form .section-expression {
-	margin-top: 25px;
+    margin-top: 25px;
 }
 .job-add-form .expression-part {
-	width: 100%;
-	padding-left: 20px;
+    width: 100%;
+    padding-left: 20px;
 }
 .job-add-form .expression-part .input-group-addon {
-	width: 110px;
-	text-align: left;
+    width: 110px;
+    text-align: left;
 }
 .expression-part + .expression-part {
-	margin-top: 15px;
+    margin-top: 15px;
 }

@@ -25,32 +25,32 @@ use \Symfony\Component\Process\Process;
  */
 class SystemUser
 {
-	/**
-	 * User the web server is running as.
-	 * 
-	 * @var string
-	 */
-	protected $_username;
-	
-	/**
-	 * Retrieves the system user the web server is running as.
-	 * 
-	 * @return string
-	 * @throws \RuntimeException
-	 */
-	public function getUsername()
-	{
-		if (!$this->_username) {
-			$process = new Process('whoami');
-			$process->run();
-			if (!$process->isSuccessful()) {
-				throw new \RuntimeException(sprintf('Unable to detect current user: %s',
-					trim($process->getErrorOutput())));
-			}
-			
-			$this->_username = trim($process->getOutput());
-		}
-		
-		return $this->_username;
-	}
+    /**
+     * User the web server is running as.
+     * 
+     * @var string
+     */
+    protected $_username;
+    
+    /**
+     * Retrieves the system user the web server is running as.
+     * 
+     * @return string
+     * @throws \RuntimeException
+     */
+    public function getUsername()
+    {
+        if (!$this->_username) {
+            $process = new Process('whoami');
+            $process->run();
+            if (!$process->isSuccessful()) {
+                throw new \RuntimeException(sprintf('Unable to detect current user: %s',
+                    trim($process->getErrorOutput())));
+            }
+            
+            $this->_username = trim($process->getOutput());
+        }
+        
+        return $this->_username;
+    }
 }

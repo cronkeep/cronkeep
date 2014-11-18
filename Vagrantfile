@@ -12,12 +12,12 @@ config.vm.network :forwarded_port, guest: 80, host: 8080, auto_correct: true
 
     # VM specific configs
     config.vm.provider "virtualbox" do |v|
-     v.name = "cronkeep"
-     v.customize ["modifyvm", :id, "--memory", "1024"]
+      v.name = "cronkeep"
+      v.customize ["modifyvm", :id, "--memory", "1024"]
     end
 
     # Shell provisioning
     config.vm.provision "shell" do |s|
-     s.path = "provision/setup.sh"
+      s.path = "provision/setup.sh"
     end
 end

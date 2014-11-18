@@ -17,65 +17,65 @@
 ?>
 <?php $crontabEmpty = !count($crontab); ?>
 <div class="well well-empty-crontab visible-empty-crontab
-			<?php echo $crontabEmpty ? '' : 'hidden' ?>">
-	<h3>Crontab is empty</h3>
-	<p>
-		User "<?php echo $systemUser->getUsername() ?>" doesn't have any jobs.
-		Start by adding a new cron job.
-	</p>
-	<p>
-		<button type="button" class="btn btn-primary job-add" title="Add Job"
-				autocomplete="off">
-			<span class="glyphicon glyphicon-plus"></span> Add Job
-		</button>
-	</p>
+            <?php echo $crontabEmpty ? '' : 'hidden' ?>">
+    <h3>Crontab is empty</h3>
+    <p>
+        User "<?php echo $systemUser->getUsername() ?>" doesn't have any jobs.
+        Start by adding a new cron job.
+    </p>
+    <p>
+        <button type="button" class="btn btn-primary job-add" title="Add Job"
+                autocomplete="off">
+            <span class="glyphicon glyphicon-plus"></span> Add Job
+        </button>
+    </p>
 </div>
 
 <div class="row visible-full-crontab<?php echo $crontabEmpty ? ' hidden' : '' ?>">
-	<div class="col-xs-8">
-		<h2><?php echo $systemUser->getUsername() ?></h2>
-	</div>
-	<div class="col-xs-4">
-		<button type="button" class="btn btn-primary pull-right job-add" title="Add Job"
-				autocomplete="off">
-			<span class="glyphicon glyphicon-plus"></span> Add Job
-		</button>
-	</div>
+    <div class="col-xs-8">
+        <h2><?php echo $systemUser->getUsername() ?></h2>
+    </div>
+    <div class="col-xs-4">
+        <button type="button" class="btn btn-primary pull-right job-add" title="Add Job"
+                autocomplete="off">
+            <span class="glyphicon glyphicon-plus"></span> Add Job
+        </button>
+    </div>
 </div>
 <div class="panel panel-default panel-crontab visible-full-crontab
-			<?php echo $crontabEmpty ? 'hidden' : '' ?>">
-	<div class="panel-heading">
-		<input type="text" class="form-control job-search" autocomplete="off" placeholder="Search">
-	</div>
+            <?php echo $crontabEmpty ? 'hidden' : '' ?>">
+    <div class="panel-heading">
+        <input type="text" class="form-control job-search" autocomplete="off" placeholder="Search">
+    </div>
 
-	<div class="empty-search hidden">
-		<p>Your search did not match any of the jobs.</p>
-		<button type="button" class="btn btn-default job-search-reset">
-			<span class="glyphicon glyphicon-arrow-left"></span>
-			Start Over
-		</button>
-	</div>
+    <div class="empty-search hidden">
+        <p>Your search did not match any of the jobs.</p>
+        <button type="button" class="btn btn-default job-search-reset">
+            <span class="glyphicon glyphicon-arrow-left"></span>
+            Start Over
+        </button>
+    </div>
 
-	<table class="table table-hover table-crontab">
-		<thead>		
-			<tr>
-				<th>Time</th>
-				<th>Command</th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
-			<?php foreach ($crontab as $job): ?>
-				<?php echo $this->partial('partials/job.phtml', array(
-					'job' => $job
-				)) ?>
-			<?php endforeach; ?>
-		</tbody>
-	</table>
+    <table class="table table-hover table-crontab">
+        <thead>        
+            <tr>
+                <th>Time</th>
+                <th>Command</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($crontab as $job): ?>
+                <?php echo $this->partial('partials/job.phtml', array(
+                    'job' => $job
+                )) ?>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 </div>
 
 <?php echo $this->partial('partials/job-delete.phtml') ?>
 <?php echo $this->partial('partials/job-add-dialog.phtml', array(
-	'simpleForm'   => $simpleForm,
-	'advancedForm' => $advancedForm
+    'simpleForm'   => $simpleForm,
+    'advancedForm' => $advancedForm
 )) ?>

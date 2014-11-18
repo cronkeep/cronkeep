@@ -20,43 +20,43 @@
 $form->prepare();
 ?>
 <form class="job-add-form job-add-advanced-form" role="form" method="post">
-	<div class="form-alerts"></div>
-	<input type="hidden" name="mode" value="advanced">
-	<input type="hidden" name="returnHtml" value="1">
-	<?php if (isset($hash)): ?>
-		<input type="hidden" name="hash" value="<?php echo $hash ?>">
-	<?php endif; ?>
-	<div class="row">
-		<div class="col-md-2">
-			<span class="legend"><?php echo $form->get('name')->getLabel() ?></span>
-		</div>
-		<div class="col-md-10">
-			<?php echo $this->formText($form->get('name')) ?>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-2">
-			<span class="legend"><?php echo $form->get('expression')->getLabel() ?></span>
-		</div>
-		<div class="col-md-10">
-			<?php echo $this->formText($form->get('expression')) ?>
-			<p class="help-block">
-				You may peep at this 
-				<a href="https://linuxmoz.com/crontab-syntax-tutorial/" target="_blank"
-				   title="Crontab Syntax Tutorial With Examples - LinuxMoz">
-					tutorial on crons</a> or read
-				<a href="http://unixhelp.ed.ac.uk/CGI/man-cgi?crontab+5" target="_blank"
-				   title="UNIX man pages : crontab (5)">
-					the crontab man page</a> for a full walkthrough on time expressions.
-			</p>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-2">
-			<span class="legend"><?php echo $form->get('command')->getLabel() ?></span>
-		</div>
-		<div class="col-md-10">
-			<?php echo $this->formTextarea($form->get('command')) ?>
-		</div>
-	</div>
+    <div class="form-alerts"></div>
+    <input type="hidden" name="mode" value="advanced">
+    <input type="hidden" name="returnHtml" value="1">
+    <?php if (isset($hash)): ?>
+        <input type="hidden" name="hash" value="<?php echo $hash ?>">
+    <?php endif; ?>
+    <div class="row">
+        <div class="col-md-2">
+            <span class="legend"><?php echo $form->get('name')->getLabel() ?></span>
+        </div>
+        <div class="col-md-10">
+            <?php echo $this->formText($form->get('name')) ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <span class="legend"><?php echo $form->get('expression')->getLabel() ?></span>
+        </div>
+        <div class="col-md-10">
+            <?php echo $this->formText($form->get('expression')) ?>
+            <p class="help-block">
+                You may peep at this 
+                <a href="https://linuxmoz.com/crontab-syntax-tutorial/" target="_blank"
+                   title="Crontab Syntax Tutorial With Examples - LinuxMoz">
+                    tutorial on crons</a> or read
+                <a href="http://unixhelp.ed.ac.uk/CGI/man-cgi?crontab+5" target="_blank"
+                   title="UNIX man pages : crontab (5)">
+                    the crontab man page</a> for a full walkthrough on time expressions.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <span class="legend"><?php echo $form->get('command')->getLabel() ?></span>
+        </div>
+        <div class="col-md-10">
+            <?php echo $this->formTextarea($form->get('command')) ?>
+        </div>
+    </div>
 </form>
