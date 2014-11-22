@@ -496,43 +496,19 @@ class SimpleForm extends Form implements InputFilterProviderInterface
                 self::WEEKLY => array(
                     'type' => 'Zend\InputFilter\InputFilter',
                     'dayOfWeek' => array(
-                        'required' => false,
-                        'validators' => array(
-                            array('name' => 'Zend\Validator\Digits'),
-                            array(
-                                'name' => 'Zend\Validator\Between',
-                                'options' => array('min' => 0, 'max' => 6)
-                            )
-                        )
+                        'required' => false
                     )
                 ),
                 self::MONTHLY => array(
                     'type' => 'Zend\InputFilter\InputFilter',
                     'dayOfMonth' => array(
-                        'required' => false,
-                        'validators' => array(
-                            array('name' => 'Zend\Validator\Digits'),
-                            array(
-                                'name' => 'Zend\Validator\Between',
-                                'options' => array('min' => 1, 'max' => 31)
-                            )
-                        )
+                        'required' => false
                     )
                 ),
                 self::YEARLY => array(
                     'type' => 'Zend\InputFilter\InputFilter',
                     'dayOfMonth' => array(
-                        'required' => false,
-                        'filters' => array(
-                            array('name' => 'Zend\Filter\StringTrim')
-                        ),
-                        'validators' => array(
-                            array('name' => 'Zend\Validator\Digits'),
-                            array(
-                                'name' => 'Zend\Validator\Between',
-                                'options' => array('min' => 1, 'max' => 31)
-                            )
-                        )
+                        'required' => false
                     )
                 )
             )

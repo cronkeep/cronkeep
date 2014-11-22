@@ -1,9 +1,9 @@
 {
-    "name": "bogdanghervan/cronkeep",
+    "name": "cronkeep/cronkeep",
     "require": {
         "slim/slim": "2.*",
         "symfony/process": "2.5.2",
-        "entomb/slim-json-api": "dev-master",
+		"dogancelik/slim-json": "dev-master",
         "zendframework/zend-form": "2.3.1",
         "zendframework/zend-servicemanager": "2.3.1",
         "zendframework/zend-view": "2.3.1",

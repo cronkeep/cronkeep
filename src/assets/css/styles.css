@@ -25,6 +25,7 @@ body {
 }
 .well-empty-crontab {
     margin-top: 25px;
+    text-align: center;
 }
 .empty-search {
     padding: 15px;

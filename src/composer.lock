@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "65fc1973e62db85c3b3b22671d749600",
+    "hash": "374b7ae35d3a697675baca9ed62f72ac",
     "packages": [
         {
-            "name": "entomb/slim-json-api",
+            "name": "dogancelik/slim-json",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/entomb/slim-json-api.git",
-                "reference": "1d4531499a42af085157796e41afdb0415eceff6"
+                "url": "https://github.com/dogancelik/slim-json.git",
+                "reference": "36c23c8e7985e9b3a68bf0ec561e1853caa5409c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/entomb/slim-json-api/zipball/1d4531499a42af085157796e41afdb0415eceff6",
-                "reference": "1d4531499a42af085157796e41afdb0415eceff6",
+                "url": "https://api.github.com/repos/dogancelik/slim-json/zipball/36c23c8e7985e9b3a68bf0ec561e1853caa5409c",
+                "reference": "36c23c8e7985e9b3a68bf0ec561e1853caa5409c",
                 "shasum": ""
             },
             "require": {
@@ -25,32 +25,30 @@
             },
             "type": "library",
             "autoload": {
-                "classmap": [
-                    "jsonAPI/"
-                ]
+                "psr-0": {
+                    "SlimJson": "."
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "GPL 3.0"
+                "MIT"
             ],
             "authors": [
                 {
-                    "name": "Jonathan Tavares",
-                    "email": "the.entomb@gmail.com",
-                    "homepage": "https://github.com/entomb",
-                    "role": "Developer"
+                    "name": "Doğan Çelik",
+                    "email": "iletisim@dogancelik.com",
+                    "homepage": "http://dogancelik.com/"
                 }
             ],
-            "description": "Slim extension to implement fast JSON API's",
-            "homepage": "https://github.com/entomb/slim-json-api",
+            "description": "JSON middleware for Slim PHP framework",
+            "homepage": "http://github.com/dogancelik/slim-json",
             "keywords": [
-                "api",
                 "json",
                 "middleware",
                 "slim",
                 "view"
             ],
-            "time": "2014-08-25 12:39:35"
+            "time": "2014-05-08 15:50:18"
         },
         {
             "name": "slim/slim",
@@ -727,21 +725,13 @@
             "time": "2014-04-15 15:28:55"
         }
     ],
-    "packages-dev": [
-
-    ],
-    "aliases": [
-
-    ],
+    "packages-dev": [],
+    "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "entomb/slim-json-api": 20
+        "dogancelik/slim-json": 20
     },
     "prefer-stable": false,
-    "platform": [
-
-    ],
-    "platform-dev": [
-
-    ]
+    "platform": [],
+    "platform-dev": []
 }

@@ -72,9 +72,7 @@ $app->group('/job', function() use ($app) {
      */
     $setupJsonResponse = function() {
         $app = \Slim\Slim::getInstance();
-        
-        $app->view(new \JsonApiView());
-        $app->add(new \JsonApiMiddleware());
+        $app->add(new \SlimJson\Middleware());
     };
     
     /**
@@ -102,6 +100,7 @@ $app->group('/job', function() use ($app) {
                         'error' => true,
                         'msg' => 'Cron job no longer exists'
                     ));
+                    $app->stop();
                 }
             } else {
                 $job = new Crontab\Job();
@@ -146,6 +145,7 @@ $app->group('/job', function() use ($app) {
                 'error' => true,
                 'msg' => 'Cron job no longer exists'
             ));
+            $app->stop();
         }
         
         $expressionService = new ExpressionService();
@@ -264,6 +264,16 @@ $app->group('/job', function() use ($app) {
                 'msg' => 'Cron job no longer exists.'
             ));
         }
+    });
+    
+    /**
+     * Error handler.
+     */
+    $app->error(function (\Exception $e) use ($app) {
+        $app->render(500, array(
+            'error' => true,
+            'msg'   => $e->getMessage()
+        ));
     });
 });
 
