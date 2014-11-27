@@ -1,7 +1,25 @@
 {
     "name": "cronkeep/cronkeep",
+    "description": "Web-based crontab management tool",
+    "keywords": ["crontab", "cron"],
+    "type": "project",
+    "homepage": "http://www.cronkeep.com",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Bogdan Ghervan",
+            "email": "bogdan.ghervan@gmail.com",
+            "homepage": "https://www.linkedin.com/in/bogdanghervan",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/cronkeep/cronkeep/issues",
+        "source": "https://github.com/cronkeep/cronkeep"
+    },
     "require": {
-        "slim/slim": "2.*",
+        "php": ">=5.3",
+        "slim/slim": "2.4.3",
         "symfony/process": "2.5.2",
 		"dogancelik/slim-json": "dev-master",
         "zendframework/zend-form": "2.3.1",

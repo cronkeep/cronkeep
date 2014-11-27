@@ -100,10 +100,10 @@ class ExpressionService
             $expression = Expression::create($expression);
         }
         
-        $minute        = $expression->getMinute();
-        $hour        = $expression->getHour();
+        $minute     = $expression->getMinute();
+        $hour       = $expression->getHour();
         $dayOfMonth = $expression->getDayOfMonth();
-        $month        = $expression->getMonth();
+        $month      = $expression->getMonth();
         $dayOfWeek  = $expression->getDayOfWeek();
         
         // Simple expressions feature a specific time (one hour, one minute)

@@ -29,7 +29,7 @@ service apache2 reload
 echo "Installing Composer..."
 curl -sS https://getcomposer.org/installer | php
 mv composer.phar /usr/local/bin/composer
-composer update
+composer install
 
 echo "Installing Xdebug..."
 apt-get install -y php5-dev
