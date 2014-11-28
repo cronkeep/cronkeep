@@ -66,7 +66,7 @@ Note that we've put the password file in a place where Apache can't accidentally
 
 * It's in the virtual host we're pointing Apache to the htdigest password file. So let's add these lines to the virtual host that we've previously set up for CronKeep.
 
-Copy these lines to the ```<VirtualHost>``` section:
+Copy these lines to the ```VirtualHost``` section:
 
 ```ApacheConf
     <Directory "/var/www/cronkeep/src">
