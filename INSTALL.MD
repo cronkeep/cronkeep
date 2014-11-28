@@ -62,7 +62,7 @@ htdigest -c /etc/htdigest/htdigest "cronkeep" john # enter password at the promp
 chmod 644 /etc/htdigest/htdigest
 ```
 
-Note that we've put the file in a place where Apache can't accidentally serve it up from. Also note the `-c` argument overrides an existing password file, so please leave it out should you want to create additional users.
+Note that we've put the password file in a place where Apache can't accidentally serve it up from. Also, please be mindful that the `-c` argument should be used only once, to create the password file, and should be left out if you want to onboard additional users, as it will overwrite an existing file of the same name.
 
 * It's in the virtual host we're pointing Apache to the htdigest password file. So let's add these lines to the virtual host that we've previously set up for CronKeep.
 
