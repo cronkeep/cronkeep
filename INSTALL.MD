@@ -23,7 +23,7 @@ Should you not have git or Composer installed, please refer to their docs for in
 
 Note that the following instructions are for Apache only.
 
-Create a ``/etc/apache2/sites-available/cronkeep.conf`` file with your favorite text editor, and paste this content inside that file:
+Create a ``/etc/apache2/sites-available/cronkeep.conf`` file with your favorite text editor, and paste this content inside the file:
 
 ```ApacheConf
 <VirtualHost *:80>
@@ -46,7 +46,7 @@ Here's a guide on how to set up Digest Authentication with Apache under Debian /
 
 ### Digest Access Authentication
 
-This guide is based on a Apache 2.4 installation under Ubuntu 14.04.
+This guide is based on an Apache 2.4 installation under Ubuntu 14.04.
 
 * First we'll enable `mod_auth_digest`:
 
