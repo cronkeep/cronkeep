@@ -44,7 +44,7 @@ Should you not have git or Composer installed, please refer to their docs for in
 
 * Set up authentication
 
-At this time, the crontab manager does not feature in-app authentication. It is up to the user to set up means of authentication. Please refer to [Installation](INSTALL.MD#set-up-a-virtual-host) for more details.
+At this time, the crontab manager does not feature in-app authentication. It is up to the user to set up means of authentication. Please refer to [Installation](INSTALL.md#set-up-a-virtual-host) for more details.
 
 ## License
 
