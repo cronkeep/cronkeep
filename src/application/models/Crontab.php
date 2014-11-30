@@ -29,6 +29,11 @@ use models\Crontab\Job;
 class Crontab implements \IteratorAggregate, \Countable
 {
     /**
+     * Possible errors printed by "crontab".
+     */
+    const ERROR_EMPTY = "/no crontab for .+/";
+    
+    /**
      * Raw cron table.
      * 
      * @var string
@@ -219,6 +224,7 @@ class Crontab implements \IteratorAggregate, \Countable
      * Reads crontab for current user.
      * 
      * @return Crontab
+     * @throws \Exception
      */
     protected function _readCrontab()
     {
@@ -227,12 +233,7 @@ class Crontab implements \IteratorAggregate, \Countable
         
         if (!$process->isSuccessful()) {
             $errorOutput = $process->getErrorOutput();
-            if ($errorOutput) {
-                throw new \RuntimeException(sprintf(
-                    'There has been an error reading the crontab. Here\'s the output from the shell: %s',
-                    trim($errorOutput)));
-            }
-            throw new \RuntimeException('There has been an error reading the crontab.');
+            $this->_handleReadError($errorOutput);
         }
         
         $this->_rawTable = $process->getOutput();
@@ -343,6 +344,33 @@ class Crontab implements \IteratorAggregate, \Countable
         }
         
         return $this;
+    }
+    
+    /**
+     * Handles errors encountered while attempting to read the crontab.
+     * 
+     * @param string $errorOutput
+     * @return Crontab
+     * @throws \RuntimeException
+     */
+    public function _handleReadError($errorOutput)
+    {
+        $errorOutput = trim($errorOutput);
+        
+        // Unknown error condition
+        if (empty($errorOutput)) {
+            throw new \RuntimeException('There has been an error reading the crontab.');
+        }
+        
+        // Do nothing if crontab is empty
+        if (preg_match(self::ERROR_EMPTY, $errorOutput)) {
+            return $this;
+        }
+        
+        // Unrecognized error condition
+        throw new \RuntimeException(sprintf(
+            'There has been an error reading the crontab. Here\'s the output from the shell: %s',
+            $errorOutput));
     }
     
     /**
