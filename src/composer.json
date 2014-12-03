@@ -21,7 +21,7 @@
         "php": ">=5.3.23",
         "slim/slim": "2.4.3",
         "symfony/process": "2.5.2",
-		"dogancelik/slim-json": "dev-master",
+        "dogancelik/slim-json": "dev-master",
         "zendframework/zend-form": "2.3.1",
         "zendframework/zend-servicemanager": "2.3.1",
         "zendframework/zend-view": "2.3.1",

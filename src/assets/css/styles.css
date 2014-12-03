@@ -131,11 +131,8 @@ mark, .mark {
 .job-add-form .radio-specific-time {
     margin-top: 0;
 }
-.job-add-form .list-specific-time {
-    margin: 10px 0 0 25px;
-}
-.job-add-form .list-specific-time > li {
-    margin-bottom: 10px;
+.job-add-form .specific-time {
+    margin: 10px 0 10px 25px;
 }
 .job-add-form .radio-every-hour input[type="radio"] {
     position: absolute;
@@ -219,4 +216,10 @@ mark, .mark {
 }
 .expression-part + .expression-part {
     margin-top: 15px;
+}
+.job-add-form .error-container {
+	list-style-type: none;
+	margin-top: 5px;
+	padding-left: 0;
+	color: #a94442; /* danger style */
 }

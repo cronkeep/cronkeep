@@ -31,6 +31,8 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
     var simpleFormAlertService = new AlertService($('.form-alerts', simpleForm));
     var advancedFormAlertService = new AlertService($('.form-alerts', advancedForm));
     
+    var errorClass = 'has-error';
+    
     // Opens job add / edit dialog
     this.open = function() {
         container.modal();
@@ -65,7 +67,7 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
     
     // Assert-style function to compare repeat picker's value with passed value
     var assertRepeat = function(expected) {
-        var repeatPicker = $('input[name="repeat[picker]"]:checked', container);
+        var repeatPicker = $('select[name="repeat[picker]"]', container);
         return repeatPicker.val() === expected;
     };
     
@@ -98,31 +100,51 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
     
     var addValidationsAndSubmitHandler = function() {
         $.validator.setDefaults({
-            errorClass: 'has-error'
-        });
-        simpleForm.validate({
+            errorClass: errorClass,
             highlight: function(element, errorClass) {
-                $(element).parents('.may-host-errors').addClass(errorClass);
+                $(element).closest('[data-error-host~="' + $(element).attr('name') + '"]')
+                    .addClass(errorClass);
             },
             unhighlight: function(element, errorClass) {
-                $(element).parents('.may-host-errors').removeClass(errorClass);
+                $(element).closest('[data-error-host~="' + $(element).attr('name') + '"]')
+                    .removeClass(errorClass);
             },
             showErrors: function(errorMap, errorList) {
-                for (var i in errorList) {
+                var i, elements, error;
+
+                for (i = 0; error = errorList[i]; i++) {
+                    this.settings.highlight.call(this, error.element, this.settings.errorClass);
+
+                    // Find closest parent that can host this element's error
+                    var errorHostQuery = '[data-error-host~="' + $(error.element).attr('name') + '"]';
+                    var errorHost = $(error.element).closest(errorHostQuery);
+
                     // Use the same template that Zend\Form\View\Helper\FormElementErrors uses
-                    var error = '<ul class="error-container"><li>'
-                              + errorList[i].message + '</li></ul>';
-                    var errorHost = $(errorList[i].element).parents('.may-host-errors');
-                    var errorContainer = $('.error-container', errorHost);
-                    
+                    var newErrorContainer = '<ul class="error-container"><li>' + error.message + '</li></ul>';
+
                     // Replace (server-side) error container or append new one
+                    var errorContainer = $('.error-container', errorHost);
                     if (errorContainer.size()) {
-                        errorContainer.replaceWith(error);
+                        errorContainer.replaceWith(newErrorContainer);
                     } else {
-                        errorHost.append(error);
+                        errorHost.append(newErrorContainer);
                     }
                 }
-            },
+
+                // Unhighlight valid elements and remove errors
+                for (i = 0, elements = this.validElements(); elements[i]; i++) {
+                    this.settings.unhighlight.call(this, elements[i], this.settings.errorClass);
+
+                    // Find closest parent that hosts this element's error
+                    var errorHostQuery = '[data-error-host~="' + $(elements[i]).attr('name') + '"]';
+                    var errorHost = $(elements[i]).closest(errorHostQuery);
+
+                    errorHost.children('.error-container').remove();
+                }
+            }
+        });
+        
+        simpleForm.validate({
             submitHandler: submitHandler,
             rules: {
                 'command': {
@@ -181,7 +203,7 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
                         return assertRepeat(YEARLY);
                     }
                 },
-                'repeat[yearly][day]': {
+                'repeat[yearly][dayOfMonth]': {
                     required: function() {
                         return assertRepeat(YEARLY);
                     },
@@ -204,16 +226,22 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
         });
     };
     
-    // Cycles through time radio options and toggles accompanying inputs
+    // Cycles through time radio options and toggles accompanying inputs (hour, minute, step)
     var toggleTimeInputs = function() {
         timePicker.each(function(i, radio) {            
             var radioChecked = $(radio).prop('checked');
             var timeInputDisabled = !radioChecked;
-            
             var radioContainer = $(this).parents('.radio-time');
-            $('.input-hour, .input-minute, .input-step', radioContainer)
-                .prop('disabled', timeInputDisabled);
-        });        
+            
+            // Disable inputs and remove any validation errors
+            $('input[type="number"]', radioContainer).each(function(i, timeInput) {
+                $(timeInput).prop('disabled', timeInputDisabled);
+                
+                if (timeInputDisabled) {
+                    resetValidatedInput($(timeInput));
+                }
+            });
+        });
     };
     
     // Shows fieldset corresponding to chosen "Repeat" option and hides the others
@@ -226,6 +254,16 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
                 $('.fieldset-' + repeat).addClass('hidden').removeClass('show');
             }
         });
+    };
+    
+    // Removes validation artifacts from input (workaround for jzaefferer/jquery-validation#224)
+    var resetValidatedInput = function(input) {
+        // Find closest parent that could host this element's error
+        var errorHost = input.closest('[data-error-host~="' + input.attr('name') + '"]');
+        
+        errorHost.removeClass(errorClass);
+        errorHost.children('.error-container').remove();
+        input.removeAttr('aria-invalid');
     };
     
     // Pads time fields with "0" for single-digit values
@@ -245,9 +283,7 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
     };
     
     // Toggle accompanying inputs when cycling through radio options
-    timePicker.on('change', function() {
-        toggleTimeInputs();
-    });
+    timePicker.on('change', toggleTimeInputs);
     
     // Emulate "label" behavior when text acting as label is clicked
     $('.radio-every-hour, .radio-every-minute').click(function() {

@@ -294,6 +294,10 @@ class ExpressionService
                  *   'max'  => (int),
                  *   'step' => (int)
                  * )
+                 * 
+                 * @var int $min
+                 * @var int $max
+                 * @var int $step
                  */
                 extract($partValue);
                 while ($min <= $max) {

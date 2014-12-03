@@ -32,7 +32,7 @@ $form->prepare();
         <div class="col-md-2">
             <span class="legend"><?php echo $form->get('name')->getLabel() ?></span>
         </div>
-        <div class="col-md-10 may-host-errors">
+        <div class="col-md-10" data-error-host="<?php echo $form->get('name')->getName() ?>">
             <?php echo $this->formText($form->get('name')) ?>
             <?php echo $this->formElementErrors($form->get('name'), array(
                 'class' => 'error-container'
@@ -43,7 +43,7 @@ $form->prepare();
         <div class="col-md-2">
             <span class="legend"><?php echo $form->get('command')->getLabel() ?></span>
         </div>
-        <div class="col-md-10 may-host-errors">
+        <div class="col-md-10" data-error-host="<?php echo $form->get('command')->getName() ?>">
             <?php echo $this->formTextarea($form->get('command')) ?>
             <?php echo $this->formElementErrors($form->get('command'), array(
                 'class' => 'error-container'
@@ -64,20 +64,20 @@ $form->prepare();
         <div class="col-md-2">
             <span class="legend"><?php echo $time->get('picker')->getLabel() ?></span>
         </div>
-        <div class="col-md-10">
+        <div class="col-md-10" data-error-host="<?php echo $time->get('picker')->getName() ?>">
             <!-- Specific time in the day -->
-            <div class="radio radio-time radio-specific-time may-host-errors">
+            <div class="radio radio-time radio-specific-time"
+                 data-error-host="<?php echo $time->get('specificTime')->get('hour')->getName() ?>
+                                  <?php echo $time->get('specificTime')->get('minute')->getName() ?>">
                 <label>
                     <input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
                            value="specificTime" autocomplete="off"<?php echo $specificTimeChecked ?>>
                     Specific time in the day
                 </label>
-                <ul class="list-unstyled list-specific-time">
-                    <li>
-                        <?php echo $this->formNumber($time->get('specificTime')->get('hour')) ?> : 
-                        <?php echo $this->formNumber($time->get('specificTime')->get('minute')) ?>
-                    </li>
-                </ul>
+                <div class="specific-time">
+                    <?php echo $this->formNumber($time->get('specificTime')->get('hour')) ?> : 
+                    <?php echo $this->formNumber($time->get('specificTime')->get('minute')) ?>
+                </div>
                 <ul class="error-container">
                     <?php
                         // Group messages together for hour and minute fields
@@ -96,7 +96,9 @@ $form->prepare();
             </div>
 
             <!-- Every {step} hours at minute {minute} -->
-            <div class="radio radio-time radio-every-hour may-host-errors">
+            <div class="radio radio-time radio-every-hour"
+                 data-error-host="<?php echo $time->get('everyHour')->get('step')->getName() ?>
+                                  <?php echo $time->get('everyHour')->get('minute')->getName() ?>">
                 <input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
                        value="everyHour" autocomplete="off"<?php echo $everyHourChecked ?>>
                 <span>
@@ -123,7 +125,8 @@ $form->prepare();
             </div>
 
             <!-- Every {minute} minutes -->
-            <div class="radio radio-time radio-every-minute may-host-errors">
+            <div class="radio radio-time radio-every-minute"
+                 data-error-host="<?php echo $time->get('everyMinute')->get('step')->getName() ?>">
                 <input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
                        value="everyMinute" autocomplete="off"<?php echo $everyMinuteChecked ?>>
                 <span>
@@ -159,7 +162,7 @@ $form->prepare();
     ?>
     <div class="row fieldset-weekly hidden">
         <div class="col-md-2"></div>
-        <div class="col-md-10 may-host-errors">
+        <div class="col-md-10" data-error-host="<?php echo $dayOfWeek->getName() ?>[]">
             <span class="hint"><?php echo $dayOfWeek->getLabel() ?></span>
             <div>
                 <div class="btn-group" data-toggle="buttons">
@@ -189,7 +192,7 @@ $form->prepare();
     ?>
     <div class="row fieldset-monthly hidden">
         <div class="col-md-2"></div>
-        <div class="col-md-10 may-host-errors">
+        <div class="col-md-10" data-error-host="<?php echo $dayOfMonth->getName() ?>[]">
             <span class="hint"><?php echo $dayOfMonth->getLabel() ?></span>
             <div>
                 <div class="btn-group btn-group-day-picker">
@@ -221,7 +224,8 @@ $form->prepare();
     <div class="row fieldset-yearly hidden">
         <div class="col-md-2"></div>
         <div class="col-md-10">
-            <div class="may-host-errors">
+            <div data-error-host="<?php echo $repeat->get('yearly')->get('month')->getName() ?>
+                                  <?php echo $repeat->get('yearly')->get('dayOfMonth')->getName() ?>">
                 <span class="hint"><?php echo $repeat->get('yearly')->getLabel() ?></span>
                 <div class="clearfix">
                     <?php echo $this->formSelect($repeat->get('yearly')->get('month')) ?>
