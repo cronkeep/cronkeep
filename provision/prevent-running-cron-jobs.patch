@@ -1,0 +1,24 @@
+diff --git src/index.php src/index.php
+index 916c175..79a6e4b 100644
+--- src/index.php
++++ src/index.php
+@@ -179,6 +179,12 @@ $app->group('/job', function() use ($app) {
+      * Runs a cron job in background.
+      */
+     $app->get('/run/:hash', $setupJsonResponse, function($hash) use ($app) {
++        $app->render(403, array(
++            'error' => true,
++            'msg' => 'Running cron jobs is disabled in the demo application'
++        ));
++        $app->stop();
++        
+         $crontab = new Crontab();
+         $job = $crontab->findByHash($hash);
+         
+@@ -277,4 +283,4 @@ $app->group('/job', function() use ($app) {
+     });
+ });
+ 
+-$app->run();
+\ No newline at end of file
++$app->run();
