@@ -1,0 +1,13 @@
+<?php $arrayNotation = isset($elementIsArray) && $elementIsArray ? '[]' : ''; ?>
+
+<ul data-error="<?php echo $element->getName(), $arrayNotation ?>"
+    class="error-container" data-source="server">
+    
+    <?php
+        echo $this->formElementErrors()
+                  ->setMessageOpenFormat('<li>')
+                  ->setMessageSeparatorString('</li><li>')
+                  ->setMessageCloseString('</li>')
+                  ->render($element);
+    ?>
+</ul>

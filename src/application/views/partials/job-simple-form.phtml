@@ -32,10 +32,10 @@ $form->prepare();
         <div class="col-md-2">
             <span class="legend"><?php echo $form->get('name')->getLabel() ?></span>
         </div>
-        <div class="col-md-10" data-error-host="<?php echo $form->get('name')->getName() ?>">
+        <div class="col-md-10" data-has-error="<?php echo $form->get('name')->getName() ?>">
             <?php echo $this->formText($form->get('name')) ?>
-            <?php echo $this->formElementErrors($form->get('name'), array(
-                'class' => 'error-container'
+            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                'element' => $form->get('name')
             )) ?>
         </div>
     </div>
@@ -43,10 +43,10 @@ $form->prepare();
         <div class="col-md-2">
             <span class="legend"><?php echo $form->get('command')->getLabel() ?></span>
         </div>
-        <div class="col-md-10" data-error-host="<?php echo $form->get('command')->getName() ?>">
+        <div class="col-md-10" data-has-error="<?php echo $form->get('command')->getName() ?>">
             <?php echo $this->formTextarea($form->get('command')) ?>
-            <?php echo $this->formElementErrors($form->get('command'), array(
-                'class' => 'error-container'
+            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                'element' => $form->get('command')
             )) ?>
         </div>
     </div>
@@ -64,11 +64,11 @@ $form->prepare();
         <div class="col-md-2">
             <span class="legend"><?php echo $time->get('picker')->getLabel() ?></span>
         </div>
-        <div class="col-md-10" data-error-host="<?php echo $time->get('picker')->getName() ?>">
+        <div class="col-md-10" data-has-error="<?php echo $time->get('picker')->getName() ?>">
             <!-- Specific time in the day -->
             <div class="radio radio-time radio-specific-time"
-                 data-error-host="<?php echo $time->get('specificTime')->get('hour')->getName() ?>
-                                  <?php echo $time->get('specificTime')->get('minute')->getName() ?>">
+                 data-has-error="<?php echo $time->get('specificTime')->get('hour')->getName(), ' ',
+                                            $time->get('specificTime')->get('minute')->getName() ?>">
                 <label>
                     <input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
                            value="specificTime" autocomplete="off"<?php echo $specificTimeChecked ?>>
@@ -78,27 +78,20 @@ $form->prepare();
                     <?php echo $this->formNumber($time->get('specificTime')->get('hour')) ?> : 
                     <?php echo $this->formNumber($time->get('specificTime')->get('minute')) ?>
                 </div>
-                <ul class="error-container">
-                    <?php
-                        // Group messages together for hour and minute fields
-                        echo $this->formElementErrors()
-                                  ->setMessageOpenFormat('<li>')
-                                  ->setMessageSeparatorString('</li><li>')
-                                  ->setMessageCloseString('</li>')
-                                  ->render($time->get('specificTime')->get('hour'));
-                        echo $this->formElementErrors()
-                                  ->setMessageOpenFormat('<li>')
-                                  ->setMessageSeparatorString('</li><li>')
-                                  ->setMessageCloseString('</li>')
-                                  ->render($time->get('specificTime')->get('minute'));
-                    ?>
-                </ul>
+                
+                <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                    'element' => $time->get('specificTime')->get('hour')
+                )) ?>
+                <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                    'element' => $time->get('specificTime')->get('minute')
+                )) ?>
             </div>
 
             <!-- Every {step} hours at minute {minute} -->
             <div class="radio radio-time radio-every-hour"
-                 data-error-host="<?php echo $time->get('everyHour')->get('step')->getName() ?>
-                                  <?php echo $time->get('everyHour')->get('minute')->getName() ?>">
+                 data-has-error="<?php echo $time->get('everyHour')->get('step')->getName(), ' ',
+                                            $time->get('everyHour')->get('minute')->getName() ?>">
+                
                 <input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
                        value="everyHour" autocomplete="off"<?php echo $everyHourChecked ?>>
                 <span>
@@ -107,26 +100,19 @@ $form->prepare();
                     hours at minute
                     <?php echo $this->formNumber($time->get('everyHour')->get('minute')) ?>
                 </span>
-                <ul class="error-container">
-                    <?php
-                        // Group messages together for step and minute fields
-                        echo $this->formElementErrors()
-                                  ->setMessageOpenFormat('<li>')
-                                  ->setMessageSeparatorString('</li><li>')
-                                  ->setMessageCloseString('</li>')
-                                  ->render($time->get('everyHour')->get('step'));
-                        echo $this->formElementErrors()
-                                  ->setMessageOpenFormat('<li>')
-                                  ->setMessageSeparatorString('</li><li>')
-                                  ->setMessageCloseString('</li>')
-                                  ->render($time->get('everyHour')->get('minute'));
-                    ?>
-                </ul>
+                
+                <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                    'element' => $time->get('everyHour')->get('step')
+                )) ?>
+                <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                    'element' => $time->get('everyHour')->get('minute')
+                )) ?>
             </div>
 
             <!-- Every {minute} minutes -->
             <div class="radio radio-time radio-every-minute"
-                 data-error-host="<?php echo $time->get('everyMinute')->get('step')->getName() ?>">
+                 data-has-error="<?php echo $time->get('everyMinute')->get('step')->getName() ?>">
+                
                 <input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
                        value="everyMinute" autocomplete="off"<?php echo $everyMinuteChecked ?>>
                 <span>
@@ -134,10 +120,15 @@ $form->prepare();
                     <?php echo $this->formNumber($time->get('everyMinute')->get('step')) ?>
                     minutes
                 </span>
-                <?php echo $this->formElementErrors($time->get('everyMinute')->get('step'), array(
-                    'class' => 'error-container'
+
+                <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                    'element' => $time->get('everyMinute')->get('step')
                 )) ?>
             </div>
+            
+            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                'element' => $time->get('picker')
+            )) ?>
         </div>
     </div>
     
@@ -149,8 +140,14 @@ $form->prepare();
         <div class="col-md-2">
             <span class="legend"><?php echo $repeat->get('picker')->getLabel() ?></span>
         </div>
-        <div class="col-md-10">
+        <div class="col-md-10" data-has-error="<?php echo $repeat->get('picker')->getName() ?>">
             <?php echo $this->formSelect($repeat->get('picker')) ?>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-10">
+            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                'element' => $repeat->get('picker')
+            )) ?>
         </div>
     </div>
 
@@ -162,7 +159,7 @@ $form->prepare();
     ?>
     <div class="row fieldset-weekly hidden">
         <div class="col-md-2"></div>
-        <div class="col-md-10" data-error-host="<?php echo $dayOfWeek->getName() ?>[]">
+        <div class="col-md-10" data-has-error="<?php echo $dayOfWeek->getName() ?>[]">
             <span class="hint"><?php echo $dayOfWeek->getLabel() ?></span>
             <div>
                 <div class="btn-group" data-toggle="buttons">
@@ -178,8 +175,9 @@ $form->prepare();
                     <?php endforeach; ?>
                 </div>
             </div>
-            <?php echo $this->formElementErrors($dayOfWeek, array(
-                'class' => 'error-container'
+            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                'element' => $dayOfWeek,
+                'elementIsArray' => true
             )) ?>
         </div>
     </div>
@@ -192,7 +190,7 @@ $form->prepare();
     ?>
     <div class="row fieldset-monthly hidden">
         <div class="col-md-2"></div>
-        <div class="col-md-10" data-error-host="<?php echo $dayOfMonth->getName() ?>[]">
+        <div class="col-md-10" data-has-error="<?php echo $dayOfMonth->getName() ?>[]">
             <span class="hint"><?php echo $dayOfMonth->getLabel() ?></span>
             <div>
                 <div class="btn-group btn-group-day-picker">
@@ -214,8 +212,9 @@ $form->prepare();
                     </div>
                 </div>
             </div>
-            <?php echo $this->formElementErrors($dayOfMonth, array(
-                'class' => 'error-container'
+            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                'element' => $dayOfMonth,
+                'elementIsArray' => true
             )) ?>
         </div>
     </div>
@@ -223,30 +222,21 @@ $form->prepare();
     <!-- Repeat: Yearly -->
     <div class="row fieldset-yearly hidden">
         <div class="col-md-2"></div>
-        <div class="col-md-10">
-            <div data-error-host="<?php echo $repeat->get('yearly')->get('month')->getName() ?>
-                                  <?php echo $repeat->get('yearly')->get('dayOfMonth')->getName() ?>">
-                <span class="hint"><?php echo $repeat->get('yearly')->getLabel() ?></span>
-                <div class="clearfix">
-                    <?php echo $this->formSelect($repeat->get('yearly')->get('month')) ?>
-                    <?php echo $this->formNumber($repeat->get('yearly')->get('dayOfMonth')) ?>
-                </div>
-                <ul class="error-container">
-                    <?php
-                        // Group messages together for month and day fields
-                        echo $this->formElementErrors()
-                                  ->setMessageOpenFormat('<li>')
-                                  ->setMessageSeparatorString('</li><li>')
-                                  ->setMessageCloseString('</li>')
-                                  ->render($repeat->get('yearly')->get('month'));
-                        echo $this->formElementErrors()
-                                  ->setMessageOpenFormat('<li>')
-                                  ->setMessageSeparatorString('</li><li>')
-                                  ->setMessageCloseString('</li>')
-                                  ->render($repeat->get('yearly')->get('dayOfMonth'));
-                    ?>
-                </ul>
+        <div class="col-md-10" 
+             data-has-error="<?php echo $repeat->get('yearly')->get('month')->getName(), ' ',
+                                        $repeat->get('yearly')->get('dayOfMonth')->getName() ?>">
+            <span class="hint"><?php echo $repeat->get('yearly')->getLabel() ?></span>
+            <div class="clearfix">
+                <?php echo $this->formSelect($repeat->get('yearly')->get('month')) ?>
+                <?php echo $this->formNumber($repeat->get('yearly')->get('dayOfMonth')) ?>
             </div>
+            
+            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                'element' => $repeat->get('yearly')->get('month')
+            )) ?>
+            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                'element' => $repeat->get('yearly')->get('dayOfMonth')
+            )) ?>
         </div>
     </div>
 </form>

@@ -98,48 +98,77 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
         });
     };
     
+    // Determines closest parent that can receive the errorClass
+    var getParentToHighlight = function(element) {
+        return $(element).closest('[data-has-error~="' + $(element).attr('name') + '"]');
+    }
+    
+    // Determines error container for the given element
+    // (by looking for a matching data-error attribute)
+    var getErrorContainer = function(element) {
+        return $('[data-error="' + $(element).attr('name') + '"]', container);
+    };
+    
+    // Displays given error (while replacing any existing error)
+    var addError = function(element, errorMessage) {
+        var errorContainer = getErrorContainer(element);
+
+        errorContainer.empty()
+            .append('<li>' + errorMessage + '</li>')
+            .attr('data-source', 'client');
+        
+        return this;
+    }
+    
+    // Tells whether element has any errors attached to it
+    var hasError = function(element) {
+        var errorContainer = getErrorContainer(element);
+        return errorContainer.children().size() > 0;
+    }
+    
+    // Removes error container for given element
+    var removeError = function(element) {
+        var errorContainer = getErrorContainer(element);
+        errorContainer.empty();
+    }
+    
     var addValidationsAndSubmitHandler = function() {
         $.validator.setDefaults({
             errorClass: errorClass,
             highlight: function(element, errorClass) {
-                $(element).closest('[data-error-host~="' + $(element).attr('name') + '"]')
-                    .addClass(errorClass);
+                getParentToHighlight(element).addClass(errorClass);
             },
             unhighlight: function(element, errorClass) {
-                $(element).closest('[data-error-host~="' + $(element).attr('name') + '"]')
-                    .removeClass(errorClass);
+                var parent = getParentToHighlight(element);
+                var relElementNames = parent.attr('data-has-error').split(' ');
+                
+                // A parent can receive errorClass for several elements, listed in data-has-error.
+                // Make sure all elements are error-free before unhighlighting.
+                var doUnhighlight = true;
+                for (var i in relElementNames) {
+                    if (hasError($('[name="' + relElementNames[i] + '"]'))) {
+                        doUnhighlight = false;
+                        break;
+                    }
+                }
+                
+                if (doUnhighlight) {
+                    parent.removeClass(errorClass);
+                }
             },
             showErrors: function(errorMap, errorList) {
                 var i, elements, error;
 
+                // Highlight erroneous elements and attach errors
                 for (i = 0; error = errorList[i]; i++) {
                     this.settings.highlight.call(this, error.element, this.settings.errorClass);
-
-                    // Find closest parent that can host this element's error
-                    var errorHostQuery = '[data-error-host~="' + $(error.element).attr('name') + '"]';
-                    var errorHost = $(error.element).closest(errorHostQuery);
-
-                    // Use the same template that Zend\Form\View\Helper\FormElementErrors uses
-                    var newErrorContainer = '<ul class="error-container"><li>' + error.message + '</li></ul>';
-
-                    // Replace (server-side) error container or append new one
-                    var errorContainer = $('.error-container', errorHost);
-                    if (errorContainer.size()) {
-                        errorContainer.replaceWith(newErrorContainer);
-                    } else {
-                        errorHost.append(newErrorContainer);
-                    }
+                    addError(error.element, error.message);
                 }
 
                 // Unhighlight valid elements and remove errors
                 for (i = 0, elements = this.validElements(); elements[i]; i++) {
+                    removeError(elements[i]);
                     this.settings.unhighlight.call(this, elements[i], this.settings.errorClass);
-
-                    // Find closest parent that hosts this element's error
-                    var errorHostQuery = '[data-error-host~="' + $(elements[i]).attr('name') + '"]';
-                    var errorHost = $(elements[i]).closest(errorHostQuery);
-
-                    errorHost.children('.error-container').remove();
                 }
             }
         });
@@ -210,6 +239,44 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
                     digits: true,
                     range: [1, 31]
                 }
+            },
+            messages: {
+                'command': {
+                    required: 'Command is required'
+                },
+                'time[specificTime][hour]': {
+                    required: 'Hour is required',
+                    digits: 'Hour should be a valid number',
+                },
+                'time[specificTime][minute]': {
+                    required: 'Minute is required',
+                    digits: 'Minute should be a valid number'
+                },
+                'time[everyHour][step]': {
+                    required: 'Frequency is required',
+                    digits: 'Frequency should be a valid number'
+                },
+                'time[everyHour][minute]': {
+                    required: 'Minute is required',
+                    digits: 'Minute should be a valid number'
+                },
+                'time[everyMinute][step]': {
+                    required: 'Frequency is required',
+                    digits: 'Frequency should be a valid number'
+                },
+                'repeat[weekly][dayOfWeek][]': {
+                    required: 'Day of week is required'
+                },
+                'repeat[monthly][dayOfMonth][]': {
+                    required: 'Day of month is required'
+                },
+                'repeat[yearly][month]': {
+                    required: 'Month is required'
+                },
+                'repeat[yearly][dayOfMonth]': {
+                    required: 'Day of month is required',
+                    digits: 'Day of month should be a valid number'
+                }
             }
         });
         
@@ -221,6 +288,14 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
                 },
                 'expression': {
                     required: true
+                }
+            },
+            messages: {
+                'command': {
+                    required: "Command is required"
+                },
+                'expression': {
+                    required: "Time expression is required"
                 }
             }
         });
@@ -256,13 +331,13 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
         });
     };
     
-    // Removes validation artifacts from input (workaround for jzaefferer/jquery-validation#224)
+    // Removes validation artifacts for a disabled input
+    // (workaround for jzaefferer/jquery-validation#224)
     var resetValidatedInput = function(input) {
-        // Find closest parent that could host this element's error
-        var errorHost = input.closest('[data-error-host~="' + input.attr('name') + '"]');
+        var parent = getParentToHighlight(input);
+        parent.removeClass(errorClass);
         
-        errorHost.removeClass(errorClass);
-        errorHost.children('.error-container').remove();
+        removeError(input);
         input.removeAttr('aria-invalid');
     };
     

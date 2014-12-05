@@ -30,10 +30,10 @@ $form->prepare();
         <div class="col-md-2">
             <span class="legend"><?php echo $form->get('name')->getLabel() ?></span>
         </div>
-        <div class="col-md-10" data-error-host="<?php echo $form->get('name')->getName() ?>">
+        <div class="col-md-10" data-has-error="<?php echo $form->get('name')->getName() ?>">
             <?php echo $this->formText($form->get('name')) ?>
-            <?php echo $this->formElementErrors($form->get('name'), array(
-                'class' => 'error-container'
+            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                'element' => $form->get('name')
             )) ?>
         </div>
     </div>
@@ -41,10 +41,10 @@ $form->prepare();
         <div class="col-md-2">
             <span class="legend"><?php echo $form->get('expression')->getLabel() ?></span>
         </div>
-        <div class="col-md-10" data-error-host="<?php echo $form->get('expression')->getName() ?>">
+        <div class="col-md-10" data-has-error="<?php echo $form->get('expression')->getName() ?>">
             <?php echo $this->formText($form->get('expression')) ?>
-            <?php echo $this->formElementErrors($form->get('expression'), array(
-                'class' => 'error-container'
+            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                'element' => $form->get('expression')
             )) ?>
         </div>
         <div class="col-md-2"></div>
@@ -64,10 +64,10 @@ $form->prepare();
         <div class="col-md-2">
             <span class="legend"><?php echo $form->get('command')->getLabel() ?></span>
         </div>
-        <div class="col-md-10" data-error-host="<?php echo $form->get('command')->getName() ?>">
+        <div class="col-md-10" data-has-error="<?php echo $form->get('command')->getName() ?>">
             <?php echo $this->formTextarea($form->get('command')) ?>
-            <?php echo $this->formElementErrors($form->get('command'), array(
-                'class' => 'error-container'
+            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                'element' => $form->get('command')
             )) ?>
         </div>
     </div>
