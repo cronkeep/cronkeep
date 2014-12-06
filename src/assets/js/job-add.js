@@ -186,36 +186,31 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
                     required: function() {
                         return assertTime(SPECIFIC_TIME);
                     },
-                    digits: true,
-                    range: [0, 23]
+                    digits: true
                 },
                 'time[specificTime][minute]': {
                     required: function() {
                         return assertTime(SPECIFIC_TIME);
                     },
-                    digits: true,
-                    range: [0, 59]
+                    digits: true
                 },
                 'time[everyHour][step]': {
                     required: function() {
                         return assertTime(EVERY_HOUR);
                     },
-                    digits: true,
-                    range: [1, 23]
+                    digits: true
                 },
                 'time[everyHour][minute]': {
                     required: function() {
                         return assertTime(EVERY_HOUR);
                     },
-                    digits: true,
-                    range: [0, 59]
+                    digits: true
                 },
                 'time[everyMinute][step]': {
                     required: function() {
                         return assertTime(EVERY_MINUTE);
                     },
-                    digits: true,
-                    range: [1, 59]
+                    digits: true
                 },
                 'repeat[weekly][dayOfWeek][]': {
                     required: function() {
@@ -236,8 +231,7 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
                     required: function() {
                         return assertRepeat(YEARLY);
                     },
-                    digits: true,
-                    range: [1, 31]
+                    digits: true
                 }
             },
             messages: {
@@ -246,36 +240,54 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
                 },
                 'time[specificTime][hour]': {
                     required: 'Hour is required',
-                    digits: 'Hour should be a valid number',
+                    number: 'Hour should be a valid number',
+                    digits: 'Hour can only be an integer number',
+                    min: 'Hour has to be between 0 and 23',
+                    max: 'Hour has to be between 0 and 23'
                 },
                 'time[specificTime][minute]': {
                     required: 'Minute is required',
-                    digits: 'Minute should be a valid number'
+                    number: 'Minute should be a valid number',
+                    digits: 'Minute can only be an integer number',
+                    min: 'Minute has to be between 0 and 59',
+                    max: 'Minute has to be between 0 and 59'
                 },
                 'time[everyHour][step]': {
                     required: 'Frequency is required',
-                    digits: 'Frequency should be a valid number'
+                    number: 'Frequency should be a valid number',
+                    digits: 'Frequency could only be an integer number',
+                    min: 'Frequency has to be between 1 and 23',
+                    max: 'Frequency has to be between 1 and 23'
                 },
                 'time[everyHour][minute]': {
                     required: 'Minute is required',
-                    digits: 'Minute should be a valid number'
+                    number: 'Minute should be a valid number',
+                    digits: 'Minute can only be an integer number',
+                    min: 'Minute has to be between 0 and 59',
+                    max: 'Minute has to be between 0 and 59'
                 },
                 'time[everyMinute][step]': {
                     required: 'Frequency is required',
-                    digits: 'Frequency should be a valid number'
+                    number: 'Frequency should be a valid number',
+                    digits: 'Frequency could only be an integer number',
+                    min: 'Frequency has to be between 1 and 59',
+                    max: 'Frequency has to be between 1 and 59'
                 },
                 'repeat[weekly][dayOfWeek][]': {
-                    required: 'Day of week is required'
+                    required: 'Please select at least one day'
                 },
                 'repeat[monthly][dayOfMonth][]': {
-                    required: 'Day of month is required'
+                    required: 'Please select at least one day'
                 },
                 'repeat[yearly][month]': {
                     required: 'Month is required'
                 },
                 'repeat[yearly][dayOfMonth]': {
-                    required: 'Day of month is required',
-                    digits: 'Day of month should be a valid number'
+                    required: 'Day is required',
+                    number: 'Day should be a valid number',
+                    digits: 'Day could only be an integer number',
+                    min: 'Day has to be between 1 and 31',
+                    max: 'Day has to be between 1 and 31'
                 }
             }
         });

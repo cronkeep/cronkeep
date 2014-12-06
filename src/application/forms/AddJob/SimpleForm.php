@@ -314,7 +314,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
     public function getRepeatYearlyFieldset()
     {
         $repeatYearlyFieldset = new Fieldset(self::YEARLY);
-        $repeatYearlyFieldset->setLabel('Pick dates');
+        $repeatYearlyFieldset->setLabel('Pick date');
         
         $month = new Element\Select('month');
         $month->setAttributes(array(
