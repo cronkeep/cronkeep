@@ -299,6 +299,13 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
                 }
             }
         });
+        
+        // Manually trigger validation for checkbox-style button groups,
+        // whenever the underlying checkboxes record a change
+        $('.btn-group[data-toggle="buttons"] input', container).on('change', function() {
+            var validator = simpleForm.validate();
+            validator.element(this);
+        });
     };
     
     // Cycles through time radio options and toggles accompanying inputs (hour, minute, step)
