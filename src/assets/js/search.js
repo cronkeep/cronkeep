@@ -134,11 +134,16 @@ var SearchService = function(searchData) {
     };
     
     // Assign handlers
-    $('body').on('keyup', '.job-search', function() {
+    $('body').on('keyup', '.job-search', function(e) {
         self.search($(this).val(), function() {
             // Empty search handler
             emptySearch.removeClass('hidden');
         });
+        
+        // Reset search when Esc is pressed
+        if (e.keyCode == 27) {
+            self.reset();
+        }
     });
     
     $('body').on('click', '.job-search-reset', function() {
