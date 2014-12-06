@@ -146,6 +146,13 @@ var SearchService = function(searchData) {
         }
     });
     
+    // Reset search when the clear button that some browsers show is clicked
+    $('.job-search').on('input', function() {
+        if ($(this).val() == '') {
+            self.reset();
+        }
+    });
+    
     $('body').on('click', '.job-search-reset', function() {
         self.reset();
     });
