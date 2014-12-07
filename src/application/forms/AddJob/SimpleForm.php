@@ -303,7 +303,6 @@ class SimpleForm extends Form implements InputFilterProviderInterface
         
         return $repeatMonthlyFieldset;
     }
-    
 
     /**
      * Builds fieldset with additional properties for the "yearly" repeat picker value.

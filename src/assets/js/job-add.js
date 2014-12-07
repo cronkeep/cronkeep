@@ -91,8 +91,17 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
                 crontabService.appendJob(data.html, data.hash);
             }
         }).fail(function(data) {
-            var formAlertService = getFormAlertService();
-            formAlertService.pushError(data.responseJSON.msg);
+            var msg = data.responseJSON.msg;
+            
+            if ($.isPlainObject(msg)) {
+                $.each(msg, function(name, message) {
+                    var element = $('[name="' + name + '"]', $(form));
+                    addError(element, message);
+                });
+            } else {
+                var formAlertService = getFormAlertService();
+                formAlertService.pushError(msg);
+            }
         }).always(function() {
             saveButton.button('reset');
         });
@@ -106,16 +115,49 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
     // Determines error container for the given element
     // (by looking for a matching data-error attribute)
     var getErrorContainer = function(element) {
-        return $('[data-error="' + $(element).attr('name') + '"]', container);
+        return $('[data-error="' + $(element).attr('name') + '"]', getActiveForm());
     };
+    
+    // Applies highlight style to element that failed validation
+    var highlightError = function(element) {
+        getParentToHighlight(element).addClass(errorClass);
+        return this;
+    }
+    
+    // Removes highlight style from element
+    var unhighlightError = function(element) {
+        var parent = getParentToHighlight(element);
+        if (!parent.length) {
+            return this;
+        }
+        
+        var relElementNames = parent.attr('data-has-error').split(' ');
+
+        // A parent can receive errorClass for several elements, listed in data-has-error.
+        // Make sure all elements are error-free before unhighlighting.
+        var doUnhighlight = true;
+        for (var i in relElementNames) {
+            if (hasError($('[name="' + relElementNames[i] + '"]'))) {
+                doUnhighlight = false;
+                break;
+            }
+        }
+
+        if (doUnhighlight) {
+            parent.removeClass(errorClass);
+        }
+        
+        return this;
+    }
     
     // Displays given error (while replacing any existing error)
     var addError = function(element, errorMessage) {
         var errorContainer = getErrorContainer(element);
 
         errorContainer.empty()
-            .append('<li>' + errorMessage + '</li>')
-            .attr('data-source', 'client');
+            .append('<li>' + errorMessage + '</li>');
+        
+        highlightError(element);
         
         return this;
     }
@@ -130,45 +172,29 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
     var removeError = function(element) {
         var errorContainer = getErrorContainer(element);
         errorContainer.empty();
+        
+        unhighlightError(element);
+        
+        return this;
     }
     
     var addValidationsAndSubmitHandler = function() {
         $.validator.setDefaults({
             errorClass: errorClass,
-            highlight: function(element, errorClass) {
-                getParentToHighlight(element).addClass(errorClass);
-            },
-            unhighlight: function(element, errorClass) {
-                var parent = getParentToHighlight(element);
-                var relElementNames = parent.attr('data-has-error').split(' ');
-                
-                // A parent can receive errorClass for several elements, listed in data-has-error.
-                // Make sure all elements are error-free before unhighlighting.
-                var doUnhighlight = true;
-                for (var i in relElementNames) {
-                    if (hasError($('[name="' + relElementNames[i] + '"]'))) {
-                        doUnhighlight = false;
-                        break;
-                    }
-                }
-                
-                if (doUnhighlight) {
-                    parent.removeClass(errorClass);
-                }
-            },
+            // These are handled by addError and removeError directly
+            highlight: false,
+            unhighlight: false,
             showErrors: function(errorMap, errorList) {
                 var i, elements, error;
 
                 // Highlight erroneous elements and attach errors
                 for (i = 0; error = errorList[i]; i++) {
-                    this.settings.highlight.call(this, error.element, this.settings.errorClass);
                     addError(error.element, error.message);
                 }
 
                 // Unhighlight valid elements and remove errors
                 for (i = 0, elements = this.validElements(); elements[i]; i++) {
                     removeError(elements[i]);
-                    this.settings.unhighlight.call(this, elements[i], this.settings.errorClass);
                 }
             }
         });
