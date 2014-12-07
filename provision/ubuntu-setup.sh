@@ -21,7 +21,7 @@ apt-get update
 apt-get install -y apache2 libapache2-mod-php5 screen git
 
 echo "Configuring virtual host..."
-cp /var/www/cronkeep/provision/config/cronkeep.conf /etc/apache2/sites-available
+cp /var/www/cronkeep/provision/config/cronkeep-ubuntu.conf /etc/apache2/sites-available/cronkeep.conf
 a2ensite cronkeep
 a2enmod rewrite
 service apache2 reload
@@ -36,6 +36,8 @@ apt-get install -y php5-dev
 pecl install xdebug
 cat <<EOF > /etc/php5/mods-available/xdebug.ini
 zend_extension=xdebug.so
+xdebug.remote_enable=1
+xdebug.remote_host=192.168.50.1
 xdebug.var_display_max_data=4096
 xdebug.var_display_max_depth=4
 EOF

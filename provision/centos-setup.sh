@@ -28,7 +28,7 @@ yum --enablerepo=ius-archive install -y php53
 service httpd start
 
 echo "Configuring virtual host..."
-cat /vagrant/provision/config/cronkeep.conf >> /etc/httpd/conf/httpd.conf
+cat /vagrant/provision/config/cronkeep-centos.conf >> /etc/httpd/conf/httpd.conf
 service httpd reload
 
 echo "Installing Composer..."
