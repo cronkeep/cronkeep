@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
     ubuntu.vm.provision "shell", path: "provision/ubuntu-setup.sh"
     ubuntu.vm.provider "virtualbox" do |v|
       v.name = "CronKeep (Ubuntu)"
-        v.memory = 512
+      v.memory = 512
     end
   end
 
@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
     centos.vm.provision "shell", path: "provision/centos-setup.sh"
     centos.vm.provider "virtualbox" do |v|
       v.name = "CronKeep (CentOS)"
-        v.memory = 512
+      v.memory = 512
     end
   end
 
