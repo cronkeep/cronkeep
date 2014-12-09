@@ -42,8 +42,8 @@
     </div>
 
     <div class="container">
-        <?php if ($showAtUnavailableAlert && !$isAtCommandAvailable): ?>
-            <?php echo $this->partial('partials/alert-at-unavailable.phtml', array(
+        <?php if (isset($showAlertAtUnavailable) && $showAlertAtUnavailable && !$isAtCommandAvailable): ?>
+            <?php echo $this->partial('partials/alerts/at-unavailable.phtml', array(
                 'atCommandErrorOutput' => $atCommandErrorOutput,
                 'systemUser' => $systemUser
             )) ?>

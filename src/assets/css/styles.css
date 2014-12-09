@@ -59,9 +59,26 @@ body {
     background-color: #f5f5f5;
 }
 
-.at-command-error-output {
+.alert .error-output {
     display: block;
     margin-top: 10px;
+}
+.alert .action-items {
+}
+.alert .action-items .btn {
+	margin-top: 20px;
+}
+/* Exception that resembles the Bootstrap "Crontab is empty" well */
+.alert-exception {
+	margin-top: 25px;
+	text-align: center;
+	padding: 19px;
+}
+.alert-exception > p + p {
+	margin-top: 10px;
+}
+.alert-exception > p {
+	margin: 0 0 10px;
 }
 
 mark, .mark {

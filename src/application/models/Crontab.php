@@ -19,6 +19,7 @@ namespace models;
 
 use \Symfony\Component\Process\Process;
 use models\Crontab\Job;
+use models\Crontab\Exception;
 
 /**
  * Crontab model.
@@ -32,6 +33,7 @@ class Crontab implements \IteratorAggregate, \Countable
      * Possible errors printed by "crontab".
      */
     const ERROR_EMPTY = "/no crontab for .+/";
+    const ERROR_SPOOL_UNREACHABLE = "/'\/var\/spool\/cron' is not a directory, bailing out/";
     
     /**
      * Raw cron table.
@@ -353,7 +355,7 @@ class Crontab implements \IteratorAggregate, \Countable
      * @return Crontab
      * @throws \RuntimeException
      */
-    public function _handleReadError($errorOutput)
+    protected function _handleReadError($errorOutput)
     {
         $errorOutput = trim($errorOutput);
         
@@ -365,6 +367,10 @@ class Crontab implements \IteratorAggregate, \Countable
         // Do nothing if crontab is empty
         if (preg_match(self::ERROR_EMPTY, $errorOutput)) {
             return $this;
+        }
+        
+        if (preg_match(self::ERROR_SPOOL_UNREACHABLE, $errorOutput)) {
+            throw new Exception\SpoolUnreachableException($errorOutput);
         }
         
         // Unrecognized error condition

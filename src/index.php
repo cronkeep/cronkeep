@@ -17,6 +17,7 @@
 
 require_once 'vendor/autoload.php';
 use \models\Crontab;
+use \models\Crontab\Exception;
 use \models\SystemUser;
 use \models\At;
 use \forms\AddJob;
@@ -24,7 +25,7 @@ use \services\ExpressionService;
 
 $app = new \Slim\Slim(array(
     'templates.path' => 'application/views',
-    'debug' => true
+    'debug' => false
 ));
 \Slim\Route::setDefaultConditions(array(
     'hash' => '[a-z0-9]{8}'
@@ -47,8 +48,8 @@ $app->get('/', function() use ($app) {
     $advancedForm = new AddJob\AdvancedForm();
     
     $showAlertAtUnavailable = $app->getCookie('showAlertAtUnavailable');
-    $app->view->setData('showAtUnavailableAlert', $showAlertAtUnavailable !== null ?
-            (bool) $showAlertAtUnavailable : true);
+    $app->view->setData('showAlertAtUnavailable', $showAlertAtUnavailable !== null ?
+        (bool) $showAlertAtUnavailable : true);
     
     $app->render('index.phtml', array(
         'crontab'              => $crontab,
@@ -267,7 +268,7 @@ $app->group('/job', function() use ($app) {
     });
     
     /**
-     * Error handler.
+     * Error handler for job methods.
      */
     $app->error(function (\Exception $e) use ($app) {
         $app->render(500, array(
@@ -275,6 +276,20 @@ $app->group('/job', function() use ($app) {
             'msg'   => $e->getMessage()
         ));
     });
+});
+
+/**
+ * Global error handler.
+ */
+$app->error(function (\Exception $e) use ($app) {
+    $template = 'partials/alerts/unknown-error.phtml';
+    switch (true) {
+        case ($e instanceof Exception\SpoolUnreachableException):
+            $template = 'partials/alerts/spool-unreachable.phtml';
+            break;
+    }
+    
+    $app->render($template, array('e' => $e));
 });
 
 $app->run();

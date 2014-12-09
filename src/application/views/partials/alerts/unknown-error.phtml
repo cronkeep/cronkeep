@@ -1,0 +1,32 @@
+<?php
+/**
+ * Copyright 2014 Bogdan Ghervan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+?>
+<div class="alert alert-warning alert-exception" role="alert">
+    <h3>Oh Snap!</h3>
+    <p>An error occurred that prevented CronKeep from completing your action. Details follow:</p>
+    <p>
+        <?php echo $e->getMessage() ?>
+        <?php if ($e->getCode()): ?>
+            (error code <?php echo $e->getCode() ?>)
+        <?php endif; ?>
+    </p>
+    <p>
+        We'll be happy to help you, so please
+        <a href="https://github.com/cronkeep/cronkeep/issues" title="CronKeep Issues"
+           target="_blank">tell us</a> about it!
+    </p>
+</div>
