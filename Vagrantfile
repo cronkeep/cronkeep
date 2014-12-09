@@ -20,7 +20,7 @@ Vagrant.configure("2") do |config|
     ubuntu.vm.box = "ubuntu/trusty64"
     ubuntu.vm.network "private_network", ip: "192.168.50.10"
     ubuntu.vm.synced_folder "./", "/var/www/cronkeep", create: true, group: "www-data", owner: "www-data"
-    ubuntu.vm.provision "shell", path: "provision/ubuntu-setup.sh"
+    ubuntu.vm.provision "shell", path: "provision/ubuntu/setup.sh"
     ubuntu.vm.provider "virtualbox" do |v|
       v.name = "CronKeep (Ubuntu)"
       v.memory = 512
@@ -30,8 +30,8 @@ Vagrant.configure("2") do |config|
   config.vm.define "centos", autostart: false do |centos|
     centos.vm.box = "chef/centos-6.5"
     centos.vm.network "private_network", ip: "192.168.50.20"
-    centos.vm.synced_folder "./", "/var/www/cronkeep", create: true
-    centos.vm.provision "shell", path: "provision/centos-setup.sh"
+    centos.vm.synced_folder "./", "/var/www/cronkeep", create: true, group: "root", owner: "root"
+    centos.vm.provision "shell", path: "provision/centos/setup.sh"
     centos.vm.provider "virtualbox" do |v|
       v.name = "CronKeep (CentOS)"
       v.memory = 512

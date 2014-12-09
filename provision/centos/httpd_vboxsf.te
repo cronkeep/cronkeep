@@ -1,0 +1,13 @@
+
+module httpd_vboxsf 1.0;
+
+require {
+	type httpd_t;
+	type vmblock_t;
+	class dir { search getattr };
+	class file { read getattr open };
+}
+
+#============= httpd_t ==============
+allow httpd_t vmblock_t:dir { search getattr };
+allow httpd_t vmblock_t:file { read getattr open };

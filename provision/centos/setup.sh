@@ -27,8 +27,13 @@ yum --enablerepo=ius-archive install -y php53
 
 service httpd start
 
+# Allow Apache access to vmblock_t security context
+# More info in the Developer guide:
+# https://github.com/cronkeep/cronkeep/wiki/Developer-Guide
+semodule -i /vagrant/provision/centos/httpd_vboxsf.pp
+
 echo "Configuring virtual host..."
-cat /vagrant/provision/config/cronkeep-centos.conf >> /etc/httpd/conf/httpd.conf
+cat /vagrant/provision/centos/virtual-host.conf >> /etc/httpd/conf/httpd.conf
 service httpd reload
 
 echo "Installing Composer..."
@@ -38,6 +43,6 @@ PATH=$PATH:/usr/local/bin
 composer install
 
 echo "Installing test crontab..."
-crontab -u apache /var/www/cronkeep/provision/config/crontabfile
+crontab -u apache /var/www/cronkeep/provision/crontabfile
 
 echo "Finished provisioning."

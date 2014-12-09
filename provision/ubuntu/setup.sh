@@ -21,7 +21,7 @@ apt-get update
 apt-get install -y apache2 libapache2-mod-php5 screen git
 
 echo "Configuring virtual host..."
-cp /var/www/cronkeep/provision/config/cronkeep-ubuntu.conf /etc/apache2/sites-available/cronkeep.conf
+cp /var/www/cronkeep/provision/ubuntu/virtual-host.conf /etc/apache2/sites-available/cronkeep.conf
 a2ensite cronkeep
 a2enmod rewrite
 service apache2 reload
@@ -45,6 +45,6 @@ php5enmod xdebug
 service apache2 reload
 
 echo "Installing test crontab..."
-crontab -u www-data /var/www/cronkeep/provision/config/crontabfile
+crontab -u www-data /var/www/cronkeep/provision/crontabfile
 
 echo "Finished provisioning."
