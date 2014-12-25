@@ -113,7 +113,7 @@ The policy package only contains the minimum security rules needed and nothing m
 
 It looks like on a SELinux-enabled environment running in enforcing mode, Apache is denied access to read
 the PAM configuration file (usually `/etc/security/access.conf`) which regulates access to the `crontab`
-system utility. The following message is then triggered:
+system utility. The following error is then triggered:
 ```
 System error You (apache) are not allowed to access to (crontab) because of pam configuration.
 ```
