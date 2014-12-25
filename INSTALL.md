@@ -88,7 +88,7 @@ service apache2 restart
 
 ### /var/spool/cron is not a directory, bailing out
 
-![CronKeep — &quot;/var/spool/cron is not a directory, bailing out&quot; error screen](/docs/screenshots/alert-spool-unreachable.png "CronKeep — &quot;/var/spool/cron is not a directory, bailing out&quot; error screen")
+![CronKeep — "/var/spool/cron is not a directory, bailing out" error screen](/docs/screenshots/alert-spool-unreachable.png "CronKeep — "/var/spool/cron is not a directory, bailing out" error screen")
 
 What this error is basically saying is that the `crontab` utility which CronKeep uses behind the scenes is denied access to the `/var/spool/cron` directory. This is usually the case in a SELinux-enabled environment running in enforcing mode.
 
