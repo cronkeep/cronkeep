@@ -18,22 +18,21 @@
 <div class="alert alert-warning alert-exception" role="alert">
     <h3>Oh Snap!</h3>
     <p>
-        CronKeep cannot access the crontab as Apache is denied access to its own cron table file.
+        Apache is denied access to read PAM configuration, which prevents CronKeep from reading the crontab.
+        Here's the error we got:
     </p>
     <p>
-        Here's the error we got:
         <samp>
             <?php echo $e->getMessage() ?>
         </samp>
     </p>
     <p>
         Please head on to the
-        <a href="https://github.com/cronkeep/cronkeep/blob/master/INSTALL.md#varspoolcron-is-not-a-directory-bailing-out">
-            Troubleshooting</a>
+        <a href="https://github.com/cronkeep/cronkeep/blob/master/INSTALL.md#troubleshooting">Troubleshooting</a>
         section for the recommended way to clear this error.
     </p>
     <p class="action-items">
-        <a href="https://github.com/cronkeep/cronkeep/blob/master/INSTALL.md#varspoolcron-is-not-a-directory-bailing-out"
+        <a href="https://github.com/cronkeep/cronkeep/blob/master/INSTALL.md#troubleshooting"
            title="Proceed to Trobleshooting" class="btn btn-warning" type="button">
             Proceed to Troubleshooting</a>
     </p>

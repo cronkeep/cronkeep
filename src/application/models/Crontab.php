@@ -37,6 +37,7 @@ class Crontab implements \IteratorAggregate, \Countable
      */
     const ERROR_EMPTY = "/no crontab for .+/";
     const ERROR_SPOOL_UNREACHABLE = "/'\/var\/spool\/cron' is not a directory, bailing out/";
+    const ERROR_PAM_UNREADABLE = "/You \([\w]+\) are not allowed to access to \(crontab\) because of pam configuration/";
     
     /**
      * Raw cron table.
@@ -374,6 +375,10 @@ class Crontab implements \IteratorAggregate, \Countable
         
         if (preg_match(self::ERROR_SPOOL_UNREACHABLE, $errorOutput)) {
             throw new Exception\SpoolUnreachableException($errorOutput);
+        }
+        
+        if (preg_match(self::ERROR_PAM_UNREADABLE, $errorOutput)) {
+            throw new Exception\PamUnreadableException($errorOutput);
         }
         
         // Unrecognized error condition

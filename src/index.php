@@ -287,6 +287,9 @@ $app->error(function (\Exception $e) use ($app) {
         case ($e instanceof Exception\SpoolUnreachableException):
             $template = 'partials/alerts/spool-unreachable.phtml';
             break;
+        case ($e instanceof Exception\PamUnreadableException):
+            $template = 'partials/alerts/pam-unreadable.phtml';
+            break;
     }
     
     $app->render($template, array('e' => $e));

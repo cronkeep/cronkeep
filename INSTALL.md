@@ -107,4 +107,39 @@ $ curl -OfL https://github.com/cronkeep/cronkeep/raw/master/provision/centos/htt
 ```
 The policy package only contains the minimum security rules needed and nothing more.
 
+### Apache is denied access to read PAM configuration
+
+![CronKeep — "Apache denied access to PAM configuration" error screen](/docs/screenshots/alert-pam-unreadable.png "CronKeep — "Apache denied access to PAM configuration" error screen")
+
+It looks like on a SELinux-enabled environment running in enforcing mode, Apache is denied access to read
+the PAM configuration file (usually `/etc/security/access.conf`) which regulates access to the `crontab`
+system utility. The following message is then triggered:
+```
+System error You (apache) are not allowed to access to (crontab) because of pam configuration.
+```
+
+Also, further entries from the logs associated with this situation:
+```
+==> /var/log/secure <==
+Dec 25 10:49:48 localhost crontab: pam_access(crond:account): login_access: user=apache, from=cron, file=/etc/security/access.conf
+
+==> /var/log/audit/audit.log <==
+type=AVC msg=audit(1419504588.145:797): avc:  denied  { read } for  pid=3191 comm="unix_chkpwd" name="shadow" dev=dm-0 ino=394249 scontext=unconfined_u:system_r:httpd_t:s0 tcontext=system_u:object_r:shadow_t:s0 tclass=file
+type=SYSCALL msg=audit(1419504588.145:797): arch=c000003e syscall=2 success=no exit=-13 a0=7ff518d256bb a1=80000 a2=1b6 a3=0 items=0 ppid=3190 pid=3191 auid=500 uid=0 gid=48 euid=0 suid=0 fsuid=0 egid=48 sgid=48 fsgid=48 tty=(none) ses=3 comm="unix_chkpwd" exe="/sbin/unix_chkpwd" subj=unconfined_u:system_r:httpd_t:s0 key=(null)
+
+==> /var/log/secure <==
+Dec 25 10:49:48 localhost unix_chkpwd[3191]: could not obtain user info (apache)
+Dec 25 10:49:48 localhost crontab: PAM audit_open() failed: Permission denied
+Dec 25 10:49:48 localhost crontab: PAM audit_open() failed: Permission denied
+
+==> /var/log/audit/audit.log <==
+type=AVC msg=audit(1419504588.146:798): avc:  denied  { create } for  pid=3190 comm="crontab" scontext=unconfined_u:system_r:httpd_t:s0 tcontext=unconfined_u:system_r:httpd_t:s0 tclass=netlink_audit_socket
+type=SYSCALL msg=audit(1419504588.146:798): arch=c000003e syscall=41 success=no exit=-13 a0=10 a1=3 a2=9 a3=7fffab7d1ff0 items=0 ppid=2764 pid=3190 auid=500 uid=48 gid=48 euid=0 suid=0 fsuid=0 egid=48 sgid=48 fsgid=48 tty=(none) ses=3 comm="crontab" exe="/usr/bin/crontab" subj=unconfined_u:system_r:httpd_t:s0 key=(null)
+```
+
+Luckily, this can be easily fixed as follows:
+```Shell
+setsebool -P allow_httpd_mod_auth_pam 1
+```
+
 *Found a typo in this file or want to propose changes? Just [fork and edit](https://github.com/cronkeep/cronkeep/edit/master/INSTALL.md) this file.*
