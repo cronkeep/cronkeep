@@ -23,8 +23,11 @@ use \Zend\View\Resolver\ResolverInterface;
 /**
  * Implementation of a layout system similar to what other frameworks have.
  * Extends \Zend\View\Renderer\RendererInterface for interoperability with Zend_View.
- * 
- * @author Bogdan Ghervan <bogdan.ghervan@gmail.com>
+ *
+ * @author      Bogdan Ghervan <bogdan.ghervan@gmail.com>
+ * @copyright   2014 Bogdan Ghervan
+ * @link        http://github.com/cronkeep/cronkeep
+ * @license     http://opensource.org/licenses/Apache-2.0 Apache License 2.0
  */
 class View extends \Slim\View implements RendererInterface
 {

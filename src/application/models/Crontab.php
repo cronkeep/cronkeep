@@ -24,8 +24,11 @@ use models\Crontab\Exception;
 /**
  * Crontab model.
  * 
- * @author Bogdan Ghervan <bogdan.ghervan@gmail.com>
- * @see man 5 crontab for details
+ * @author      Bogdan Ghervan <bogdan.ghervan@gmail.com>
+ * @copyright   2014 Bogdan Ghervan
+ * @link        http://github.com/cronkeep/cronkeep
+ * @license     http://opensource.org/licenses/Apache-2.0 Apache License 2.0
+ * @see         man 5 crontab for details
  */
 class Crontab implements \IteratorAggregate, \Countable
 {

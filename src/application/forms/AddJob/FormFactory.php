@@ -19,8 +19,11 @@ namespace forms\AddJob;
 
 /**
  * Initializes the right add job form (simple or advanced) based on passed form data.
- * 
- * @author Bogdan Ghervan <bogdan.ghervan@gmail.com>
+ *
+ * @author      Bogdan Ghervan <bogdan.ghervan@gmail.com>
+ * @copyright   2014 Bogdan Ghervan
+ * @link        http://github.com/cronkeep/cronkeep
+ * @license     http://opensource.org/licenses/Apache-2.0 Apache License 2.0
  */
 class FormFactory
 {

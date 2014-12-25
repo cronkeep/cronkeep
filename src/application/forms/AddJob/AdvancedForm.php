@@ -23,8 +23,11 @@ use Zend\InputFilter\InputFilterProviderInterface;
 
 /**
  * Advanced form for adding a cron job.
- * 
- * @author Bogdan Ghervan <bogdan.ghervan@gmail.com>
+ *
+ * @author      Bogdan Ghervan <bogdan.ghervan@gmail.com>
+ * @copyright   2014 Bogdan Ghervan
+ * @link        http://github.com/cronkeep/cronkeep
+ * @license     http://opensource.org/licenses/Apache-2.0 Apache License 2.0
  */
 class AdvancedForm extends Form implements InputFilterProviderInterface
 {

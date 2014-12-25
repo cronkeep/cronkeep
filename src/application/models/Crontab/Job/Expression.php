@@ -20,6 +20,11 @@ namespace models\Crontab\Job;
 /**
  * Expression model.
  * 
+ * @author      Bogdan Ghervan <bogdan.ghervan@gmail.com>
+ * @copyright   2014 Bogdan Ghervan
+ * @link        http://github.com/cronkeep/cronkeep
+ * @license     http://opensource.org/licenses/Apache-2.0 Apache License 2.0
+ * 
  * @method Expression setMinute(int|string|array $minute)
  * @method Expression addMinute(int|string|array $minute)
  * @method array getMinute()
@@ -35,8 +40,6 @@ namespace models\Crontab\Job;
  * @method Expression setDayOfWeek(int|string|array $dayOfWeek)
  * @method Expression addDayOfWeek(int|string|array $dayOfWeek)
  * @method array getDayOfWeek()
- * 
- * @author Bogdan Ghervan <bogdan.ghervan@gmail.com>
  */
 class Expression
 {
