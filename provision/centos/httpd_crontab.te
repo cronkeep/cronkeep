@@ -1,0 +1,17 @@
+
+module httpd_crontab 1.0;
+
+require {
+	type user_cron_spool_t;
+	type httpd_t;
+	class file { rename create unlink open setattr };
+	class dir { write remove_name getattr search add_name };
+}
+
+#============= httpd_t ==============
+
+#!!!! This avc is allowed in the current policy
+allow httpd_t user_cron_spool_t:dir { write remove_name getattr search add_name };
+
+#!!!! This avc is allowed in the current policy
+allow httpd_t user_cron_spool_t:file { rename create unlink open setattr };
