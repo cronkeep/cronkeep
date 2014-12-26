@@ -381,12 +381,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
                         array(
                             'name' => 'Zend\Validator\Callback',
                             'options' => array(
-                                'callback' => function($timeOption) {
-                                    $timeInputFilter = $this->getInputFilter()->get('time');
-                                    $this->_markInputsAsRequired($timeInputFilter, $timeOption);
-                                    
-                                    return true;
-                                }
+                                'callback' => array($this, 'requireDependentTimeInputs')
                             )
                         ),
                     )
@@ -485,12 +480,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
                         array(
                             'name' => 'Zend\Validator\Callback',
                             'options' => array(
-                                'callback' => function($repeatOption) {
-                                    $repeatInputFilter = $this->getInputFilter()->get('repeat');
-                                    $this->_markInputsAsRequired($repeatInputFilter, $repeatOption);
-                                    
-                                    return true;
-                                }
+                                'callback' => array($this, 'requireDependentRepeatInputs')
                             )
                         ),
                     )
@@ -515,6 +505,36 @@ class SimpleForm extends Form implements InputFilterProviderInterface
                 )
             )
         );
+    }
+
+    /**
+     * Marks inputs related to chosen time option as required.
+     * This can be used as a callback validator for the time picker.
+     * 
+     * @param string $timeOption
+     * @return boolean
+     */
+    public function requireDependentTimeInputs($timeOption)
+    {
+        $timeInputFilter = $this->getInputFilter()->get('time');
+        $this->_markInputsAsRequired($timeInputFilter, $timeOption);
+        
+        return true;
+    }
+
+    /**
+     * Marks inputs related to chosen repeat option as required.
+     * This can be used as a callback validator for the repeat picker.
+     * 
+     * @param string $repeatOption
+     * @return bool
+     */
+    public function requireDependentRepeatInputs($repeatOption)
+    {
+        $repeatInputFilter = $this->getInputFilter()->get('repeat');
+        $this->_markInputsAsRequired($repeatInputFilter, $repeatOption);
+
+        return true;
     }
     
     /**
