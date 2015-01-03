@@ -1,6 +1,6 @@
 {
     "name": "cronkeep/cronkeep",
-    "description": "Web-based crontab management tool",
+    "description": "Web-based crontab manager",
     "keywords": ["crontab", "cron"],
     "type": "project",
     "homepage": "http://www.cronkeep.com",
@@ -14,7 +14,9 @@
         }
     ],
     "support": {
+        "email": "hello@cronkeep.com",
         "issues": "https://github.com/cronkeep/cronkeep/issues",
+        "wiki" : "https://github.com/cronkeep/cronkeep/wiki",
         "source": "https://github.com/cronkeep/cronkeep"
     },
     "require": {
