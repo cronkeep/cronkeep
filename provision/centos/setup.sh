@@ -33,11 +33,12 @@ service httpd start
 semodule -i /vagrant/provision/centos/httpd_vboxsf.pp
 
 echo "Configuring virtual host..."
-cat /vagrant/provision/centos/virtual-host.conf >> /etc/httpd/conf/httpd.conf
+cp /var/www/cronkeep/provision/centos/virtual-host.conf /etc/httpd/conf.d/cronkeep.conf
 service httpd reload
 
 echo "Installing Composer..."
-curl -sS https://getcomposer.org/installer | php -d allow_url_fopen=1
+sed -i "s/allow_url_fopen = Off/allow_url_fopen = On/" /etc/php.ini
+curl -sS https://getcomposer.org/installer | php
 mv composer.phar /usr/local/bin/composer
 PATH=$PATH:/usr/local/bin
 composer install
