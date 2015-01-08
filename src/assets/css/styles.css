@@ -51,6 +51,9 @@ body {
 .table-crontab > thead > tr > th:nth-child(3) {
     width: 12%;
 }
+.table-crontab .actions {
+	min-width: 95px;
+}
 
 /* Inactive style for paused cron jobs */
 .table > tbody > tr.inactive > td,
