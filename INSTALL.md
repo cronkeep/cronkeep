@@ -23,7 +23,7 @@ Should you not have git or Composer installed, please refer to their docs for in
 
 Note that the following instructions are for Apache only.
 
-Create a ``/etc/apache2/sites-available/cronkeep.conf`` file with your favorite text editor, and paste this content inside the file:
+Create a new/etc/apache2/sites-available/cronkeep.conf`` file with your favorite text editor, and paste this content inside the file:
 
 ```ApacheConf
 <VirtualHost *:80>
@@ -116,25 +116,6 @@ the PAM configuration file (usually `/etc/security/access.conf`) which regulates
 system utility. The following error is then triggered:
 ```
 System error You (apache) are not allowed to access to (crontab) because of pam configuration.
-```
-
-Also, further entries from the logs associated with this situation:
-```
-==> /var/log/secure <==
-Dec 25 10:49:48 localhost crontab: pam_access(crond:account): login_access: user=apache, from=cron, file=/etc/security/access.conf
-
-==> /var/log/audit/audit.log <==
-type=AVC msg=audit(1419504588.145:797): avc:  denied  { read } for  pid=3191 comm="unix_chkpwd" name="shadow" dev=dm-0 ino=394249 scontext=unconfined_u:system_r:httpd_t:s0 tcontext=system_u:object_r:shadow_t:s0 tclass=file
-type=SYSCALL msg=audit(1419504588.145:797): arch=c000003e syscall=2 success=no exit=-13 a0=7ff518d256bb a1=80000 a2=1b6 a3=0 items=0 ppid=3190 pid=3191 auid=500 uid=0 gid=48 euid=0 suid=0 fsuid=0 egid=48 sgid=48 fsgid=48 tty=(none) ses=3 comm="unix_chkpwd" exe="/sbin/unix_chkpwd" subj=unconfined_u:system_r:httpd_t:s0 key=(null)
-
-==> /var/log/secure <==
-Dec 25 10:49:48 localhost unix_chkpwd[3191]: could not obtain user info (apache)
-Dec 25 10:49:48 localhost crontab: PAM audit_open() failed: Permission denied
-Dec 25 10:49:48 localhost crontab: PAM audit_open() failed: Permission denied
-
-==> /var/log/audit/audit.log <==
-type=AVC msg=audit(1419504588.146:798): avc:  denied  { create } for  pid=3190 comm="crontab" scontext=unconfined_u:system_r:httpd_t:s0 tcontext=unconfined_u:system_r:httpd_t:s0 tclass=netlink_audit_socket
-type=SYSCALL msg=audit(1419504588.146:798): arch=c000003e syscall=41 success=no exit=-13 a0=10 a1=3 a2=9 a3=7fffab7d1ff0 items=0 ppid=2764 pid=3190 auid=500 uid=48 gid=48 euid=0 suid=0 fsuid=0 egid=48 sgid=48 fsgid=48 tty=(none) ses=3 comm="crontab" exe="/usr/bin/crontab" subj=unconfined_u:system_r:httpd_t:s0 key=(null)
 ```
 
 Luckily, this can be easily fixed as follows:
