@@ -51,4 +51,5 @@ At this time, the crontab manager does not feature in-app authentication. It is 
 ## License
 
 CronKeep is a free to use application, both for non-profit and commercial organizations, licensed under the terms of Apache License 2.0. Contributions are encouraged.
-
+- - -
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/aa1eeb97-0cf2-410c-851c-6deb6e88b032/big.png)](https://insight.sensiolabs.com/projects/aa1eeb97-0cf2-410c-851c-6deb6e88b032)
