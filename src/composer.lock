@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "52101b7672afe8396f4ea8d90103c968",
+    "hash": "a0c8cc34400d54f8d06f345093af6b3e",
     "packages": [
         {
             "name": "dogancelik/slim-json",
@@ -35,7 +35,7 @@
             ],
             "authors": [
                 {
-                    "name": "Doğan Çelik",
+                    "name": "Do\u011fan \u00c7elik",
                     "email": "iletisim@dogancelik.com",
                     "homepage": "http://dogancelik.com/"
                 }
@@ -98,17 +98,17 @@
         },
         {
             "name": "symfony/process",
-            "version": "v2.5.2",
+            "version": "v2.6.0",
             "target-dir": "Symfony/Component/Process",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Process.git",
-                "reference": "5e53efbf61a7fbf73c79e3e08feea50f64c20bfa"
+                "reference": "dc88f75d1c07791e5733f90be747961dce26cf05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Process/zipball/5e53efbf61a7fbf73c79e3e08feea50f64c20bfa",
-                "reference": "5e53efbf61a7fbf73c79e3e08feea50f64c20bfa",
+                "url": "https://api.github.com/repos/symfony/Process/zipball/dc88f75d1c07791e5733f90be747961dce26cf05",
+                "reference": "dc88f75d1c07791e5733f90be747961dce26cf05",
                 "shasum": ""
             },
             "require": {
@@ -117,7 +117,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.6-dev"
                 }
             },
             "autoload": {
@@ -131,19 +131,17 @@
             ],
             "authors": [
                 {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
-                },
-                {
                     "name": "Symfony Community",
                     "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
                 }
             ],
             "description": "Symfony Process Component",
             "homepage": "http://symfony.com",
-            "time": "2014-07-09 09:05:48"
+            "time": "2014-11-04 14:29:39"
         },
         {
             "name": "zendframework/zend-escaper",
@@ -732,8 +730,9 @@
         "dogancelik/slim-json": 20
     },
     "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": {
-        "php": ">=5.3"
+        "php": ">=5.3.23"
     },
     "platform-dev": []
 }
