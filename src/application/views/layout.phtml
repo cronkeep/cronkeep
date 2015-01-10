@@ -1,0 +1,72 @@
+<?php
+/**
+ * Copyright 2014 Bogdan Ghervan
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="description" content="Web-based crontab manager">
+    <meta name="author" content="Bogdan Ghervan">
+    <title>CronKeep</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/styles.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href=".">CronKeep</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <?php if (isset($showAlertAtUnavailable) && $showAlertAtUnavailable && !$isAtCommandAvailable): ?>
+            <?php echo $this->partial('partials/alerts/at-unavailable.phtml', array(
+                'atCommandErrorOutput' => $atCommandErrorOutput,
+                'systemUser' => $systemUser
+            )) ?>
+        <?php endif; ?>
+        
+        <div class="global-alerts"></div>
+        <div><?php echo $content ?></div>
+    </div>
+    
+    <?php if ($vars): ?>
+    <script>
+        <?php echo $vars ?>
+    </script>
+    <?php endif; ?>
+    <script src="assets/js/jquery-1.11.1.min.js"></script>
+    <script src="assets/js/jquery.validate.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/highlightRegex.min.js"></script>
+    <script src="assets/js/alert.js"></script>
+    <script src="assets/js/crontab.js"></script>
+    <script src="assets/js/job-add.js"></script>
+    <script src="assets/js/search.js"></script>
+    <script src="assets/js/index.js"></script>
+</body>
+
+</html>
