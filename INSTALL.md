@@ -1,29 +1,35 @@
 Installation
 ============
 
-Application is still in the development phase. An official alpha release will follow soon. In the meantime, you may still install it, provided you have git and Composer already on your server.
+This application is in early alpha which means things might break, depending on your setup. Ubuntu and CentOS are officially supported (tested thoroughly on Ubuntu 14.04 and CentOS 6.5). If you think you've found a problem, kindly [post an issue](https://github.com/cronkeep/cronkeep/issues).
 
-## Download Files
+## Download App
 
-* Clone the repository into your web root folder:
-
-```Shell
-git clone https://github.com/cronkeep/cronkeep.git /var/www/cronkeep
-```
-
-* Install dependencies via Composer:
+* Install Composer if you don't already have it:
 
 ```Shell
-cd /var/www/cronkeep/src/ && composer install --no-dev
+curl -sS https://getcomposer.org/installer | php
 ```
 
-Should you not have git or Composer installed, please refer to their docs for installation instructions ([git](http://git-scm.com/download/linux), [Composer](https://getcomposer.org/doc/00-intro.md#installation-nix)).
+* Fetch CronKeep and all of its dependencies onto your directory of choice (preferably, your *www* directory):
+
+```Shell
+php composer.phar create-project cronkeep/cronkeep --keep-vcs -s dev /var/www/cronkeep
+```
+
+* To update CronKeep in the future all you need to do is run these from the CronKeep installation directory:
+```Shell
+git pull
+composer install
+```
+
+For more information regarding git or Composer, please refer to their docs ([git](https://git-scm.com/doc), [Composer](https://getcomposer.org/doc/00-intro.md)).
 
 ## Set up a Virtual Host
 
 Note that the following instructions are for Apache only.
 
-Create a new/etc/apache2/sites-available/cronkeep.conf`` file with your favorite text editor, and paste this content inside the file:
+Create a new ``/etc/apache2/sites-available/cronkeep.conf`` file with your favorite text editor, and paste this content inside the file:
 
 ```ApacheConf
 <VirtualHost *:80>
@@ -37,6 +43,8 @@ Enable the virtual host by running:
 ```Shell
 sudo a2ensite cronkeep
 ```
+
+Please note that you may need to adjust your DNS zone settings or edit your operating system's *hosts* file for the hostname (e.g. ``cronkeep.example.com``) to be reachable. Information on how to do that is outside out of the scope of this article.
 
 ## Set up Authentication
 

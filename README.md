@@ -26,23 +26,16 @@ The current CronKeep version interacts only with the crontab of the user Apache 
 
 ## Installation
 
-Application is still in the development phase. An official alpha release will follow soon.
-
-In the meantime, you may install it, provided you have git and Composer already installed on your server.
-
-* Clone the repository into your web root folder:
+* Proceed with installing Composer if you don't already have it.
 
 ```Shell
-git clone https://github.com/cronkeep/cronkeep.git /var/www/cronkeep
+curl -sS https://getcomposer.org/installer | php
 ```
 
-* Install dependencies via Composer:
-
+* Now using this one-liner command, Composer will install CronKeep and all of its dependencies onto your directory of choice (preferably, your *www* directory):
 ```Shell
-cd /var/www/cronkeep/src/ && composer install --no-dev
+php composer.phar create-project cronkeep/cronkeep --keep-vcs -s dev /var/www/cronkeep
 ```
-
-Should you not have git or Composer installed, please refer to their docs for installation instructions ([git](http://git-scm.com/download/linux), [Composer](https://getcomposer.org/doc/00-intro.md#installation-nix)).
 
 * Set up authentication
 
