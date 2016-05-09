@@ -32,10 +32,13 @@
     },
     "autoload": {
         "psr-4": {
-            "models\\": "application/models/",
-            "services\\": "application/services/",
-            "forms\\": "application/forms/",
-            "library\\": "library/"
+            "models\\": "src/application/models/",
+            "services\\": "src/application/services/",
+            "forms\\": "src/application/forms/",
+            "library\\": "src/library/"
         }
+    },
+    "config": {
+        "vendor-dir": "src/vendor"
     }
 }
