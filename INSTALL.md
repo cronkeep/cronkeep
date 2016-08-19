@@ -3,6 +3,11 @@ Installation
 
 This application is in early alpha which means things might break, depending on your setup. Ubuntu and CentOS are officially supported (tested thoroughly on Ubuntu 14.04 and CentOS 6.5). If you think you've found a problem, kindly [post an issue](https://github.com/cronkeep/cronkeep/issues).
 
+## Requirements
+
+* Apache with `mod_rewrite` enabled
+* PHP >= 5.3.23
+
 ## Download App
 
 * Install Composer if you don't already have it:
@@ -35,6 +40,10 @@ Create a new ``/etc/apache2/sites-available/cronkeep.conf`` file with your favor
 <VirtualHost *:80>
     ServerName cronkeep.example.com # adjust accordingly
     DocumentRoot /var/www/cronkeep/src
+    
+    <Directory "/var/www/cronkeep/src">
+        AllowOverride all
+    </Directory>
 </VirtualHost>
 ```
 
