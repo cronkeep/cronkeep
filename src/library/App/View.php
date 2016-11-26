@@ -19,6 +19,7 @@ namespace library\App;
 
 use \Zend\View\Renderer\RendererInterface;
 use \Zend\View\Resolver\ResolverInterface;
+use \Slim\Slim;
 
 /**
  * Implementation of a layout system similar to what other frameworks have.
@@ -98,7 +99,7 @@ class View extends \Slim\View implements RendererInterface
     }
     
     /**
-     * Renders template fragment in its own veriable scope.
+     * Renders template fragment in its own variable scope.
      * 
      * @param string $template
      * @param array $data
@@ -110,6 +111,35 @@ class View extends \Slim\View implements RendererInterface
         $view->setTemplatesDirectory($this->getTemplatesDirectory());
         
         return $view->render($template, $data);
+    }
+
+    /**
+     * Generates a fully qualified URL to the given path.
+     *
+     * @param string $path
+     * @return string
+     */
+    public function url($path = null)
+    {
+        $app = Slim::getInstance();
+
+        $components = array(
+            $app->request->getUrl()
+        );
+
+        $scriptName = ltrim($app->request->getScriptName(), '/');
+        if ($scriptName != '') {
+            $components[] = $scriptName;
+        }
+
+        $path = ltrim($path, '/');
+        if ($path != '') {
+            $components[] = $path;
+        }
+
+        $url = implode('/', $components);
+
+        return $url;
     }
     
     /**

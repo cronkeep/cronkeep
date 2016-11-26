@@ -25,20 +25,12 @@ use \services\ExpressionService;
 
 $app = new \Slim\Slim(array(
     'templates.path' => 'application/views',
+    'view' => new \library\App\Layout(),
     'debug' => false
 ));
 \Slim\Route::setDefaultConditions(array(
     'hash' => '[a-z0-9]{8}'
 ));
-
-// Initialize layout and store it, and use it right away
-// as the view for non-XHR requests
-$view = new \library\App\Layout();
-$view->setTemplatesDirectory($app->config('templates.path'));
-$app->config('view', $view);
-if (!$app->request->isXhr()) {
-    $app->view($view);
-}
 
 // Routes
 $app->get('/', function() use ($app) {
@@ -51,6 +43,7 @@ $app->get('/', function() use ($app) {
     $app->view->setData('showAlertAtUnavailable', $showAlertAtUnavailable !== null ?
         (bool) $showAlertAtUnavailable : true);
     
+    $app->view->appendVar('baseUrl', $app->view->url());
     $app->render('index.phtml', array(
         'crontab'              => $crontab,
         'systemUser'           => $systemUser,

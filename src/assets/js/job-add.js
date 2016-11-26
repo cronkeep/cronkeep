@@ -76,7 +76,7 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
         var oldHash = $('input[name=hash]', form).val();
         stripNewlines($('textarea.command', form));
         
-        $.post('/job/save', $(form).serialize(), function(data) {            
+        $.post(baseUrl + '/job/save', $(form).serialize(), function(data) {
             // Show success message, close dialog and reset form
             globalAlertService.pushSuccess(data.msg);
             container.modal('hide');

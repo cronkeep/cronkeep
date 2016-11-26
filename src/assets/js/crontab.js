@@ -28,7 +28,7 @@ var CrontabService = function(alertService) {
         var runButton = $('.job-run', job);
         runButton.button('loading');
         
-        $.ajax('/job/run/' + hash).done(function(data) {
+        $.ajax(baseUrl + '/job/run/' + hash).done(function(data) {
             alertService.pushSuccess(data.msg);
         }).fail(function(data) {
             alertService.pushError(data.responseJSON.msg);
@@ -51,7 +51,7 @@ var CrontabService = function(alertService) {
             // Remove previous dialog
             $('#job-edit').remove();
 
-            $.ajax('/job/edit-form/' + hash).done(function(data) {
+            $.ajax(baseUrl + '/job/edit-form/' + hash).done(function(data) {
                 // Append dialog data
                 $('body').append(data.html);
 
@@ -87,7 +87,7 @@ var CrontabService = function(alertService) {
     this.pauseJob = function(job) {
         var hash = job.attr('data-hash');
         
-        $.ajax('/job/pause/' + hash).done(function(data) {
+        $.ajax(baseUrl + '/job/pause/' + hash).done(function(data) {
             alertService.pushSuccess(data.msg);
             
             var pauseMenuItem  = $('.menu-item-pause', job);
@@ -110,7 +110,7 @@ var CrontabService = function(alertService) {
     this.resumeJob = function(job) {
         var hash = job.attr('data-hash');
         
-        $.ajax('/job/resume/' + hash).done(function(data) {
+        $.ajax(baseUrl + '/job/resume/' + hash).done(function(data) {
             alertService.pushSuccess(data.msg);
             
             var pauseMenuItem  = $('.menu-item-pause', job);
@@ -133,7 +133,7 @@ var CrontabService = function(alertService) {
     this.deleteJob = function(job) {
         var hash = job.attr('data-hash');
         
-        $.ajax('/job/delete/' + hash).done(function(data) {
+        $.ajax(baseUrl + '/job/delete/' + hash).done(function(data) {
             alertService.pushSuccess(data.msg);
             
             // Remove element from the DOM

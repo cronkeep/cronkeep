@@ -54,7 +54,7 @@ class Layout extends View
         
         return parent::render($this->_layoutFile, array(
             'content' => $viewContent,
-            'vars'      => $this->_getVarsForOutput()
+            'vars'    => $this->_getVarsForOutput()
         ));
     }
     
@@ -63,7 +63,7 @@ class Layout extends View
      * 
      * @param string $name
      * @param mixed $value
-     * @return \library\Extra\Layout
+     * @return \library\App\Layout
      */
     public function appendVar($name, $value)
     {
