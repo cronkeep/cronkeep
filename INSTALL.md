@@ -108,7 +108,7 @@ service apache2 restart
 
 ### You (www-data) are not allowed to use this program (crontab)
 
-![CronKeep — "You (www-data) are not allowed to use this program (crontab)" error screen](/docs/screenshots/alert-www-data-not-allowed.png "CronKeep — "You (www-data) are not allowed to use this program (crontab)" error screen")
+![CronKeep — "You (www-data) are not allowed to use this program (crontab)" error screen](/docs/screenshots/alert-www-data-not-allowed.png "CronKeep — \"You (www-data) are not allowed to use this program (crontab)\" error screen")
 
 There are several variations of this error message, with the user that is denied
 access varying (in this case it's `www-data`).
@@ -119,7 +119,7 @@ in `/etc/cron.deny` — locate that file and remove the user from there.
 
 ### /var/spool/cron is not a directory, bailing out
 
-![CronKeep — "/var/spool/cron is not a directory, bailing out" error screen](/docs/screenshots/alert-spool-unreachable.png "CronKeep — "/var/spool/cron is not a directory, bailing out" error screen")
+![CronKeep — "/var/spool/cron is not a directory, bailing out" error screen](/docs/screenshots/alert-spool-unreachable.png "CronKeep — \"/var/spool/cron is not a directory, bailing out\" error screen")
 
 What this error is basically saying is that the `crontab` utility, which CronKeep uses behind the scenes, is denied access to the `/var/spool/cron` directory. This is usually the case in a SELinux-enabled environment running in enforcing mode.
 
@@ -140,7 +140,7 @@ The policy package only contains the minimum security rules needed and nothing m
 
 ### Apache is denied access to read PAM configuration
 
-![CronKeep — "Apache denied access to PAM configuration" error screen](/docs/screenshots/alert-pam-unreadable.png "CronKeep — "Apache denied access to PAM configuration" error screen")
+![CronKeep — "Apache denied access to PAM configuration" error screen](/docs/screenshots/alert-pam-unreadable.png "CronKeep — \"Apache denied access to PAM configuration\" error screen")
 
 It looks like on a SELinux-enabled environment running in enforcing mode, Apache is denied access to read
 the PAM configuration file (usually `/etc/security/access.conf`) which regulates access to the `crontab`
