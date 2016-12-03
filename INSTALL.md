@@ -106,6 +106,17 @@ service apache2 restart
 
 ## Troubleshooting
 
+### You (www-data) are not allowed to use this program (crontab)
+
+![CronKeep — "You (www-data) are not allowed to use this program (crontab)" error screen](/docs/screenshots/alert-www-data-not-allowed.png "CronKeep — "You (www-data) are not allowed to use this program (crontab)" error screen")
+
+There are several variations of this error message, with the user that is denied
+access varying (in this case it's `www-data`).
+
+To allow access you should add the user to the `/etc/cron.allow` file on a new
+line. If the file does not exist, the user that is denied access might be listed
+in `/etc/cron.deny` — locate that file and remove the user from there.
+
 ### /var/spool/cron is not a directory, bailing out
 
 ![CronKeep — "/var/spool/cron is not a directory, bailing out" error screen](/docs/screenshots/alert-spool-unreachable.png "CronKeep — "/var/spool/cron is not a directory, bailing out" error screen")
@@ -142,5 +153,12 @@ Luckily, this can be easily fixed as follows:
 ```Shell
 setsebool -P allow_httpd_mod_auth_pam 1
 ```
+
+### Getting a different error?
+
+Please head on to [Issues](https://github.com/cronkeep/cronkeep/issues) to
+see if other users have experienced the same error in the past. When opening
+a new issue, please make sure to include the full text of the error and
+details about your setup (including web server and operating system versions).
 
 *Found a typo in this file or want to propose changes? Just [fork and edit](https://github.com/cronkeep/cronkeep/edit/master/INSTALL.md) this file.*

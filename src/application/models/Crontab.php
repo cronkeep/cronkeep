@@ -19,7 +19,10 @@ namespace models;
 
 use \Symfony\Component\Process\Process;
 use models\Crontab\Job;
-use models\Crontab\Exception;
+use RuntimeException;
+use models\Crontab\Exception\UserNotAllowedException;
+use models\Crontab\Exception\SpoolUnreachableException;
+use models\Crontab\Exception\PamUnreadableException;
 
 /**
  * Crontab model.
@@ -36,8 +39,9 @@ class Crontab implements \IteratorAggregate, \Countable
      * Possible errors printed by "crontab".
      */
     const ERROR_EMPTY = "/no crontab for .+/";
+    const ERROR_USER_NOT_ALLOWED = "/You \([\w_.-]+\) are not allowed to use this program \(crontab\)/";
     const ERROR_SPOOL_UNREACHABLE = "/'\/var\/spool\/cron' is not a directory, bailing out/";
-    const ERROR_PAM_UNREADABLE = "/You \([\w]+\) are not allowed to access to \(crontab\) because of pam configuration/";
+    const ERROR_PAM_UNREADABLE = "/You \([\w_.-]+\) are not allowed to access to \(crontab\) because of pam configuration/";
     
     /**
      * Raw cron table.
@@ -192,7 +196,7 @@ class Crontab implements \IteratorAggregate, \Countable
      * Saves the current user's crontab.
      * 
      * @return Crontab
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function save()
     {
@@ -203,11 +207,11 @@ class Crontab implements \IteratorAggregate, \Countable
         if (!$process->isSuccessful()) {
             $errorOutput = $process->getErrorOutput();
             if ($errorOutput) {
-                throw new \RuntimeException(sprintf(
+                throw new RuntimeException(sprintf(
                     'There has been an error saving the crontab. Here\'s the output from the shell: %s',
                     trim($errorOutput)));
             }
-            throw new \RuntimeException('There has been an error saving the crontab.');
+            throw new RuntimeException('There has been an error saving the crontab.');
         }
         
         return $this;
@@ -230,7 +234,8 @@ class Crontab implements \IteratorAggregate, \Countable
      * Reads crontab for current user.
      * 
      * @return Crontab
-     * @throws \Exception
+     * @throws SpoolUnreachableException
+     * @throws
      */
     protected function _readCrontab()
     {
@@ -357,7 +362,14 @@ class Crontab implements \IteratorAggregate, \Countable
      * 
      * @param string $errorOutput
      * @return Crontab
-     * @throws \RuntimeException
+     * @throws RuntimeException if either error output is empty or error
+     *     is not recognized by CronKeep
+     * @throws UserNotAllowedException usually when the web server's user
+     *     is denied access by means of /etc/cron.deny
+     * @throws SpoolUnreachableException if crontab is denied access to
+     *     /var/spool/cron usually in a SELinux-enabled environment
+     * @throws PamUnreadableException if the web server is denied access
+     *     to read PAM configuration file
      */
     protected function _handleReadError($errorOutput)
     {
@@ -365,24 +377,28 @@ class Crontab implements \IteratorAggregate, \Countable
         
         // Unknown error condition
         if (empty($errorOutput)) {
-            throw new \RuntimeException('There has been an error reading the crontab.');
+            throw new RuntimeException('There has been an error reading the crontab.');
         }
         
-        // Do nothing if crontab is empty
+        // Do nothing if no cron jobs exist (not an error)
         if (preg_match(self::ERROR_EMPTY, $errorOutput)) {
             return $this;
         }
+
+        if (preg_match(self::ERROR_USER_NOT_ALLOWED, $errorOutput)) {
+            throw new UserNotAllowedException($errorOutput);
+        }
         
         if (preg_match(self::ERROR_SPOOL_UNREACHABLE, $errorOutput)) {
-            throw new Exception\SpoolUnreachableException($errorOutput);
+            throw new SpoolUnreachableException($errorOutput);
         }
         
         if (preg_match(self::ERROR_PAM_UNREADABLE, $errorOutput)) {
-            throw new Exception\PamUnreadableException($errorOutput);
+            throw new PamUnreadableException($errorOutput);
         }
         
         // Unrecognized error condition
-        throw new \RuntimeException(sprintf(
+        throw new RuntimeException(sprintf(
             'There has been an error reading the crontab. Here\'s the output from the shell: %s',
             $errorOutput));
     }

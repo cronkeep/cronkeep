@@ -277,6 +277,9 @@ $app->group('/job', function() use ($app) {
 $app->error(function (\Exception $e) use ($app) {
     $template = 'partials/alerts/unknown-error.phtml';
     switch (true) {
+        case ($e instanceof Exception\UserNotAllowedException):
+            $template = 'partials/alerts/user-not-allowed.phtml';
+            break;
         case ($e instanceof Exception\SpoolUnreachableException):
             $template = 'partials/alerts/spool-unreachable.phtml';
             break;
