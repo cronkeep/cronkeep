@@ -8,6 +8,9 @@ This application is in early alpha which means things might break, depending on 
 * Apache with `mod_rewrite` enabled
 * PHP >= 5.3.23
 
+Optional:
+* `at` utility ([what's that?](https://en.wikipedia.org/wiki/At_(Unix)))
+
 ## Download App
 
 * Install Composer if you don't already have it:
