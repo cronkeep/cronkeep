@@ -67,6 +67,12 @@ $app->group('/job', function() use ($app) {
     $setupJsonResponse = function() {
         $app = \Slim\Slim::getInstance();
         $app->add(new \SlimJson\Middleware());
+        $app->error(function (\Exception $e) use ($app) {
+            $app->render(500, array(
+                'error' => true,
+                'msg'   => $e->getMessage()
+            ));
+        });
     };
     
     /**
@@ -258,16 +264,6 @@ $app->group('/job', function() use ($app) {
                 'msg' => 'Cron job no longer exists.'
             ));
         }
-    });
-    
-    /**
-     * Error handler for job methods.
-     */
-    $app->error(function (\Exception $e) use ($app) {
-        $app->render(500, array(
-            'error' => true,
-            'msg'   => $e->getMessage()
-        ));
     });
 });
 
