@@ -144,6 +144,13 @@ mark, .mark {
     margin: 0;
 }
 
+.job-add-form fieldset {
+    border: 1px solid #cecece;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+
 /* Pick time section */
 .radio-time + .radio-time {
     margin-top: 15px;
@@ -181,6 +188,10 @@ mark, .mark {
 /* Repeat section */
 .job-add-form .fieldset-yearly .input-day {
     margin-left: 10px;
+}
+
+.job-add-form .tab-command {
+    margin-top: 3%;
 }
 
 /* Nested button groups */
