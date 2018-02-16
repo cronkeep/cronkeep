@@ -39,38 +39,14 @@ $form->prepare();
         )) ?>
     </div>
 
-    <ul class="nav nav-tabs">
-        <li class="nav-item active"><a href="#command-tab" data-toggle="tab">Command</a></li>
-        <li class="nav-item"><a href="#url-tab" data-toggle="tab">URL</a></li>
-    </ul>
-
-    <div class="tab-content tab-command">
-        <!-- Command -->
-        <div class="tab-pane active in" id="command-tab">
-
-            <div class="form-group">
-                <label for="<?php echo $form->get('command')->getLabel() ?>"><?php echo $form->get('command')->getLabel() ?>
-                    <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
-                          title="The URL inputted in this field will be executed with curl command"></span></label>
-                <?php echo $this->formTextarea($form->get('command')) ?>
-                <?php echo $this->partial('partials/job-form-element-error.phtml', array(
-                    'element' => $form->get('command')
-                )) ?>
-            </div>
-        </div>
-
-        <!-- URL -->
-        <div class="tab-pane" id="url-tab">
-            <div class="form-group">
-                    <label for="<?php echo $form->get('url')->getLabel() ?>"><?php echo $form->get('url')->getLabel() ?>
-                        <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
-                              title="The URL inputted in this field will be executed with curl command"></span></label>
-                <?php echo $this->formTextarea($form->get('url')) ?>
-                <?php echo $this->partial('partials/job-form-element-error.phtml', array(
-                    'element' => $form->get('url')
-                )) ?>
-            </div>
-        </div>
+    <div class="form-group">
+        <label for="<?php echo $form->get('command')->getLabel() ?>"><?php echo $form->get('command')->getLabel() ?>
+            <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                  title="The URL inputted in this field will be executed with curl command"></span></label>
+        <?php echo $this->formTextarea($form->get('command')) ?>
+        <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+            'element' => $form->get('command')
+        )) ?>
     </div>
 
     <!-- ======== -->

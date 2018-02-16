@@ -67,15 +67,6 @@ class AdvancedForm extends Form implements InputFilterProviderInterface
             'class' => 'form-control command'
         ));
         $this->add($command);
-
-        // URL
-        $url = new Element\Textarea('url');
-        $url->setLabel('URL');
-        $url->setAttributes(array(
-            'autocomplete' => 'off',
-            'class' => 'form-control url'
-        ));
-        $this->add($url);
     }
     
     /**

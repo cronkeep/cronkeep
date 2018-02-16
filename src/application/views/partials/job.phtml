@@ -17,7 +17,7 @@
 ?>
 <?php $classAttr = ($job->getIsPaused() ? ' class="inactive"' : ''); ?>
 <tr data-hash="<?php echo $job->getHash() ?>"<?php echo $classAttr ?>>
-    <td data-searchable="1"><?php echo $job->getExpression() ?></td>
+    <td data-searchable="1"><?php echo $job->getComment() ?></td>
     <td data-searchable="1">
         <?php echo $job->getCommand() ?>
         <?php if ($job->getComment()): ?>
@@ -25,6 +25,7 @@
                   data-toggle="tooltip" title="<?php echo $job->getComment() ?>"></span>
         <?php endif; ?>
     </td>
+    <td data-searchable="0"><?php echo $job->getExpression() ?></td>
     <td>
         <div class="btn-group pull-right hidden-xs actions">
             <button type="button" class="btn btn-success job-run" title="Run Job Now"
