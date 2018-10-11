@@ -1,0 +1,253 @@
+<?php
+/**
+ * Copyright 2014 Bogdan Ghervan
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+?>
+<?php
+use \forms\AddJob\SimpleForm;
+
+/* @var $form SimpleForm */
+$form->prepare();
+?>
+<form class="job-add-form job-add-postgres-form" role="form" method="post">
+    <div class="form-alerts"></div>
+    <input type="hidden" name="mode" value="postgres">
+    <input type="hidden" name="returnHtml" value="1">
+    <?php if (isset($hash)): ?>
+        <input type="hidden" name="hash" value="<?php echo $hash ?>">
+    <?php endif; ?>
+    <div class="row">
+        <div class="col-md-2">
+            <span class="legend"><?php echo $form->get('name')->getLabel() ?></span>
+        </div>
+        <div class="col-md-10" data-has-error="<?php echo $form->get('name')->getName() ?>">
+            <?php echo $this->formText($form->get('name')) ?>
+            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                'element' => $form->get('name')
+            )) ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <span class="legend"><?php echo $form->get('database')->getLabel() ?></span>
+        </div>
+        <div class="col-md-10" data-has-error="<?php echo $form->get('database')->getName() ?>">
+            <?php echo $this->formText($form->get('database')) ?>
+            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                'element' => $form->get('database')
+            )) ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <span class="legend"><?php echo $form->get('command')->getLabel() ?></span>
+        </div>
+        <div class="col-md-10" data-has-error="<?php echo $form->get('command')->getName() ?>">
+            <?php echo $this->formTextarea($form->get('command')) ?>
+            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                'element' => $form->get('command')
+            )) ?>
+        </div>
+    </div>
+    
+    <?php
+        /* @var $time \Zend\Form\Fieldset */
+        $time = $form->get('time');
+        $pickerValue = $time->get('picker')->getValue();
+        
+        $specificTimeChecked = ($pickerValue == SimpleForm::SPECIFIC_TIME ? ' checked' : '');
+        $everyHourChecked    = ($pickerValue == SimpleForm::EVERY_HOUR ? ' checked' : '');
+        $everyMinuteChecked  = ($pickerValue == SimpleForm::EVERY_MINUTE ? ' checked' : '');
+    ?>
+    <div class="row">
+        <div class="col-md-2">
+            <span class="legend"><?php echo $time->get('picker')->getLabel() ?></span>
+        </div>
+        <div class="col-md-10" data-has-error="<?php echo $time->get('picker')->getName() ?>">
+            <!-- Specific time in the day -->
+            <div class="radio radio-time radio-specific-time"
+                 data-has-error="<?php echo $time->get('specificTime')->get('hour')->getName(), ' ',
+                                            $time->get('specificTime')->get('minute')->getName() ?>">
+                <label>
+                    <input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
+                           value="specificTime" autocomplete="off"<?php echo $specificTimeChecked ?>>
+                    Specific time in the day
+                </label>
+                <div class="specific-time">
+                    <?php echo $this->formNumber($time->get('specificTime')->get('hour')) ?> : 
+                    <?php echo $this->formNumber($time->get('specificTime')->get('minute')) ?>
+                </div>
+                
+                <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                    'element' => $time->get('specificTime')->get('hour')
+                )) ?>
+                <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                    'element' => $time->get('specificTime')->get('minute')
+                )) ?>
+            </div>
+
+            <!-- Every {step} hours at minute {minute} -->
+            <div class="radio radio-time radio-every-hour"
+                 data-has-error="<?php echo $time->get('everyHour')->get('step')->getName(), ' ',
+                                            $time->get('everyHour')->get('minute')->getName() ?>">
+                
+                <input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
+                       value="everyHour" autocomplete="off"<?php echo $everyHourChecked ?>>
+                <span>
+                    Every 
+                    <?php echo $this->formNumber($time->get('everyHour')->get('step')) ?>
+                    hours at minute
+                    <?php echo $this->formNumber($time->get('everyHour')->get('minute')) ?>
+                </span>
+                
+                <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                    'element' => $time->get('everyHour')->get('step')
+                )) ?>
+                <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                    'element' => $time->get('everyHour')->get('minute')
+                )) ?>
+            </div>
+
+            <!-- Every {minute} minutes -->
+            <div class="radio radio-time radio-every-minute"
+                 data-has-error="<?php echo $time->get('everyMinute')->get('step')->getName() ?>">
+                
+                <input type="radio" name="<?php echo $time->get('picker')->getName() ?>"
+                       value="everyMinute" autocomplete="off"<?php echo $everyMinuteChecked ?>>
+                <span>
+                    Every
+                    <?php echo $this->formNumber($time->get('everyMinute')->get('step')) ?>
+                    minutes
+                </span>
+
+                <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                    'element' => $time->get('everyMinute')->get('step')
+                )) ?>
+            </div>
+            
+            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                'element' => $time->get('picker')
+            )) ?>
+        </div>
+    </div>
+    
+    <?php
+        /* @var $repeat \Zend\Form\Fieldset */
+        $repeat = $form->get('repeat');
+    ?>
+    <div class="row">
+        <div class="col-md-2">
+            <span class="legend"><?php echo $repeat->get('picker')->getLabel() ?></span>
+        </div>
+        <div class="col-md-10" data-has-error="<?php echo $repeat->get('picker')->getName() ?>">
+            <?php echo $this->formSelect($repeat->get('picker')) ?>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-10">
+            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                'element' => $repeat->get('picker')
+            )) ?>
+        </div>
+    </div>
+
+    <!-- Repeat: Weekly -->
+    <?php
+        /* @var $dayOfWeek \Zend\Form\Element\MultiCheckbox */
+        $dayOfWeek = $repeat->get('weekly')->get('dayOfWeek');
+        $selectedDays = $dayOfWeek->getValue();
+    ?>
+    <div class="row fieldset-weekly hidden">
+        <div class="col-md-2"></div>
+        <div class="col-md-10" data-has-error="<?php echo $dayOfWeek->getName() ?>[]">
+            <span class="hint"><?php echo $dayOfWeek->getLabel() ?></span>
+            <div>
+                <div class="btn-group" data-toggle="buttons">
+                    <?php foreach ($dayOfWeek->getValueOptions() as $value => $label):
+                            $dayChecked = $selectedDays && in_array($value, $selectedDays);
+                    ?>
+                        <label class="btn btn-default<?php echo $dayChecked ? ' active' : '' ?>">
+                            <input type="checkbox" name="<?php echo $dayOfWeek->getName() ?>[]"
+                                   <?php echo $dayChecked ? 'checked' : '' ?>
+                                   value="<?php echo $value ?>" autocomplete="off">
+                            <?php echo $label ?>
+                        </label>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                'element' => $dayOfWeek,
+                'elementIsArray' => true
+            )) ?>
+        </div>
+    </div>
+
+    <!-- Repeat: Monthly -->
+    <?php
+        /* @var $dayOfMonth \Zend\Form\Element\MultiCheckbox */
+        $dayOfMonth = $repeat->get('monthly')->get('dayOfMonth');
+        $selectedDays = $dayOfMonth->getValue();
+    ?>
+    <div class="row fieldset-monthly hidden">
+        <div class="col-md-2"></div>
+        <div class="col-md-10" data-has-error="<?php echo $dayOfMonth->getName() ?>[]">
+            <span class="hint"><?php echo $dayOfMonth->getLabel() ?></span>
+            <div>
+                <div class="btn-group btn-group-day-picker">
+                    <div class="btn-group" data-toggle="buttons">
+                        <?php foreach ($dayOfMonth->getValueOptions() as $day):
+                                $dayChecked = $selectedDays && in_array($day, $selectedDays);
+                        ?>
+                            <label class="btn btn-default<?php echo $dayChecked ? ' active' : '' ?>">
+                                <input type="checkbox" name="<?php echo $dayOfMonth->getName() ?>[]"
+                                       <?php echo $dayChecked ? 'checked' : '' ?>
+                                       value="<?php echo $day ?>" autocomplete="off">
+                                <?php echo $day ?>
+                            </label>
+                            <?php if ($day % 7 == 0): ?>
+                                </div>
+                                <div class="btn-group" data-toggle="buttons">
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                'element' => $dayOfMonth,
+                'elementIsArray' => true
+            )) ?>
+        </div>
+    </div>
+
+    <!-- Repeat: Yearly -->
+    <div class="row fieldset-yearly hidden">
+        <div class="col-md-2"></div>
+        <div class="col-md-10" 
+             data-has-error="<?php echo $repeat->get('yearly')->get('month')->getName(), ' ',
+                                        $repeat->get('yearly')->get('dayOfMonth')->getName() ?>">
+            <span class="hint"><?php echo $repeat->get('yearly')->getLabel() ?></span>
+            <div class="clearfix">
+                <?php echo $this->formSelect($repeat->get('yearly')->get('month')) ?>
+                <?php echo $this->formNumber($repeat->get('yearly')->get('dayOfMonth')) ?>
+            </div>
+            
+            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                'element' => $repeat->get('yearly')->get('month')
+            )) ?>
+            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+                'element' => $repeat->get('yearly')->get('dayOfMonth')
+            )) ?>
+        </div>
+    </div>
+</form>

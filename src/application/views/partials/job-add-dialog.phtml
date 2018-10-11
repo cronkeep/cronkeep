@@ -33,6 +33,10 @@
                         <a href="#advanced-add" role="tab" data-toggle="pill" data-mode="advanced">
                             Advanced</a>
                     </li>
+                    <li>
+                        <a href="#pgsql-add" role="tab" data-toggle="pill" data-mode="postgresql">
+                            Postgresql Query</a>
+                    </li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="simple-add">
@@ -44,6 +48,12 @@
                     <div class="tab-pane" id="advanced-add">
                         <?php echo $this->partial('partials/job-advanced-form.phtml', array(
                             'form' => $advancedForm
+                        )) ?>
+                    </div>
+
+                    <div class="tab-pane" id="pgsql-add">
+                        <?php echo $this->partial('partials/job-postgres-form.phtml', array(
+                            'form' => $postgresForm
                         )) ?>
                     </div>
                 </div>

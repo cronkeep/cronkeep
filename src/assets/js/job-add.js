@@ -25,11 +25,13 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
     var timePicker = $('input[name="time[picker]"]', container);
     var repeatPicker = $('.repeat', container);
     var simpleForm = $('.job-add-simple-form', container);
+    var postgresForm = $('.job-add-postgres-form', container);
     var advancedForm = $('.job-add-advanced-form', container);
     var saveButton = $('.btn-save', container);
     
     var simpleFormAlertService = new AlertService($('.form-alerts', simpleForm));
     var advancedFormAlertService = new AlertService($('.form-alerts', advancedForm));
+    var postgresFormAlertService = new AlertService($('.form-alerts', postgresForm));
     
     var errorClass = 'has-error';
     
@@ -42,11 +44,19 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
     var isSimpleFormActive = function() {
         return $('ul.nav li.active a', container).attr('data-mode') === 'simple';
     };
+
+    // Tells whether the simple form is the one currently active
+    var isPostgresFormActive = function() {
+        return $('ul.nav li.active a', container).attr('data-mode') === 'postgresql';
+    };
     
     // Retrieves simple or advanced form, whichever is active now
     var getActiveForm = function() {
         if (isSimpleFormActive()) {
             return simpleForm;
+        }
+        if (isPostgresFormActive()){
+            return postgresForm;
         }
         return advancedForm;
     };
@@ -55,6 +65,9 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
     var getFormAlertService = function() {
         if (isSimpleFormActive()) {
             return simpleFormAlertService;
+        }
+        if (isPostgresFormActive()){
+            return postgresFormAlertService;
         }
         return advancedFormAlertService;
     };
@@ -200,6 +213,127 @@ var AddJobDialog = function(container, crontabService, globalAlertService) {
         });
         
         simpleForm.validate({
+            submitHandler: submitHandler,
+            rules: {
+                'command': {
+                    required: true
+                },
+                'time[picker]': {
+                    required: true
+                },
+                'time[specificTime][hour]': {
+                    required: function() {
+                        return assertTime(SPECIFIC_TIME);
+                    },
+                    digits: true
+                },
+                'time[specificTime][minute]': {
+                    required: function() {
+                        return assertTime(SPECIFIC_TIME);
+                    },
+                    digits: true
+                },
+                'time[everyHour][step]': {
+                    required: function() {
+                        return assertTime(EVERY_HOUR);
+                    },
+                    digits: true
+                },
+                'time[everyHour][minute]': {
+                    required: function() {
+                        return assertTime(EVERY_HOUR);
+                    },
+                    digits: true
+                },
+                'time[everyMinute][step]': {
+                    required: function() {
+                        return assertTime(EVERY_MINUTE);
+                    },
+                    digits: true
+                },
+                'repeat[weekly][dayOfWeek][]': {
+                    required: function() {
+                        return assertRepeat(WEEKLY);
+                    }
+                },
+                'repeat[monthly][dayOfMonth][]': {
+                    required: function() {
+                        return assertRepeat(MONTHLY);
+                    }
+                },
+                'repeat[yearly][month]': {
+                    required: function() {
+                        return assertRepeat(YEARLY);
+                    }
+                },
+                'repeat[yearly][dayOfMonth]': {
+                    required: function() {
+                        return assertRepeat(YEARLY);
+                    },
+                    digits: true
+                }
+            },
+            messages: {
+                'command': {
+                    required: 'Command is required'
+                },
+                'time[specificTime][hour]': {
+                    required: 'Hour is required',
+                    number: 'Hour should be a valid number',
+                    digits: 'Hour can only be an integer number',
+                    min: 'Hour has to be between 0 and 23',
+                    max: 'Hour has to be between 0 and 23'
+                },
+                'time[specificTime][minute]': {
+                    required: 'Minute is required',
+                    number: 'Minute should be a valid number',
+                    digits: 'Minute can only be an integer number',
+                    min: 'Minute has to be between 0 and 59',
+                    max: 'Minute has to be between 0 and 59'
+                },
+                'time[everyHour][step]': {
+                    required: 'Frequency is required',
+                    number: 'Frequency should be a valid number',
+                    digits: 'Frequency could only be an integer number',
+                    min: 'Frequency has to be between 1 and 23',
+                    max: 'Frequency has to be between 1 and 23'
+                },
+                'time[everyHour][minute]': {
+                    required: 'Minute is required',
+                    number: 'Minute should be a valid number',
+                    digits: 'Minute can only be an integer number',
+                    min: 'Minute has to be between 0 and 59',
+                    max: 'Minute has to be between 0 and 59'
+                },
+                'time[everyMinute][step]': {
+                    required: 'Frequency is required',
+                    number: 'Frequency should be a valid number',
+                    digits: 'Frequency could only be an integer number',
+                    min: 'Frequency has to be between 1 and 59',
+                    max: 'Frequency has to be between 1 and 59'
+                },
+                'repeat[weekly][dayOfWeek][]': {
+                    required: 'Please select at least one day'
+                },
+                'repeat[monthly][dayOfMonth][]': {
+                    required: 'Please select at least one day'
+                },
+                'repeat[yearly][month]': {
+                    required: 'Month is required'
+                },
+                'repeat[yearly][dayOfMonth]': {
+                    required: 'Day is required',
+                    number: 'Day should be a valid number',
+                    digits: 'Day could only be an integer number',
+                    min: 'Day has to be between 1 and 31',
+                    max: 'Day has to be between 1 and 31'
+                }
+            }
+        });
+
+
+
+        postgresForm.validate({
             submitHandler: submitHandler,
             rules: {
                 'command': {
