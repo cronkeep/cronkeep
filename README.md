@@ -22,7 +22,7 @@ Running cron jobs is disabled in the demo app.
 
 CronKeep fits nicely into your LAMP stack. Apache and PHP 5.3.23 or newer are required.
 
-The current CronKeep version interacts only with the crontab of the user Apache is running as. This means it will only have access to the jobs added for user `www-data`, `apache` or `nobody`, depending on your system.
+The current CronKeep version interacts only with the crontab of the user Apache is running as. This means it will only have access to the jobs added for the user `www-data`, `apache` or `nobody`, depending on your system.
 
 ## Installation
 
