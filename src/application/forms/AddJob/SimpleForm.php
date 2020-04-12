@@ -100,7 +100,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
             'class' => 'form-control'
         ));
         $this->add($name);
-        
+
         // Command
         $command = new Element\Textarea('command');
         $command->setLabel('Command');
@@ -109,7 +109,7 @@ class SimpleForm extends Form implements InputFilterProviderInterface
             'class' => 'form-control command'
         ));
         $this->add($command);
-        
+
         // Add fieldset wrapping all time options
         $this->add($this->getTimeFieldset());
         

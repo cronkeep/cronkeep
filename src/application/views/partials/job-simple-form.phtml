@@ -21,36 +21,36 @@ use \forms\AddJob\SimpleForm;
 /* @var $form SimpleForm */
 $form->prepare();
 ?>
-<form class="job-add-form job-add-simple-form" role="form" method="post">
+<form class="job-add-form job-add-simple-form table-crontab" role="form" method="post">
+
     <div class="form-alerts"></div>
     <input type="hidden" name="mode" value="simple">
     <input type="hidden" name="returnHtml" value="1">
     <?php if (isset($hash)): ?>
         <input type="hidden" name="hash" value="<?php echo $hash ?>">
     <?php endif; ?>
-    <div class="row">
-        <div class="col-md-2">
-            <span class="legend"><?php echo $form->get('name')->getLabel() ?></span>
-        </div>
-        <div class="col-md-10" data-has-error="<?php echo $form->get('name')->getName() ?>">
-            <?php echo $this->formText($form->get('name')) ?>
-            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
-                'element' => $form->get('name')
-            )) ?>
-        </div>
+
+    <!-- NEW FORM -->
+    <div class="form-group">
+        <label for="<?php echo $form->get('name')->getLabel() ?>"><?php echo $form->get('name')->getLabel() ?></label>
+        <?php echo $this->formText($form->get('name')) ?>
+        <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+            'element' => $form->get('name')
+        )) ?>
     </div>
-    <div class="row">
-        <div class="col-md-2">
-            <span class="legend"><?php echo $form->get('command')->getLabel() ?></span>
-        </div>
-        <div class="col-md-10" data-has-error="<?php echo $form->get('command')->getName() ?>">
-            <?php echo $this->formTextarea($form->get('command')) ?>
-            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
-                'element' => $form->get('command')
-            )) ?>
-        </div>
+
+    <div class="form-group">
+        <label for="<?php echo $form->get('command')->getLabel() ?>"><?php echo $form->get('command')->getLabel() ?>
+            <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                  title="The URL inputted in this field will be executed with curl command"></span></label>
+        <?php echo $this->formTextarea($form->get('command')) ?>
+        <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+            'element' => $form->get('command')
+        )) ?>
     </div>
-    
+
+    <!-- ======== -->
+
     <?php
         /* @var $time \Zend\Form\Fieldset */
         $time = $form->get('time');
@@ -60,11 +60,10 @@ $form->prepare();
         $everyHourChecked    = ($pickerValue == SimpleForm::EVERY_HOUR ? ' checked' : '');
         $everyMinuteChecked  = ($pickerValue == SimpleForm::EVERY_MINUTE ? ' checked' : '');
     ?>
-    <div class="row">
-        <div class="col-md-2">
-            <span class="legend"><?php echo $time->get('picker')->getLabel() ?></span>
-        </div>
-        <div class="col-md-10" data-has-error="<?php echo $time->get('picker')->getName() ?>">
+    <fieldset class="form-group">
+        <label for="<?php echo $time->get('picker')->getLabel() ?>"><?php echo $time->get('picker')->getLabel() ?></label>
+        <div  data-has-error="<?php echo $time->get('picker')->getName() ?>">
+
             <!-- Specific time in the day -->
             <div class="radio radio-time radio-specific-time"
                  data-has-error="<?php echo $time->get('specificTime')->get('hour')->getName(), ' ',
@@ -74,10 +73,10 @@ $form->prepare();
                            value="specificTime" autocomplete="off"<?php echo $specificTimeChecked ?>>
                     Specific time in the day
                 </label>
-                <div class="specific-time">
+                <span class="specific-time">
                     <?php echo $this->formNumber($time->get('specificTime')->get('hour')) ?> : 
                     <?php echo $this->formNumber($time->get('specificTime')->get('minute')) ?>
-                </div>
+                </span>
                 
                 <?php echo $this->partial('partials/job-form-element-error.phtml', array(
                     'element' => $time->get('specificTime')->get('hour')
@@ -130,21 +129,16 @@ $form->prepare();
                 'element' => $time->get('picker')
             )) ?>
         </div>
-    </div>
+    </fieldset>
     
     <?php
         /* @var $repeat \Zend\Form\Fieldset */
         $repeat = $form->get('repeat');
     ?>
-    <div class="row">
-        <div class="col-md-2">
-            <span class="legend"><?php echo $repeat->get('picker')->getLabel() ?></span>
-        </div>
-        <div class="col-md-10" data-has-error="<?php echo $repeat->get('picker')->getName() ?>">
+    <div class="form-group">
+        <label for="<?php echo $repeat->get('picker')->getLabel() ?>"><?php echo $repeat->get('picker')->getLabel() ?></label>
+        <div data-has-error="<?php echo $repeat->get('picker')->getName() ?>">
             <?php echo $this->formSelect($repeat->get('picker')) ?>
-        </div>
-        <div class="col-md-2"></div>
-        <div class="col-md-10">
             <?php echo $this->partial('partials/job-form-element-error.phtml', array(
                 'element' => $repeat->get('picker')
             )) ?>
@@ -157,9 +151,8 @@ $form->prepare();
         $dayOfWeek = $repeat->get('weekly')->get('dayOfWeek');
         $selectedDays = $dayOfWeek->getValue();
     ?>
-    <div class="row fieldset-weekly hidden">
-        <div class="col-md-2"></div>
-        <div class="col-md-10" data-has-error="<?php echo $dayOfWeek->getName() ?>[]">
+    <fieldset class="form-group fieldset-weekly hidden">
+        <div data-has-error="<?php echo $dayOfWeek->getName() ?>[]">
             <span class="hint"><?php echo $dayOfWeek->getLabel() ?></span>
             <div>
                 <div class="btn-group" data-toggle="buttons">
@@ -180,7 +173,7 @@ $form->prepare();
                 'elementIsArray' => true
             )) ?>
         </div>
-    </div>
+    </fieldset>
 
     <!-- Repeat: Monthly -->
     <?php
@@ -188,9 +181,8 @@ $form->prepare();
         $dayOfMonth = $repeat->get('monthly')->get('dayOfMonth');
         $selectedDays = $dayOfMonth->getValue();
     ?>
-    <div class="row fieldset-monthly hidden">
-        <div class="col-md-2"></div>
-        <div class="col-md-10" data-has-error="<?php echo $dayOfMonth->getName() ?>[]">
+    <fieldset class="form-group fieldset-monthly hidden">
+        <div data-has-error="<?php echo $dayOfMonth->getName() ?>[]">
             <span class="hint"><?php echo $dayOfMonth->getLabel() ?></span>
             <div>
                 <div class="btn-group btn-group-day-picker">
@@ -217,13 +209,11 @@ $form->prepare();
                 'elementIsArray' => true
             )) ?>
         </div>
-    </div>
+    </fieldset>
 
     <!-- Repeat: Yearly -->
-    <div class="row fieldset-yearly hidden">
-        <div class="col-md-2"></div>
-        <div class="col-md-10" 
-             data-has-error="<?php echo $repeat->get('yearly')->get('month')->getName(), ' ',
+    <fieldset class="form-group fieldset-yearly hidden">
+        <div data-has-error="<?php echo $repeat->get('yearly')->get('month')->getName(), ' ',
                                         $repeat->get('yearly')->get('dayOfMonth')->getName() ?>">
             <span class="hint"><?php echo $repeat->get('yearly')->getLabel() ?></span>
             <div class="clearfix">
@@ -238,5 +228,5 @@ $form->prepare();
                 'element' => $repeat->get('yearly')->get('dayOfMonth')
             )) ?>
         </div>
-    </div>
+    </fieldset>
 </form>

@@ -19,36 +19,33 @@
 /* @var $form \forms\AddJob\AdvancedForm */
 $form->prepare();
 ?>
-<form class="job-add-form job-add-advanced-form" role="form" method="post">
+<form class="job-add-form job-add-advanced-form table-crontab" role="form" method="post">
     <div class="form-alerts"></div>
     <input type="hidden" name="mode" value="advanced">
     <input type="hidden" name="returnHtml" value="1">
     <?php if (isset($hash)): ?>
         <input type="hidden" name="hash" value="<?php echo $hash ?>">
     <?php endif; ?>
-    <div class="row">
-        <div class="col-md-2">
-            <span class="legend"><?php echo $form->get('name')->getLabel() ?></span>
-        </div>
-        <div class="col-md-10" data-has-error="<?php echo $form->get('name')->getName() ?>">
+
+    <div class="form-group">
+        <label for="<?php echo $form->get('name')->getLabel() ?>"><?php echo $form->get('name')->getLabel() ?></label>
+        <div data-has-error="<?php echo $form->get('name')->getName() ?>">
             <?php echo $this->formText($form->get('name')) ?>
             <?php echo $this->partial('partials/job-form-element-error.phtml', array(
                 'element' => $form->get('name')
             )) ?>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-2">
-            <span class="legend"><?php echo $form->get('expression')->getLabel() ?></span>
-        </div>
-        <div class="col-md-10" data-has-error="<?php echo $form->get('expression')->getName() ?>">
+
+    <div class="form-group">
+        <label for="<?php echo $form->get('expression')->getLabel() ?>"><?php echo $form->get('expression')->getLabel() ?></label>
+        <div data-has-error="<?php echo $form->get('expression')->getName() ?>">
             <?php echo $this->formText($form->get('expression')) ?>
             <?php echo $this->partial('partials/job-form-element-error.phtml', array(
                 'element' => $form->get('expression')
             )) ?>
         </div>
-        <div class="col-md-2"></div>
-        <div class="col-md-10">
+        <div>
             <p class="help-block">
                 You may peep at this
                 <a href="https://linuxmoz.com/crontab-syntax-tutorial/" target="_blank"
@@ -60,15 +57,15 @@ $form->prepare();
             </p>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-2">
-            <span class="legend"><?php echo $form->get('command')->getLabel() ?></span>
-        </div>
-        <div class="col-md-10" data-has-error="<?php echo $form->get('command')->getName() ?>">
-            <?php echo $this->formTextarea($form->get('command')) ?>
-            <?php echo $this->partial('partials/job-form-element-error.phtml', array(
-                'element' => $form->get('command')
-            )) ?>
-        </div>
+
+    <div class="form-group">
+        <label for="<?php echo $form->get('command')->getLabel() ?>"><?php echo $form->get('command')->getLabel() ?>
+            <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                  title="The URL inputted in this field will be executed with curl command"></span></label>
+        <?php echo $this->formTextarea($form->get('command')) ?>
+        <?php echo $this->partial('partials/job-form-element-error.phtml', array(
+            'element' => $form->get('command')
+        )) ?>
     </div>
+
 </form>

@@ -45,6 +45,9 @@ var CrontabService = function(alertService) {
         // Use existing dialog if editing the same job
         if (hash == lastEditedJobHash) {
             editJobDialog.open();
+
+            //Enable tooltip after jobEdit call
+            $(document).trigger('jobEdit', {hash: hash});
         
         // Fetch dialog for given job
         } else {
@@ -59,11 +62,15 @@ var CrontabService = function(alertService) {
                 editJobDialog = new AddJobDialog($('#job-edit'), self, alertService);
                 editJobDialog.open();
                 lastEditedJobHash = hash;
+
+                //Enable tooltip after jobEdit call
+                $(document).trigger('jobEdit', {hash: hash});
+
             }).fail(function() {
                 alertService.pushError('Unable to edit the job at this time');
             });
         }
-        
+
         return this;
     };
     
@@ -72,7 +79,7 @@ var CrontabService = function(alertService) {
         crontab.append(content);
         $(document).trigger('jobAdd', {hash: hash});
         toggleCrontabGrid();
-        
+
         return this;
     };
     
@@ -213,6 +220,7 @@ var CrontabService = function(alertService) {
     $(function() {
         $(".table-crontab [data-toggle='tooltip']").tooltip();
     });
+
     $(document).on('jobAdd jobEdit', function(event, data) {
         var job = $(".table-crontab [data-hash='" + data.hash + "']");
         $("[data-toggle='tooltip']", job).tooltip();
