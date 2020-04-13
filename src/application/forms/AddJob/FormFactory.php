@@ -29,6 +29,7 @@ class FormFactory
 {
     const SIMPLE = 'simple';
     const ADVANCED = 'advanced';
+    const POSTGRES = 'postgres';
     
     /**
      * Initializes the right add job form (simple or advanced) based on passed form data,
@@ -46,7 +47,9 @@ class FormFactory
         
         if ($formData['mode'] == self::SIMPLE) {
             $form = new SimpleForm();
-        } else {
+        } elseif ($formData['mode'] == self::POSTGRES) {
+            $form = new PostgresqlForm();
+        }else {
             $form = new AdvancedForm();
         }
         

@@ -15,6 +15,17 @@
  * limitations under the License.
  */
 
+if (PHP_SAPI == 'cli-server') {
+    $_SERVER['SCRIPT_NAME'] = basename(__FILE__);
+    // To help the built-in PHP dev server, check if the request was actually for
+    // something which should probably be served as a static file
+    $url  = parse_url($_SERVER['REQUEST_URI']);
+    $file = __DIR__ . $url['path'];
+    if (is_file($file)) {
+        return false;
+    }
+}
+
 require_once 'vendor/autoload.php';
 use \models\Crontab;
 use \models\Crontab\Exception;
@@ -22,7 +33,6 @@ use \models\SystemUser;
 use \models\At;
 use \forms\AddJob;
 use \services\ExpressionService;
-
 $app = new \Slim\Slim(array(
     'templates.path' => 'application/views',
     'view' => new \library\App\Layout(),
@@ -38,6 +48,7 @@ $app->get('/', function() use ($app) {
     $systemUser   = new SystemUser();
     $simpleForm   = new AddJob\SimpleForm();
     $advancedForm = new AddJob\AdvancedForm();
+    $postgresForm = new AddJob\PostgresqlForm();
     
     $showAlertAtUnavailable = $app->getCookie('showAlertAtUnavailable');
     $app->view->setData('showAlertAtUnavailable', $showAlertAtUnavailable !== null ?
@@ -50,7 +61,8 @@ $app->get('/', function() use ($app) {
         'isAtCommandAvailable' => At::isAvailable(),
         'atCommandErrorOutput' => At::getErrorOutput(),
         'simpleForm'           => $simpleForm,
-        'advancedForm'         => $advancedForm
+        'advancedForm'         => $advancedForm,
+        'postgresForm'         => $postgresForm
     ));
 });
 
@@ -86,12 +98,17 @@ $app->group('/job', function() use ($app) {
         if ($form->isValid()) {
             $crontab = new Crontab();
             
-            if ($formData['mode'] == AddJob\FormFactory::SIMPLE) {
+            if ($formData['mode'] == AddJob\FormFactory::SIMPLE or $formData['mode'] == AddJob\FormFactory::POSTGRES) {
                 $expression = ExpressionService::createExpression($formData);
             } else {
                 $expression = $formData['expression'];
             }
-            
+
+
+            if ($formData['mode'] == AddJob\FormFactory::POSTGRES){
+                    $formData['command'] = 'pgsql ' . $formData['database'] . ' -c "' . $formData['command']. '"';
+            }
+
             // This is an edit
             if ($hash) {    
                 $job = $crontab->findByHash($hash);
@@ -107,6 +124,7 @@ $app->group('/job', function() use ($app) {
             }
             
             $job->setExpression($expression);
+
             $job->setCommand($formData['command']);
             $job->setComment($formData['name']);
             
@@ -132,6 +150,7 @@ $app->group('/job', function() use ($app) {
         } else {
             $app->render(500, array(
                 'error' => true,
+                'a' => $form->getMessages(),
                 'msg' => $form->getFormattedMessages()
             ));
         }
